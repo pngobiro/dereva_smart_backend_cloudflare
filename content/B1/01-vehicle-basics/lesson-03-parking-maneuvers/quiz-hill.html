@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hill Start Parking Quiz - B1 Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #667eea;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .question-image {
+            width: 100%;
+            max-width: 500px;
+            height: 300px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e8ebff;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .nav-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⛰️ Hill Start & Parking Quiz</h1>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div id="quizContainer"></div>
+
+        <div class="buttons">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" disabled>Previous</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+        </div>
+
+        <div class="nav-links">
+            <a href="quiz-angle.html" class="nav-link">← Angle Parking Quiz</a>
+            <a href="quiz-final.html" class="nav-link">Final Assessment →</a>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                type: 'multiple-choice',
+                question: 'When parking uphill, which direction should you turn your wheels?',
+                image: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=600',
+                options: [
+                    'Towards the kerb',
+                    'Away from the kerb',
+                    'Straight ahead',
+                    'It doesn\'t matter'
+                ],
+                correct: 1,
+                explanation: 'Turn wheels AWAY from the kerb when parking uphill. If the car rolls back, it will hit the kerb and stop.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'When parking downhill, which direction should you turn your wheels?',
+                options: [
+                    'Away from the kerb',
+                    'Towards the kerb',
+                    'Straight ahead',
+                    'Depends on the car'
+                ],
+                correct: 1,
+                explanation: 'Turn wheels TOWARDS the kerb when parking downhill. If the car rolls forward, the kerb will stop it.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'What gear should you leave a manual car in when parked uphill?',
+                image: 'https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?w=600',
+                options: [
+                    'Neutral',
+                    'Reverse',
+                    '1st gear',
+                    '5th gear'
+                ],
+                correct: 2,
+                explanation: 'Leave in 1st gear when parked uphill. This provides resistance if the car tries to roll backward.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'What gear should you leave a manual car in when parked downhill?',
+                options: [
+                    '1st gear',
+                    'Neutral',
+                    'Reverse',
+                    '2nd gear'
+                ],
+                correct: 2,
+                explanation: 'Leave in reverse gear when parked downhill. This prevents the car from rolling forward.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'What is the first step in performing a hill start?',
+                options: [
+                    'Release the handbrake',
+                    'Apply handbrake and foot on brake',
+                    'Press the accelerator',
+                    'Release the clutch'
+                ],
+                correct: 1,
+                explanation: 'First, ensure handbrake is on and your foot is on the brake. This secures the car before starting.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'What RPM should you set when performing a hill start?',
+                image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600',
+                options: [
+                    '500-1000 RPM',
+                    '1500-2000 RPM',
+                    '3000-4000 RPM',
+                    'As high as possible'
+                ],
+                correct: 1,
+                explanation: 'Set gas to 1500-2000 RPM. This provides enough power to move uphill without stalling.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'What is the "biting point" in a manual car?',
+                options: [
+                    'When the engine starts',
+                    'When the clutch and engine begin to engage',
+                    'When you press the brake',
+                    'When you change gears'
+                ],
+                correct: 1,
+                explanation: 'The biting point is where the clutch and engine begin to engage, and you feel the car wanting to move.'
+            },
+            {
+                type: 'multiple-select',
+                question: 'What should you always do when parking on a hill? (Select all that apply)',
+                options: [
+                    'Apply handbrake firmly',
+                    'Turn wheels in correct direction',
+                    'Leave in appropriate gear',
+                    'Leave engine running',
+                    'Check handbrake is secure'
+                ],
+                correct: [0, 1, 2, 4],
+                explanation: 'Apply handbrake, turn wheels correctly, use appropriate gear, and verify handbrake is secure. Never leave engine running.'
+            },
+            {
+                type: 'true-false',
+                question: 'You should release the handbrake before finding the clutch biting point during a hill start.',
+                options: ['True', 'False'],
+                correct: 1,
+                explanation: 'FALSE! Find the biting point FIRST, then release the handbrake smoothly. This prevents rolling backward.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'What is the main risk of not parking correctly on a hill?',
+                image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600',
+                options: [
+                    'Getting a parking ticket',
+                    'The car rolling away and causing damage or injury',
+                    'Difficulty starting the car',
+                    'Increased fuel consumption'
+                ],
+                correct: 1,
+                explanation: 'The car could roll away, potentially causing serious damage, injury, or death. Always secure your vehicle properly on hills.'
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = [];
+
+        function initQuiz() {
+            showQuestion(currentQuestion);
+            updateProgress();
+        }
+
+        function showQuestion(index) {
+            const question = quizData[index];
+            const container = document.getElementById('quizContainer');
+            
+            let html = `
+                <div class="question-card">
+                    <div class="question-number">Question ${index + 1} of ${quizData.length}</div>
+                    <div class="question-text">${question.question}</div>
+            `;
+
+            if (question.image) {
+                html += `<img src="${question.image}" alt="Question image" class="question-image">`;
+            }
+
+            html += '<div class="options">';
+            
+            if (question.type === 'multiple-select') {
+                question.options.forEach((option, i) => {
+                    const selected = userAnswers[index] && userAnswers[index].includes(i) ? 'selected' : '';
+                    html += `<div class="option ${selected}" onclick="toggleMultiSelect(${i})">${option}</div>`;
+                });
+                html += '</div><p style="margin-top: 10px; color: #666;">Select all that apply</p>';
+            } else {
+                question.options.forEach((option, i) => {
+                    const selected = userAnswers[index] === i ? 'selected' : '';
+                    html += `<div class="option ${selected}" onclick="selectOption(${i})">${option}</div>`;
+                });
+                html += '</div>';
+            }
+
+            html += `<div class="feedback" id="feedback"></div></div>`;
+            container.innerHTML = html;
+            updateButtons();
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            showQuestion(currentQuestion);
+        }
+
+        function toggleMultiSelect(index) {
+            if (!userAnswers[currentQuestion]) {
+                userAnswers[currentQuestion] = [];
+            }
+            const arr = userAnswers[currentQuestion];
+            const idx = arr.indexOf(index);
+            if (idx > -1) {
+                arr.splice(idx, 1);
+            } else {
+                arr.push(index);
+            }
+            showQuestion(currentQuestion);
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+                updateProgress();
+            }
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = 
+                currentQuestion === quizData.length - 1 ? 'Finish Quiz' : 'Next';
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function calculateScore() {
+            score = 0;
+            quizData.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                
+                if (question.type === 'multiple-select') {
+                    if (userAnswer && JSON.stringify(userAnswer.sort()) === JSON.stringify(question.correct.sort())) {
+                        score++;
+                    }
+                } else {
+                    if (userAnswer === question.correct) {
+                        score++;
+                    }
+                }
+            });
+        }
+
+        function showResults() {
+            calculateScore();
+            const percentage = Math.round((score / quizData.length) * 100);
+            const passed = percentage >= 70;
+            
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = `
+                <div class="results">
+                    <h2>${passed ? '🎉 Excellent Work!' : '📚 Keep Practicing!'}</h2>
+                    <div class="score-circle">${percentage}%</div>
+                    <p style="font-size: 20px; margin: 20px 0;">
+                        <strong>Score:</strong> ${score} out of ${quizData.length}
+                    </p>
+                    <p style="color: #666; margin: 20px 0;">
+                        ${passed 
+                            ? 'You understand hill parking and starts! Ready for the final assessment.' 
+                            : 'Review the lesson material and try again. You need 70% to pass.'}
+                    </p>
+                    <button class="btn btn-primary" onclick="location.reload()" style="margin: 20px auto; display: block;">
+                        Retake Quiz
+                    </button>
+                </div>
+            `;
+            
+            document.querySelector('.buttons').style.display = 'none';
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>

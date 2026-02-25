@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehicle Controls & Road Rules - B1 License</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .control-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .control-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .control-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .control-icon {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .interactive-demo {
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .demo-controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .demo-button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .demo-button:active {
+            transform: translateY(0);
+        }
+
+        .visual-display {
+            margin: 30px 0;
+            padding: 40px;
+            background: #2d2d44;
+            border-radius: 10px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .car-diagram {
+            position: relative;
+            width: 300px;
+            height: 500px;
+            margin: 0 auto;
+        }
+
+        .car-part {
+            position: absolute;
+            background: #667eea;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .car-part:hover {
+            background: #764ba2;
+            transform: scale(1.1);
+        }
+
+        .car-part.active {
+            background: #4CAF50;
+            box-shadow: 0 0 20px #4CAF50;
+        }
+
+        .label {
+            position: absolute;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            white-space: nowrap;
+            display: none;
+        }
+
+        .car-part:hover .label {
+            display: block;
+        }
+
+        ul {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .control-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 Vehicle Controls & Road Rules</h1>
+
+        <!-- Section 1: Primary Controls -->
+        <div class="section">
+            <h2>1. Primary Vehicle Controls</h2>
+            <p>Understanding and mastering these controls is essential for safe driving.</p>
+
+            <div class="control-grid">
+                <div class="control-card">
+                    <div class="control-icon">🎯</div>
+                    <h3>Steering Wheel</h3>
+                    <p><strong>Function:</strong> Controls vehicle direction</p>
+                    <p><strong>Technique:</strong> Hand position at 9 and 3 o'clock</p>
+                    <p><strong>Tip:</strong> Smooth, gradual movements</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">⚡</div>
+                    <h3>Accelerator Pedal</h3>
+                    <p><strong>Function:</strong> Controls engine power and speed</p>
+                    <p><strong>Location:</strong> Right pedal</p>
+                    <p><strong>Tip:</strong> Gentle pressure for smooth acceleration</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">🛑</div>
+                    <h3>Brake Pedal</h3>
+                    <p><strong>Function:</strong> Slows down or stops the vehicle</p>
+                    <p><strong>Location:</strong> Middle pedal</p>
+                    <p><strong>Tip:</strong> Progressive braking, not sudden</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">⚙️</div>
+                    <h3>Clutch Pedal (Manual)</h3>
+                    <p><strong>Function:</strong> Engages/disengages transmission</p>
+                    <p><strong>Location:</strong> Left pedal</p>
+                    <p><strong>Tip:</strong> Fully depress when changing gears</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">🔄</div>
+                    <h3>Gear Lever</h3>
+                    <p><strong>Function:</strong> Selects gear ratio</p>
+                    <p><strong>Pattern:</strong> H-pattern (1-2-3-4-5-R)</p>
+                    <p><strong>Tip:</strong> Match engine speed to gear</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">🅿️</div>
+                    <h3>Handbrake</h3>
+                    <p><strong>Function:</strong> Holds vehicle when parked</p>
+                    <p><strong>Location:</strong> Between front seats</p>
+                    <p><strong>Tip:</strong> Always engage when parking</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Secondary Controls -->
+        <div class="section">
+            <h2>2. Secondary Controls & Indicators</h2>
+
+            <div class="control-grid">
+                <div class="control-card">
+                    <div class="control-icon">💡</div>
+                    <h3>Headlights</h3>
+                    <p>Dipped beam for normal driving, full beam for unlit roads</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">⬅️➡️</div>
+                    <h3>Indicators</h3>
+                    <p>Signal intentions 30m before turning or changing lanes</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">🌧️</div>
+                    <h3>Wipers</h3>
+                    <p>Clear windscreen in rain - adjust speed to conditions</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">📯</div>
+                    <h3>Horn</h3>
+                    <p>Alert other road users - use sparingly and legally</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">🪟</div>
+                    <h3>Mirrors</h3>
+                    <p>Check every 5-8 seconds - adjust before driving</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">🔥</div>
+                    <h3>Hazard Lights</h3>
+                    <p>Use when broken down or in emergency situations</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div class="interactive-demo">
+            <h2>🎮 Interactive Control Demonstration</h2>
+            <p>Click the buttons below to see how each control affects the vehicle</p>
+
+            <div class="demo-controls">
+                <button class="demo-button" onclick="demonstrateControl('steering')">Steering</button>
+                <button class="demo-button" onclick="demonstrateControl('accelerator')">Accelerator</button>
+                <button class="demo-button" onclick="demonstrateControl('brake')">Brake</button>
+                <button class="demo-button" onclick="demonstrateControl('clutch')">Clutch</button>
+                <button class="demo-button" onclick="demonstrateControl('gear')">Gear Change</button>
+                <button class="demo-button" onclick="demonstrateControl('indicators')">Indicators</button>
+            </div>
+
+            <div class="visual-display" id="visualDisplay">
+                <div id="demoContent">
+                    <h3 style="color: #667eea;">Select a control to see demonstration</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Road Rules -->
+        <div class="section">
+            <h2>3. Essential Road Rules in Kenya</h2>
+
+            <h3>Speed Limits</h3>
+            <ul>
+                <li><strong>Urban areas:</strong> 50 km/h</li>
+                <li><strong>Rural roads:</strong> 80 km/h</li>
+                <li><strong>Highways:</strong> 100 km/h</li>
+                <li><strong>School zones:</strong> 30 km/h</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>⚠️ Warning:</strong> Speed limits may vary based on road conditions and signage. Always observe posted limits.
+            </div>
+
+            <h3>Right of Way</h3>
+            <ul>
+                <li>Vehicles on main roads have priority over side roads</li>
+                <li>At roundabouts, give way to traffic from the right</li>
+                <li>Pedestrians at zebra crossings have absolute priority</li>
+                <li>Emergency vehicles with sirens/lights have priority</li>
+            </ul>
+
+            <h3>Lane Discipline</h3>
+            <ul>
+                <li>Keep left except when overtaking</li>
+                <li>Use indicators before changing lanes</li>
+                <li>Check blind spots before lane changes</li>
+                <li>Maintain safe following distance (3-second rule)</li>
+            </ul>
+
+            <div class="tip-box">
+                <strong>💡 Pro Tip:</strong> The 3-second rule - Pick a fixed point ahead. When the vehicle in front passes it, count "one thousand and one, one thousand and two, one thousand and three". You should not reach that point before finishing the count.
+            </div>
+        </div>
+
+        <!-- Section 4: Traffic Signs -->
+        <div class="section">
+            <h2>4. Common Traffic Signs</h2>
+
+            <div class="control-grid">
+                <div class="control-card">
+                    <div class="control-icon">🛑</div>
+                    <h3>STOP Sign</h3>
+                    <p>Come to complete stop, check all directions before proceeding</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">⚠️</div>
+                    <h3>YIELD Sign</h3>
+                    <p>Slow down, give way to traffic on main road</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">🚫</div>
+                    <h3>No Entry</h3>
+                    <p>Do not enter - one-way street or restricted area</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">↩️</div>
+                    <h3>No Overtaking</h3>
+                    <p>Overtaking prohibited in this zone</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">🅿️</div>
+                    <h3>Parking</h3>
+                    <p>Designated parking area - check time restrictions</p>
+                </div>
+
+                <div class="control-card">
+                    <div class="control-icon">🚸</div>
+                    <h3>Pedestrian Crossing</h3>
+                    <p>Zebra crossing ahead - be prepared to stop</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Safety Checks -->
+        <div class="section">
+            <h2>5. Pre-Drive Safety Checks (POWDERY)</h2>
+            <p>Perform these checks before every journey:</p>
+
+            <ul>
+                <li><strong>P - Petrol/Fuel:</strong> Check fuel level is adequate</li>
+                <li><strong>O - Oil:</strong> Check engine oil level</li>
+                <li><strong>W - Water:</strong> Check coolant and windscreen washer fluid</li>
+                <li><strong>D - Damage:</strong> Walk around vehicle checking for damage</li>
+                <li><strong>E - Electrics:</strong> Test all lights and indicators</li>
+                <li><strong>R - Rubber:</strong> Check tire pressure and tread depth</li>
+                <li><strong>Y - Yourself:</strong> Ensure you're fit to drive</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> Never drive if you're tired, unwell, or under the influence of alcohol or drugs.
+            </div>
+        </div>
+
+        <!-- Section 6: Emergency Procedures -->
+        <div class="section">
+            <h2>6. Emergency Procedures</h2>
+
+            <h3>Brake Failure</h3>
+            <ul>
+                <li>Pump the brake pedal rapidly</li>
+                <li>Use engine braking (downshift gears)</li>
+                <li>Apply handbrake gradually</li>
+                <li>Steer to safe area if possible</li>
+            </ul>
+
+            <h3>Tire Blowout</h3>
+            <ul>
+                <li>Grip steering wheel firmly</li>
+                <li>Do NOT brake suddenly</li>
+                <li>Ease off accelerator gradually</li>
+                <li>Steer straight, then move to roadside</li>
+            </ul>
+
+            <h3>Skidding</h3>
+            <ul>
+                <li>Steer in direction of skid</li>
+                <li>Do NOT brake hard</li>
+                <li>Ease off accelerator</li>
+                <li>Wait for traction to return</li>
+            </ul>
+
+            <div class="tip-box">
+                <strong>💡 Remember:</strong> In emergencies, stay calm and follow your training. Panic causes mistakes.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function demonstrateControl(control) {
+            const display = document.getElementById('demoContent');
+            
+            const demonstrations = {
+                steering: `
+                    <h3 style="color: #4CAF50;">🎯 Steering Demonstration</h3>
+                    <div style="margin: 20px 0;">
+                        <svg width="200" height="200" style="margin: 0 auto; display: block;">
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#667eea" stroke-width="8"/>
+                            <circle cx="100" cy="100" r="20" fill="#667eea"/>
+                            <line x1="100" y1="100" x2="100" y2="20" stroke="#764ba2" stroke-width="6" class="rotating-line"/>
+                        </svg>
+                    </div>
+                    <p><strong>Proper Technique:</strong></p>
+                    <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                        <li>Hands at 9 and 3 o'clock position</li>
+                        <li>Smooth, controlled movements</li>
+                        <li>Look where you want to go</li>
+                        <li>Never cross hands on the wheel</li>
+                    </ul>
+                `,
+                accelerator: `
+                    <h3 style="color: #4CAF50;">⚡ Accelerator Demonstration</h3>
+                    <div style="margin: 20px 0;">
+                        <div style="width: 300px; height: 40px; background: #2d2d44; border-radius: 20px; margin: 20px auto; position: relative; overflow: hidden;">
+                            <div id="speedBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, #4CAF50, #FFC107, #F44336); border-radius: 20px; transition: width 2s ease;"></div>
+                        </div>
+                        <p id="speedText" style="font-size: 24px; font-weight: bold;">0 km/h</p>
+                    </div>
+                    <p><strong>Key Points:</strong></p>
+                    <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                        <li>Gentle, progressive pressure</li>
+                        <li>Avoid sudden acceleration</li>
+                        <li>Match speed to road conditions</li>
+                        <li>Anticipate need to slow down</li>
+                    </ul>
+                `,
+                brake: `
+                    <h3 style="color: #4CAF50;">🛑 Brake Demonstration</h3>
+                    <div style="margin: 20px 0;">
+                        <div style="width: 300px; height: 40px; background: #4CAF50; border-radius: 20px; margin: 20px auto; position: relative; overflow: hidden;">
+                            <div id="brakeBar" style="width: 100%; height: 100%; background: #F44336; border-radius: 20px; transition: width 3s ease;"></div>
+                        </div>
+                        <p id="brakeText" style="font-size: 24px; font-weight: bold;">100 km/h</p>
+                    </div>
+                    <p><strong>Braking Technique:</strong></p>
+                    <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                        <li>Progressive pressure (not sudden)</li>
+                        <li>Check mirrors before braking</li>
+                        <li>Increase pressure gradually</li>
+                        <li>ABS: Maintain firm pressure</li>
+                    </ul>
+                `,
+                clutch: `
+                    <h3 style="color: #4CAF50;">⚙️ Clutch Operation</h3>
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: center; gap: 20px; margin: 20px 0;">
+                            <div style="text-align: center;">
+                                <div style="width: 80px; height: 120px; background: #667eea; border-radius: 10px; position: relative;">
+                                    <div style="position: absolute; bottom: 0; width: 100%; height: 100%; background: #4CAF50; border-radius: 10px; transition: height 1s ease;" id="clutchPedal"></div>
+                                </div>
+                                <p style="margin-top: 10px;">Clutch Pedal</p>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="width: 80px; height: 120px; background: #2d2d44; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 36px;" id="gearDisplay">N</div>
+                                <p style="margin-top: 10px;">Gear</p>
+                            </div>
+                        </div>
+                    </div>
+                    <p><strong>Clutch Control:</strong></p>
+                    <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                        <li>Fully depress to change gears</li>
+                        <li>Find the biting point</li>
+                        <li>Release smoothly while accelerating</li>
+                        <li>Don't ride the clutch</li>
+                    </ul>
+                `,
+                gear: `
+                    <h3 style="color: #4CAF50;">🔄 Gear Change Sequence</h3>
+                    <div style="margin: 20px 0;">
+                        <svg width="200" height="250" style="margin: 0 auto; display: block;">
+                            <rect x="80" y="20" width="40" height="40" fill="#667eea" rx="5"/>
+                            <text x="100" y="45" text-anchor="middle" fill="white" font-size="20">1</text>
+                            
+                            <rect x="80" y="80" width="40" height="40" fill="#667eea" rx="5"/>
+                            <text x="100" y="105" text-anchor="middle" fill="white" font-size="20">2</text>
+                            
+                            <rect x="80" y="140" width="40" height="40" fill="#667eea" rx="5"/>
+                            <text x="100" y="165" text-anchor="middle" fill="white" font-size="20">3</text>
+                            
+                            <rect x="80" y="200" width="40" height="40" fill="#667eea" rx="5"/>
+                            <text x="100" y="225" text-anchor="middle" fill="white" font-size="20">4</text>
+                        </svg>
+                    </div>
+                    <p><strong>Gear Selection:</strong></p>
+                    <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                        <li>1st gear: 0-15 km/h (starting)</li>
+                        <li>2nd gear: 15-30 km/h</li>
+                        <li>3rd gear: 30-50 km/h</li>
+                        <li>4th gear: 50+ km/h</li>
+                        <li>Match engine speed to gear</li>
+                    </ul>
+                `,
+                indicators: `
+                    <h3 style="color: #4CAF50;">⬅️➡️ Indicator Usage</h3>
+                    <div style="margin: 20px 0;">
+                        <div style="display: flex; justify-content: center; gap: 40px; margin: 30px 0;">
+                            <div style="width: 60px; height: 60px; background: #FFC107; border-radius: 50%; animation: blink 1s infinite;" id="leftIndicator">⬅️</div>
+                            <div style="width: 60px; height: 60px; background: #FFC107; border-radius: 50%; animation: blink 1s infinite 0.5s;" id="rightIndicator">➡️</div>
+                        </div>
+                    </div>
+                    <p><strong>When to Indicate:</strong></p>
+                    <ul style="text-align: left; max-width: 400px; margin: 0 auto;">
+                        <li>30 meters before turning</li>
+                        <li>Before changing lanes</li>
+                        <li>When pulling out from parking</li>
+                        <li>At roundabouts (left to exit)</li>
+                        <li>Cancel after maneuver</li>
+                    </ul>
+                    <style>
+                        @keyframes blink {
+                            0%, 49% { opacity: 1; }
+                            50%, 100% { opacity: 0.2; }
+                        }
+                    </style>
+                `
+            };
+
+            display.innerHTML = demonstrations[control] || '<p>Select a control</p>';
+
+            // Trigger animations
+            setTimeout(() => {
+                if (control === 'accelerator') {
+                    const bar = document.getElementById('speedBar');
+                    const text = document.getElementById('speedText');
+                    if (bar && text) {
+                        bar.style.width = '80%';
+                        let speed = 0;
+                        const interval = setInterval(() => {
+                            speed += 4;
+                            text.textContent = speed + ' km/h';
+                            if (speed >= 80) clearInterval(interval);
+                        }, 50);
+                    }
+                }
+                if (control === 'brake') {
+                    const bar = document.getElementById('brakeBar');
+                    const text = document.getElementById('brakeText');
+                    if (bar && text) {
+                        bar.style.width = '0%';
+                        let speed = 100;
+                        const interval = setInterval(() => {
+                            speed -= 3;
+                            text.textContent = Math.max(0, speed) + ' km/h';
+                            if (speed <= 0) clearInterval(interval);
+                        }, 75);
+                    }
+                }
+                if (control === 'clutch') {
+                    const pedal = document.getElementById('clutchPedal');
+                    const gear = document.getElementById('gearDisplay');
+                    if (pedal && gear) {
+                        const gears = ['N', '1', '2', '3', '4'];
+                        let currentGear = 0;
+                        const interval = setInterval(() => {
+                            pedal.style.height = '0%';
+                            setTimeout(() => {
+                                currentGear = (currentGear + 1) % gears.length;
+                                gear.textContent = gears[currentGear];
+                                pedal.style.height = '100%';
+                            }, 500);
+                        }, 2000);
+                    }
+                }
+            }, 100);
+        }
+
+        // Initialize with first demo
+        window.addEventListener('load', () => {
+            demonstrateControl('steering');
+        });
+    </script>
+</body>
+</html>

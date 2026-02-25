@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motorcycle Basics Quiz - A1 License</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .quiz-header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .quiz-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 0 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .question-media {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .question-media img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .question-media iframe {
+            width: 100%;
+            max-width: 560px;
+            height: 315px;
+            border-radius: 10px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background: #e8ebff;
+        }
+
+        .option.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .option.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .text-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .matching-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .matching-item {
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .matching-item:hover {
+            border-color: #667eea;
+        }
+
+        .matching-item.selected {
+            border-color: #667eea;
+            background: #e8ebff;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            color: #155724;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            border: 2px solid #dc3545;
+            color: #721c24;
+        }
+
+        .explanation {
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            margin: 30px auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .results-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .results-details p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            .matching-container {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="quiz-header">
+            <h1>🏍️ Motorcycle Basics Quiz</h1>
+            <p>Test your knowledge of A1 motorcycle fundamentals</p>
+        </div>
+
+        <div class="quiz-progress">
+            <span id="questionCounter">Question 1 of 10</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span id="scoreCounter">Score: 0/0</span>
+        </div>
+
+        <div id="quizContainer"></div>
+
+        <div class="buttons">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" disabled>Previous</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                type: 'multiple-choice',
+                question: 'What does T-CLOCS stand for in motorcycle safety checks?',
+                image: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600',
+                options: [
+                    'Tires, Controls, Lights, Oil, Chain, Stands',
+                    'Test, Check, Look, Observe, Clean, Start',
+                    'Turn, Clutch, Lean, Oil, Chain, Stop',
+                    'Throttle, Clutch, Lights, Oil, Chain, Suspension'
+                ],
+                correct: 0,
+                explanation: 'T-CLOCS is a systematic pre-ride inspection checklist: Tires, Controls, Lights, Oil, Chain, and Stands.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'Which protective gear is considered the MOST important for a motorcyclist?',
+                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                options: [
+                    'Leather jacket',
+                    'Helmet',
+                    'Gloves',
+                    'Boots'
+                ],
+                correct: 1,
+                explanation: 'A helmet is the most critical piece of safety gear as it protects your head and brain in case of an accident.'
+            },
+            {
+                type: 'true-false',
+                question: 'You should always check your motorcycle\'s tire pressure before every ride.',
+                image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600',
+                options: ['True', 'False'],
+                correct: 0,
+                explanation: 'True! Proper tire pressure is crucial for safety, handling, and fuel efficiency. Check it before every ride.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'What is the correct order for starting a motorcycle?',
+                options: [
+                    'Turn key, pull clutch, press start button',
+                    'Press start button, turn key, pull clutch',
+                    'Pull clutch, turn key, press start button',
+                    'Turn key, press start button, pull clutch'
+                ],
+                correct: 0,
+                explanation: 'The correct sequence is: Turn the key to ON, pull in the clutch lever, then press the start button.'
+            },
+            {
+                type: 'image-choice',
+                question: 'Which hand signal indicates a left turn?',
+                options: [
+                    {
+                        text: 'Left arm extended straight out',
+                        image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300'
+                    },
+                    {
+                        text: 'Left arm bent upward at 90°',
+                        image: 'https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=300'
+                    },
+                    {
+                        text: 'Left arm bent downward at 90°',
+                        image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=300'
+                    },
+                    {
+                        text: 'Right arm extended straight out',
+                        image: 'https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?w=300'
+                    }
+                ],
+                correct: 0,
+                explanation: 'A left turn is signaled by extending your left arm straight out horizontally.'
+            },
+            {
+                type: 'fill-blank',
+                question: 'The acronym ATGATT stands for "All The ____, All The Time".',
+                answer: 'gear',
+                alternatives: ['Gear', 'GEAR'],
+                explanation: 'ATGATT means "All The Gear, All The Time" - emphasizing the importance of wearing full protective gear on every ride.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'When cornering on a motorcycle, you should:',
+                video: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                options: [
+                    'Look through the turn where you want to go',
+                    'Look down at the road directly in front',
+                    'Look at the center line',
+                    'Close your eyes and pray'
+                ],
+                correct: 0,
+                explanation: 'Always look through the turn in the direction you want to go. Your motorcycle will naturally follow your line of sight.'
+            },
+            {
+                type: 'multiple-select',
+                question: 'Which of the following are part of proper riding position? (Select all that apply)',
+                image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600',
+                options: [
+                    'Elbows slightly bent',
+                    'Knees gripping the tank',
+                    'Back straight',
+                    'Arms locked straight',
+                    'Feet on the pegs'
+                ],
+                correct: [0, 1, 2, 4],
+                explanation: 'Proper riding position includes: slightly bent elbows, knees gripping the tank, straight back, and feet on the pegs. Never lock your arms straight.'
+            },
+            {
+                type: 'matching',
+                question: 'Match the motorcycle control to its function:',
+                pairs: [
+                    { left: 'Right hand grip', right: 'Throttle' },
+                    { left: 'Left hand lever', right: 'Clutch' },
+                    { left: 'Right foot lever', right: 'Rear brake' },
+                    { left: 'Left foot lever', right: 'Gear shifter' }
+                ],
+                explanation: 'Understanding the basic controls is fundamental to safe motorcycle operation.'
+            },
+            {
+                type: 'multiple-choice',
+                question: 'What is the recommended following distance behind another vehicle on a motorcycle?',
+                image: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600',
+                options: [
+                    '1 second',
+                    '2 seconds',
+                    '3-4 seconds',
+                    '5-6 seconds'
+                ],
+                correct: 2,
+                explanation: 'Motorcyclists should maintain a 3-4 second following distance to allow adequate reaction time and braking distance.'
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = [];
+        let userAnswers = [];
+
+        function initQuiz() {
+            showQuestion(currentQuestion);
+            updateProgress();
+        }
+
+        function showQuestion(index) {
+            const question = quizData[index];
+            const container = document.getElementById('quizContainer');
+            
+            let html = `
+                <div class="question-card">
+                    <div class="question-number">Question ${index + 1} of ${quizData.length}</div>
+                    <div class="question-text">${question.question}</div>
+            `;
+
+            // Add media if present
+            if (question.image) {
+                html += `<div class="question-media"><img src="${question.image}" alt="Question image"></div>`;
+            }
+            if (question.video) {
+                html += `<div class="question-media"><iframe src="${question.video}" frameborder="0" allowfullscreen></iframe></div>`;
+            }
+
+            // Render based on question type
+            switch(question.type) {
+                case 'multiple-choice':
+                case 'true-false':
+                    html += '<div class="options">';
+                    question.options.forEach((option, i) => {
+                        const selected = userAnswers[index] === i ? 'selected' : '';
+                        html += `<div class="option ${selected}" onclick="selectOption(${i})">${option}</div>`;
+                    });
+                    html += '</div>';
+                    break;
+
+                case 'image-choice':
+                    html += '<div class="options">';
+                    question.options.forEach((option, i) => {
+                        const selected = userAnswers[index] === i ? 'selected' : '';
+                        html += `
+                            <div class="option ${selected}" onclick="selectOption(${i})">
+                                <img src="${option.image}" style="width: 100%; border-radius: 5px; margin-bottom: 10px;">
+                                <div>${option.text}</div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    break;
+
+                case 'fill-blank':
+                    const savedAnswer = userAnswers[index] || '';
+                    html += `<input type="text" class="text-input" id="textAnswer" value="${savedAnswer}" placeholder="Type your answer here...">`;
+                    break;
+
+                case 'multiple-select':
+                    html += '<div class="options">';
+                    question.options.forEach((option, i) => {
+                        const selected = userAnswers[index] && userAnswers[index].includes(i) ? 'selected' : '';
+                        html += `<div class="option ${selected}" onclick="toggleMultiSelect(${i})">${option}</div>`;
+                    });
+                    html += '</div>';
+                    html += '<p style="margin-top: 10px; color: #666; font-size: 14px;">Select all that apply</p>';
+                    break;
+
+                case 'matching':
+                    html += '<div class="matching-container" id="matchingContainer">';
+                    // Left column
+                    html += '<div>';
+                    question.pairs.forEach((pair, i) => {
+                        html += `<div class="matching-item" data-index="${i}" onclick="selectMatching('left', ${i})">${pair.left}</div>`;
+                    });
+                    html += '</div>';
+                    // Right column (shuffled)
+                    html += '<div>';
+                    const shuffled = [...question.pairs].sort(() => Math.random() - 0.5);
+                    shuffled.forEach((pair, i) => {
+                        const originalIndex = question.pairs.findIndex(p => p.right === pair.right);
+                        html += `<div class="matching-item" data-index="${originalIndex}" onclick="selectMatching('right', ${originalIndex})">${pair.right}</div>`;
+                    });
+                    html += '</div>';
+                    html += '</div>';
+                    break;
+            }
+
+            html += `
+                    <div class="feedback" id="feedback"></div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            updateButtons();
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestion] = index;
+            showQuestion(currentQuestion);
+        }
+
+        function toggleMultiSelect(index) {
+            if (!userAnswers[currentQuestion]) {
+                userAnswers[currentQuestion] = [];
+            }
+            const arr = userAnswers[currentQuestion];
+            const idx = arr.indexOf(index);
+            if (idx > -1) {
+                arr.splice(idx, 1);
+            } else {
+                arr.push(index);
+            }
+            showQuestion(currentQuestion);
+        }
+
+        let matchingSelection = { left: null, right: null };
+        let matchingPairs = [];
+
+        function selectMatching(side, index) {
+            matchingSelection[side] = index;
+            
+            if (matchingSelection.left !== null && matchingSelection.right !== null) {
+                matchingPairs.push({
+                    left: matchingSelection.left,
+                    right: matchingSelection.right
+                });
+                userAnswers[currentQuestion] = matchingPairs;
+                matchingSelection = { left: null, right: null };
+            }
+        }
+
+        function nextQuestion() {
+            // Save text input answer
+            const textInput = document.getElementById('textAnswer');
+            if (textInput) {
+                userAnswers[currentQuestion] = textInput.value.trim();
+            }
+
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+                updateProgress();
+            } else {
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+                updateProgress();
+            }
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            document.getElementById('nextBtn').textContent = 
+                currentQuestion === quizData.length - 1 ? 'Finish Quiz' : 'Next';
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / quizData.length) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('questionCounter').textContent = 
+                `Question ${currentQuestion + 1} of ${quizData.length}`;
+        }
+
+        function calculateScore() {
+            score = 0;
+            quizData.forEach((question, index) => {
+                const userAnswer = userAnswers[index];
+                
+                switch(question.type) {
+                    case 'multiple-choice':
+                    case 'true-false':
+                    case 'image-choice':
+                        if (userAnswer === question.correct) score++;
+                        break;
+                    
+                    case 'fill-blank':
+                        const correctAnswers = [question.answer, ...(question.alternatives || [])];
+                        if (correctAnswers.some(ans => ans.toLowerCase() === userAnswer.toLowerCase())) {
+                            score++;
+                        }
+                        break;
+                    
+                    case 'multiple-select':
+                        if (userAnswer && JSON.stringify(userAnswer.sort()) === JSON.stringify(question.correct.sort())) {
+                            score++;
+                        }
+                        break;
+                    
+                    case 'matching':
+                        if (userAnswer && userAnswer.length === question.pairs.length) {
+                            const allCorrect = userAnswer.every(pair => pair.left === pair.right);
+                            if (allCorrect) score++;
+                        }
+                        break;
+                }
+            });
+        }
+
+        function showResults() {
+            calculateScore();
+            const percentage = Math.round((score / quizData.length) * 100);
+            const passed = percentage >= 70;
+            
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = `
+                <div class="results">
+                    <h2>${passed ? '🎉 Congratulations!' : '📚 Keep Learning!'}</h2>
+                    <div class="score-circle">${percentage}%</div>
+                    <div class="results-details">
+                        <p><strong>Score:</strong> ${score} out of ${quizData.length}</p>
+                        <p><strong>Percentage:</strong> ${percentage}%</p>
+                        <p><strong>Status:</strong> ${passed ? '✅ Passed' : '❌ Need More Practice'}</p>
+                    </div>
+                    <p style="margin: 20px 0; color: #666;">
+                        ${passed 
+                            ? 'Great job! You have a solid understanding of motorcycle basics.' 
+                            : 'Review the lesson material and try again. You need 70% to pass.'}
+                    </p>
+                    <button class="btn btn-primary" onclick="location.reload()">Retake Quiz</button>
+                </div>
+            `;
+            
+            document.querySelector('.buttons').style.display = 'none';
+        }
+
+        // Initialize quiz on page load
+        initQuiz();
+    </script>
+</body>
+</html>

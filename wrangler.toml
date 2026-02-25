@@ -1,0 +1,68 @@
+name = "dereva-smart-backend"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Account ID - Replace with your Cloudflare account ID
+account_id = "8bd8024b277632ef32a837c352da4229"
+
+# Workers AI for AI Tutor
+[ai]
+binding = "AI"
+
+# D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "dereva-smart"
+database_id = "2d159e6d-4e9f-4877-8b1e-3353e455ff02"
+
+# R2 Storage for media files
+[[r2_buckets]]
+binding = "MEDIA_BUCKET"
+bucket_name = "dereva-media"
+
+# KV for caching and sessions
+[[kv_namespaces]]
+binding = "CACHE"
+id = "8f2db301409445de984d4c005054699f"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "8dbb08a258da40d8956e01a0def28d3a"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+JWT_SECRET = "your-jwt-secret-change-this"
+MPESA_CONSUMER_KEY = "FUkERaDvg1tJtT6k2ngpyapbkPwJHKea"
+MPESA_CONSUMER_SECRET = "QNWTc8eUtn5kTjbD"
+MPESA_SHORTCODE = "755106"
+MPESA_PASSKEY = "f94ecc4674aa8e226cacd184c48295f2dd648437220fed565af93680bef7fb2f"
+GEMINI_API_KEY = "AIzaSyBNCZpaEqZzv48RC2MtRooq89QZ-iMK2-Y"
+AFRICASTALKING_API_KEY = "atsk_a97d82ec9929e76e0a01cc456cd6541389369c5603e5a5343142b97b0a35fb5633dc8874"
+AFRICASTALKING_USERNAME = "pngobiro"
+AFRICASTALKING_SENDER_ID = "DEREVA"
+
+# Development environment
+[env.dev]
+name = "dereva-smart-backend-dev"
+vars = { ENVIRONMENT = "development" }
+
+[[env.dev.d1_databases]]
+binding = "DB"
+database_name = "dereva-db-dev"
+database_id = "YOUR_DEV_DATABASE_ID"
+
+[[env.dev.r2_buckets]]
+binding = "MEDIA_BUCKET"
+bucket_name = "dereva-media-dev"
+
+# Staging environment
+[env.staging]
+name = "dereva-smart-backend-staging"
+vars = { ENVIRONMENT = "staging" }
+
+# Routes (uncomment when you have a custom domain)
+# routes = [
+#   { pattern = "api.derevasmart.com/*", zone_name = "derevasmart.com" }
+# ]

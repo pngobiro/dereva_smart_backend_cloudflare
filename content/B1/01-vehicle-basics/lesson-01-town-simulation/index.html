@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#0a1628">
+    <title>NTSA Driving Simulator – B1 Licence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Welcome Screen -->
+<div id="welcome-screen" class="overlay-screen">
+    <div class="welcome-card">
+        <div class="ntsa-badge">
+            <span class="badge-flag">🇰🇪</span>
+            <div>
+                <div class="badge-title">NTSA</div>
+                <div class="badge-sub">National Transport & Safety Authority</div>
+            </div>
+        </div>
+        <h1>Driving Simulator</h1>
+        <p class="tagline">B1 Licence Training Programme</p>
+        <div class="curriculum-list">
+            <div class="curriculum-item">
+                <span class="ci-icon">🚦</span>
+                <span>Traffic Signals & Road Signs (Traffic Act Cap 403)</span>
+            </div>
+            <div class="curriculum-item">
+                <span class="ci-icon">🛑</span>
+                <span>Priority Rules & Roundabout Navigation</span>
+            </div>
+            <div class="curriculum-item">
+                <span class="ci-icon">🏙️</span>
+                <span>Urban & Highway Driving Scenarios</span>
+            </div>
+            <div class="curriculum-item">
+                <span class="ci-icon">🅿️</span>
+                <span>Parking & Reversing Manoeuvres</span>
+            </div>
+            <div class="curriculum-item">
+                <span class="ci-icon">⚠️</span>
+                <span>Defensive Driving & Hazard Awareness</span>
+            </div>
+        </div>
+        <div class="control-guide">
+            <div class="cg-title">Controls</div>
+            <div class="cg-grid">
+                <div class="cg-key">W / ↑</div><div class="cg-desc">Accelerate</div>
+                <div class="cg-key">S / ↓</div><div class="cg-desc">Brake / Reverse</div>
+                <div class="cg-key">A / ←</div><div class="cg-desc">Steer Left</div>
+                <div class="cg-key">D / →</div><div class="cg-desc">Steer Right</div>
+                <div class="cg-key">Space</div><div class="cg-desc">Handbrake</div>
+                <div class="cg-key">C</div><div class="cg-desc">Camera View</div>
+                <div class="cg-key">H</div><div class="cg-desc">Horn</div>
+                <div class="cg-key">L</div><div class="cg-desc">Lights</div>
+            </div>
+        </div>
+        <p class="mobile-note" id="mobile-note" style="display:none">📱 Use on-screen joystick &amp; buttons to drive</p>
+        <button class="btn-start" onclick="Game.start()">Begin Training</button>
+    </div>
+</div>
+
+<!-- Violation Alert -->
+<div id="violation-alert" class="violation-toast hidden">
+    <span id="violation-msg">⚠️ Violation!</span>
+</div>
+
+<!-- Tip Box -->
+<div id="ntsa-tip" class="ntsa-tip hidden">
+    <span class="tip-icon">📘</span>
+    <span id="tip-text"></span>
+</div>
+
+<!-- 3D Canvas -->
+<div id="canvas-container">
+    <canvas id="canvas"></canvas>
+</div>
+
+<!-- HUD -->
+<div id="hud" class="hud hidden">
+    <div class="hud-header">
+        <span class="hud-logo">NTSA</span>
+        <span class="hud-mode" id="scenario-label">Free Drive</span>
+    </div>
+    <div class="hud-grid">
+        <div class="hud-cell">
+            <div class="hud-val" id="speed-val">0</div>
+            <div class="hud-lbl">km/h</div>
+        </div>
+        <div class="hud-cell">
+            <div class="hud-val" id="gear-val">N</div>
+            <div class="hud-lbl">Gear</div>
+        </div>
+        <div class="hud-cell">
+            <div class="hud-val" id="score-val">100</div>
+            <div class="hud-lbl">Score</div>
+        </div>
+        <div class="hud-cell">
+            <div class="hud-val danger" id="violations-val">0</div>
+            <div class="hud-lbl">Violations</div>
+        </div>
+    </div>
+    <div class="hud-lights-row">
+        <div class="indicator" id="ind-light" title="Headlights">💡</div>
+        <div class="indicator" id="ind-belt" title="Seatbelt">🔒</div>
+        <div class="indicator" id="ind-horn" title="Horn" style="opacity:0.2">📢</div>
+    </div>
+</div>
+
+<!-- Minimap -->
+<div id="minimap-wrap" class="minimap-wrap hidden">
+    <canvas id="minimap" width="160" height="160"></canvas>
+    <div class="minimap-label">MAP</div>
+</div>
+
+<!-- Traffic Light Status -->
+<div id="traffic-status" class="traffic-status hidden">
+    <div class="tl-light" id="tl-red"></div>
+    <div class="tl-light" id="tl-yellow"></div>
+    <div class="tl-light" id="tl-green"></div>
+</div>
+
+<!-- Scenario Panel -->
+<div id="scenario-panel" class="scenario-panel hidden">
+    <div class="sp-title" id="sp-title">Scenario</div>
+    <div class="sp-body" id="sp-body"></div>
+    <button class="btn-sm" onclick="Game.nextScenario()">Next ▶</button>
+</div>
+
+<!-- Mobile Controls -->
+<div id="mobile-controls" class="mobile-controls hidden">
+    <!-- Joystick -->
+    <div id="joystick-zone" class="joystick-zone">
+        <div id="joystick-base" class="joystick-base">
+            <div id="joystick-stick" class="joystick-stick"></div>
+        </div>
+    </div>
+    <!-- Action buttons -->
+    <div class="action-btns">
+        <button class="act-btn" id="btn-handbrake" ontouchstart="MobileCtrl.hbStart()" ontouchend="MobileCtrl.hbEnd()">🅿️<br><small>HB</small></button>
+        <button class="act-btn" id="btn-camera" onclick="Game.cycleCamera()">📷<br><small>Cam</small></button>
+        <button class="act-btn" id="btn-horn" onclick="Game.honk()">📢<br><small>Horn</small></button>
+        <button class="act-btn" id="btn-lights" onclick="Game.toggleLights()">💡<br><small>Lights</small></button>
+    </div>
+</div>
+
+<!-- Scenario complete overlay -->
+<div id="scenario-complete" class="overlay-screen hidden">
+    <div class="welcome-card" style="max-width:420px">
+        <div class="result-icon" id="result-icon">🏆</div>
+        <h2 id="result-title">Scenario Complete!</h2>
+        <p id="result-body"></p>
+        <div class="score-big" id="result-score"></div>
+        <div class="btn-row">
+            <button class="btn-start" onclick="Game.nextScenario()">Next Scenario</button>
+            <button class="btn-outline" onclick="Game.restart()">Restart</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="game.js"></script>
+<script src="mobile.js"></script>
+</body>
+</html>

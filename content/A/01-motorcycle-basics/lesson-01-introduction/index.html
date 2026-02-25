@@ -1,0 +1,703 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category A Masterclass | NTSA Kenya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fire: #ff6b1a;
+            --ember: #ff3f00;
+            --gold: #ffc947;
+            --dark: #0d0d14;
+            --surface: #14141f;
+            --card: #1c1c2e;
+            --border: rgba(255,107,26,0.2);
+            --text: #e8e4dc;
+            --muted: #8a8a9a;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,107,26,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,107,26,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes gridMove {
+            0%   { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 40px;
+            background: rgba(13,13,20,0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 22px;
+            letter-spacing: 2px;
+            color: var(--fire);
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--fire); }
+
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: radial-gradient(ellipse 80% 60% at 50% 120%, rgba(255,107,26,0.22) 0%, transparent 70%);
+            z-index: 1;
+        }
+        .hero-content { position: relative; text-align: center; padding: 40px 20px; max-width: 900px; z-index: 2; }
+        .badge {
+            display: inline-block;
+            background: rgba(255,107,26,0.15);
+            border: 1px solid var(--fire);
+            color: var(--fire);
+            font-size: 11px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 6px 18px;
+            border-radius: 100px;
+            margin-bottom: 28px;
+            animation: fadeSlideDown 0.8s ease both;
+        }
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(48px, 9vw, 100px);
+            line-height: 0.9;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #fff 30%, var(--gold) 70%, var(--fire) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeSlideDown 0.9s ease 0.1s both;
+        }
+        .hero p {
+            font-size: 18px; color: var(--muted); margin: 24px auto 40px; max-width: 650px; line-height: 1.7;
+            animation: fadeSlideDown 0.9s ease 0.2s both;
+        }
+        .hero-cta { display: inline-flex; gap: 14px; flex-wrap: wrap; justify-content: center; animation: fadeSlideDown 0.9s ease 0.3s both; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 30px; border-radius: 8px;
+            font-size: 15px; font-weight: 600; text-decoration: none;
+            cursor: pointer; border: none; transition: transform 0.25s, box-shadow 0.25s;
+            font-family: 'DM Sans', sans-serif; z-index: 2; position: relative;
+        }
+        .btn-fire { background: linear-gradient(135deg, var(--fire), var(--ember)); color: #fff; box-shadow: 0 8px 24px rgba(255,63,0,0.4); }
+        .btn-fire:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(255,63,0,0.5); }
+        .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
+        .btn-ghost:hover { border-color: var(--fire); color: var(--fire); transform: translateY(-3px); }
+
+        .bike-3d-wrapper { perspective: 1000px; margin: 50px auto 0; width: 340px; animation: fadeSlideDown 1s ease 0.4s both; }
+        .bike-3d { transform-style: preserve-3d; animation: bikeFloat 5s ease-in-out infinite, bikeRotate 16s linear infinite; }
+        @keyframes bikeFloat {
+            0%, 100% { transform: rotateY(var(--ry, -15deg)) rotateX(6deg) translateY(0); }
+            50%       { transform: rotateY(var(--ry, -15deg)) rotateX(6deg) translateY(-12px); }
+        }
+        @keyframes bikeRotate { 0% { --ry: -25deg; } 50% { --ry: 15deg; } 100% { --ry: -25deg; } }
+        .bike-svg { width: 340px; height: 200px; filter: drop-shadow(0 20px 40px rgba(255,107,26,0.5)); }
+
+        .scroll-hint {
+            position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            color: var(--muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+            animation: fadeSlideDown 1s ease 0.6s both; z-index: 2;
+        }
+        .scroll-hint .arrow {
+            width: 20px; height: 20px; border-right: 2px solid var(--fire); border-bottom: 2px solid var(--fire);
+            transform: rotate(45deg); animation: arrowBounce 1.4s infinite;
+        }
+        @keyframes fadeSlideDown { from { opacity: 0; transform: translateY(-24px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes arrowBounce { 0%,100% { transform: rotate(45deg) translateY(0); } 50% { transform: rotate(45deg) translateY(6px); } }
+
+        .section { padding: 80px 20px; max-width: 1060px; margin: 0 auto; position: relative; z-index: 1; }
+        .section-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--fire); margin-bottom: 12px; }
+        .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(38px, 6vw, 64px); line-height: 1; margin-bottom: 20px; letter-spacing: 1px; }
+        .section-subtitle { color: var(--muted); font-size: 17px; max-width: 680px; line-height: 1.7; margin-bottom: 48px; }
+        .divider { border: none; height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); margin: 10px 0; }
+
+        /* Flip Cards */
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .flip-card { height: 300px; perspective: 900px; cursor: pointer; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+        .flip-card:hover .flip-card-inner, .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-front, .flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 16px; padding: 32px; border: 1px solid var(--border); }
+        .flip-front { background: var(--card); display: flex; flex-direction: column; justify-content: flex-end; }
+        .flip-back { background: linear-gradient(135deg, #1e1830, #201828); transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; gap: 12px; border-color: var(--fire); }
+        .card-icon { font-size: 52px; margin-bottom: 12px; line-height: 1; }
+        .card-category { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--fire); margin-bottom: 6px; }
+        .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 1px; margin-bottom: 4px; }
+        .card-hint { font-size: 12px; color: var(--muted); }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 14px; }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { color: var(--muted); }
+        .detail-val { color: var(--gold); font-weight: 600; }
+
+        /* Warning Strip */
+        .warning-strip {
+            background: rgba(255,201,71,0.08); border: 1px solid rgba(255,201,71,0.3); border-radius: 10px;
+            padding: 16px 20px; display: flex; gap: 12px; align-items: flex-start;
+            font-size: 14px; color: #e0cc80; line-height: 1.6; margin-top: 40px;
+        }
+        .warning-strip .wi { font-size: 20px; flex-shrink: 0; }
+
+        /* Gear/Feature Grid */
+        .gear-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .gear-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px 22px; transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s; cursor: default; }
+        .gear-card:hover { border-color: var(--fire); transform: translateY(-6px); box-shadow: 0 16px 40px rgba(255,107,26,0.15); }
+        .gear-icon { font-size: 40px; margin-bottom: 14px; }
+        .gear-name { font-weight: 700; font-size: 17px; margin-bottom: 6px; color: var(--text); }
+        .gear-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+        /* Controls Arena */
+        .controls-arena { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 40px; position: relative; overflow: hidden; margin-bottom: 40px; }
+        .controls-arena::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(255,107,26,0.08), transparent); pointer-events: none; }
+        .controls-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; }
+        @media (max-width: 700px) { .controls-layout { grid-template-columns: 1fr; } }
+        .bike-stage { perspective: 800px; }
+        .bike-rotating { transform-style: preserve-3d; animation: stageBike 8s ease-in-out infinite; }
+        @keyframes stageBike { 0%,100% { transform: rotateY(-8deg) rotateX(4deg); } 50% { transform: rotateY(8deg) rotateX(2deg); } }
+        .controls-panel { display: flex; flex-direction: column; gap: 12px; }
+        .control-btn {
+            display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+            background: rgba(255,255,255,0.03); border: 1.5px solid var(--border); border-radius: 12px;
+            cursor: pointer; transition: all 0.25s; text-align: left; color: var(--text); font-family: 'DM Sans', sans-serif;
+        }
+        .control-btn:hover, .control-btn.active { background: rgba(255,107,26,0.1); border-color: var(--fire); transform: translateX(4px); }
+        .cb-icon { font-size: 28px; flex-shrink: 0; }
+        .cb-name { font-weight: 700; font-size: 15px; }
+        .cb-sub { font-size: 12px; color: var(--muted); }
+        .control-info-box {
+            margin-top: 24px; padding: 20px; background: rgba(255,107,26,0.07); border: 1px solid var(--fire);
+            border-radius: 12px; min-height: 80px; font-size: 15px; line-height: 1.7; transition: all 0.4s;
+        }
+        .highlight-ring {
+            display: inline-block; width: 14px; height: 14px; background: var(--fire); border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(255,107,26,0.3), 0 0 0 8px rgba(255,107,26,0.1); animation: ringPulse 1.5s infinite; margin-right: 10px; vertical-align: middle;
+        }
+        @keyframes ringPulse { 0%,100% { box-shadow: 0 0 0 4px rgba(255,107,26,0.3), 0 0 0 8px rgba(255,107,26,0.1); } 50% { box-shadow: 0 0 0 6px rgba(255,107,26,0.2), 0 0 0 14px rgba(255,107,26,0.05); } }
+
+        /* Timeline */
+        .timeline { position: relative; padding-left: 40px; margin-bottom: 40px; }
+        .timeline::before { content: ''; position: absolute; left: 12px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--fire), transparent); }
+        .tl-item { position: relative; margin-bottom: 36px; }
+        .tl-dot { position: absolute; left: -34px; top: 4px; width: 14px; height: 14px; background: var(--fire); border-radius: 50%; box-shadow: 0 0 10px rgba(255,107,26,0.6); }
+        .tl-step { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--fire); margin-bottom: 4px; }
+        .tl-title { font-weight: 700; font-size: 17px; margin-bottom: 6px; }
+        .tl-desc { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+        /* Animated SVG Containers */
+        .animated-svg-box {
+            background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+            padding: 30px; text-align: center; margin-bottom: 40px; overflow: hidden; position: relative;
+        }
+        .animated-svg-box h3 { font-family: 'Bebas Neue', sans-serif; font-size: 26px; color: var(--gold); margin-bottom: 20px; letter-spacing: 1px; }
+        .custom-svg { width: 100%; max-height: 250px; border-radius: 12px; background: #14141f; border: 1px solid rgba(255,255,255,0.05); }
+
+        /* Quiz CTA */
+        .quiz-cta { background: linear-gradient(135deg, rgba(255,107,26,0.1), rgba(255,63,0,0.05)); border: 1px solid var(--border); border-radius: 24px; padding: 60px 40px; text-align: center; position: relative; overflow: hidden; margin-top: 20px; }
+        .quiz-cta::before { content: '🏍'; position: absolute; font-size: 200px; opacity: 0.04; bottom: -30px; right: -20px; line-height: 1; }
+
+        /* Scroll Reveal */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: none; }
+
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
+    </style>
+</head>
+<body>
+
+<!-- GLOBAL SVG DEFINITIONS FOR EFFECTS -->
+<svg style="width:0;height:0;position:absolute;" aria-hidden="true">
+    <defs>
+        <linearGradient id="headlight-beam" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="#ffc947" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#ffc947" stop-opacity="0"/>
+        </linearGradient>
+    </defs>
+</svg>
+
+<nav>
+    <a href="#" class="nav-logo">NTSA · CAT A</a>
+    <div class="nav-links">
+        <a href="#unit1">Unit 1: Intro</a>
+        <a href="#unit2">Unit 2: Parts & Gear</a>
+        <a href="#unit3">Unit 3: Yard Skills</a>
+        <a href="#unit4">Unit 4: Road Riding</a>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-content">
+        <div class="badge">NTSA Curriculum · Masterclass</div>
+        <h1>Motorcycle<br>Mastery</h1>
+        <p>A comprehensive Deep Dive into Units 1 through 4 of the NTSA Category A Rider Training. Master the categories, controls, yard maneuvers, and defensive road riding.</p>
+        <div class="hero-cta">
+            <a href="#unit1" class="btn btn-fire">📚 Begin Deep Dive</a>
+            <a href="quiz.html" class="btn btn-ghost">🎯 Skip to Quiz</a>
+        </div>
+
+        <div class="bike-3d-wrapper">
+            <div class="bike-3d">
+                <svg class="bike-svg" viewBox="0 0 400 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="3D glowing motorcycle illustration">
+                    <circle cx="100" cy="165" r="55" stroke="#ff6b1a" stroke-width="10" fill="none"/>
+                    <circle cx="100" cy="165" r="28" stroke="#ff6b1a" stroke-width="3" fill="none" stroke-dasharray="6 6"/>
+                    <circle cx="100" cy="165" r="10" fill="#ff6b1a"/>
+                    <line x1="100" y1="110" x2="100" y2="137" stroke="#ff6b1a" stroke-width="2" opacity="0.5"/>
+                    <line x1="100" y1="193" x2="100" y2="220" stroke="#ff6b1a" stroke-width="2" opacity="0.5"/>
+                    <line x1="45" y1="165" x2="72" y2="165" stroke="#ff6b1a" stroke-width="2" opacity="0.5"/>
+                    <line x1="128" y1="165" x2="155" y2="165" stroke="#ff6b1a" stroke-width="2" opacity="0.5"/>
+                    <path d="M 100 165 L 155 90 L 240 85 L 300 165" stroke="#e8e4dc" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M 240 85 L 220 40 L 175 38" stroke="#e8e4dc" stroke-width="9" stroke-linecap="round" fill="none"/>
+                    <rect x="165" y="56" width="90" height="38" rx="18" fill="#ff6b1a" opacity="0.9"/>
+                    <path d="M 195 55 Q 240 48 270 58 Q 260 70 220 72 Z" fill="#333" rx="4"/>
+                    <line x1="175" y1="38" x2="155" y2="25" stroke="#e8e4dc" stroke-width="7" stroke-linecap="round"/>
+                    <line x1="155" y1="25" x2="165" y2="25" stroke="#ff6b1a" stroke-width="6" stroke-linecap="round"/>
+                    <line x1="155" y1="25" x2="145" y2="28" stroke="#ff6b1a" stroke-width="6" stroke-linecap="round"/>
+                    <rect x="168" y="110" width="60" height="48" rx="8" fill="#1c1c2e" stroke="#ff6b1a" stroke-width="2"/>
+                    <line x1="180" y1="120" x2="180" y2="148" stroke="#ff6b1a" stroke-width="2" opacity="0.5"/>
+                    <line x1="193" y1="120" x2="193" y2="148" stroke="#ff6b1a" stroke-width="2" opacity="0.5"/>
+                    <line x1="206" y1="120" x2="206" y2="148" stroke="#ff6b1a" stroke-width="2" opacity="0.5"/>
+                    <line x1="219" y1="120" x2="219" y2="148" stroke="#ff6b1a" stroke-width="2" opacity="0.5"/>
+                    <path d="M 228 150 Q 270 160 295 155 Q 310 150 305 142" stroke="#888" stroke-width="6" fill="none" stroke-linecap="round"/>
+                    <line x1="220" y1="85" x2="300" y2="130" stroke="#e8e4dc" stroke-width="8" stroke-linecap="round"/>
+                    <circle cx="300" cy="165" r="55" stroke="#ff6b1a" stroke-width="10" fill="none"/>
+                    <circle cx="300" cy="165" r="28" stroke="#ff6b1a" stroke-width="3" fill="none" stroke-dasharray="6 6"/>
+                    <circle cx="300" cy="165" r="10" fill="#ff6b1a"/>
+                    <ellipse cx="225" cy="40" rx="14" ry="10" fill="#ffc947" opacity="0.9"/>
+                    <ellipse cx="225" cy="40" rx="8" ry="6" fill="white"/>
+                    <ellipse cx="200" cy="215" rx="100" ry="8" fill="rgba(255,107,26,0.25)"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-hint">Scroll <div class="arrow"></div></div>
+</section>
+
+<!-- ══ UNIT 1: INTRODUCTION ════════════════════════════════ -->
+<section class="section" id="unit1">
+    <div class="section-label">Unit 1 (2 Hours)</div>
+    <h2 class="section-title">Introduction & Licensing</h2>
+    <p class="section-subtitle">Understanding the role of motorcycles in Kenya's transport system, crash statistics, and the legal requirements to obtain your license.</p>
+
+    <div class="cards-grid reveal">
+        <!-- A1 -->
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-front">
+                    <div class="card-icon">🛵</div>
+                    <div class="card-category">Category</div>
+                    <div class="card-title">A1 — Moped</div>
+                    <div class="card-hint">Tap to see requirements →</div>
+                </div>
+                <div class="flip-back">
+                    <div class="card-category">A1 Requirements</div>
+                    <div class="detail-row"><span class="detail-label">Engine</span><span class="detail-val">Up to 50 CC</span></div>
+                    <div class="detail-row"><span class="detail-label">Min. Age</span><span class="detail-val">16 years</span></div>
+                    <div class="detail-row"><span class="detail-label">Passengers</span><span class="detail-val">None allowed</span></div>
+                </div>
+            </div>
+        </div>
+        <!-- A2 -->
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-front">
+                    <div class="card-icon">🏍️</div>
+                    <div class="card-category">Category</div>
+                    <div class="card-title">A2 — Light Moto</div>
+                    <div class="card-hint">Tap to see requirements →</div>
+                </div>
+                <div class="flip-back">
+                    <div class="card-category">A2 Requirements</div>
+                    <div class="detail-row"><span class="detail-label">Engine</span><span class="detail-val">Above 50 CC</span></div>
+                    <div class="detail-row"><span class="detail-label">Min. Age</span><span class="detail-val">18 years</span></div>
+                    <div class="detail-row"><span class="detail-label">Max Load</span><span class="detail-val">60 kg (up to 400 CC)</span></div>
+                    <div class="detail-row"><span class="detail-label">Passengers</span><span class="detail-val">Max 1</span></div>
+                </div>
+            </div>
+        </div>
+        <!-- A3 -->
+        <div class="flip-card" onclick="this.classList.toggle('flipped')">
+            <div class="flip-card-inner">
+                <div class="flip-front">
+                    <div class="card-icon">🚀</div>
+                    <div class="card-category">Category</div>
+                    <div class="card-title">A3 — Taxi / Courier</div>
+                    <div class="card-hint">Tap to see requirements →</div>
+                </div>
+                <div class="flip-back">
+                    <div class="card-category">A3 Requirements</div>
+                    <div class="detail-row"><span class="detail-label">Engine</span><span class="detail-val">100 CC & above</span></div>
+                    <div class="detail-row"><span class="detail-label">Min. Age</span><span class="detail-val">21 years</span></div>
+                    <div class="detail-row"><span class="detail-label">Experience</span><span class="detail-val">1 yr A2 riding</span></div>
+                    <div class="detail-row"><span class="detail-label">Max Load</span><span class="detail-val">100 kg</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="warning-strip reveal">
+        <span class="wi">⚠️</span>
+        <span><strong>Crash Rate Awareness:</strong> Motorcycles have a disproportionately high crash and fatality rate in Kenya. Unlike cars, riders lack chassis protection. Proper licensing and defensive riding are your primary life-savers.</span>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ UNIT 2: PARTS & CONTROLS ═══════════════════════════ -->
+<section class="section" id="unit2">
+    <div class="section-label">Unit 2 (3 Hours)</div>
+    <h2 class="section-title">Parts, Controls & Gear</h2>
+    <p class="section-subtitle">Get familiar with rider protective equipment and master the machine interface before turning the key.</p>
+
+    <h3 style="font-family:'Bebas Neue', sans-serif; font-size:32px; margin-bottom:20px; color:var(--gold);">Protective Gear</h3>
+    <div class="gear-grid reveal" style="margin-bottom: 50px;">
+        <div class="gear-card">
+            <div class="gear-icon">🪖</div>
+            <div class="gear-name">Certified Helmet</div>
+            <div class="gear-desc">Must be certified and securely fastened. A loose helmet will fly off during impact.</div>
+        </div>
+        <div class="gear-card">
+            <div class="gear-icon">🦺</div>
+            <div class="gear-name">Reflective Vest</div>
+            <div class="gear-desc">Crucial for conspicuity. Other road users must see you to avoid you.</div>
+        </div>
+        <div class="gear-card">
+            <div class="gear-icon">🧤</div>
+            <div class="gear-name">Riding Gloves</div>
+            <div class="gear-desc">Protects hands from debris, weather, and severe road rash during a slide.</div>
+        </div>
+        <div class="gear-card">
+            <div class="gear-icon">🥾</div>
+            <div class="gear-name">Ankle Boots</div>
+            <div class="gear-desc">Guards against exhaust burns, gear-shift friction, and crushing forces.</div>
+        </div>
+    </div>
+
+    <h3 style="font-family:'Bebas Neue', sans-serif; font-size:32px; margin-bottom:20px; color:var(--gold);">Machine Controls</h3>
+    <div class="controls-arena reveal">
+        <div class="controls-layout">
+            <div class="bike-stage">
+                <div class="bike-rotating" id="bikeStage">
+                    <svg viewBox="0 0 400 260" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:420px;" role="img" aria-label="Interactive motorcycle diagram">
+                        <circle cx="100" cy="190" r="65" stroke="#334" stroke-width="12" fill="#1a1a2e"/>
+                        <circle cx="100" cy="190" r="40" stroke="#444" stroke-width="3" fill="none" stroke-dasharray="8 8"/>
+                        <circle cx="100" cy="190" r="12" fill="#555"/>
+                        <path d="M100 190 L165 100 L265 95 L320 190" stroke="#c8c4bc" stroke-width="13" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <path d="M265 95 L240 42 L192 40" stroke="#c8c4bc" stroke-width="10" stroke-linecap="round" fill="none"/>
+                        <rect x="178" y="58" width="100" height="44" rx="22" fill="#ff6b1a"/>
+                        <path d="M208 57 Q262 48 295 60 Q285 76 235 79 Z" fill="#222"/>
+                        <line x1="192" y1="40" x2="168" y2="24" stroke="#c8c4bc" stroke-width="8" stroke-linecap="round"/>
+                        <line x1="168" y1="24" x2="155" y2="28" stroke="#c8c4bc" stroke-width="7" stroke-linecap="round"/>
+                        <line x1="192" y1="24" x2="205" y2="28" stroke="#c8c4bc" stroke-width="7" stroke-linecap="round"/>
+                        <rect x="188" y="130" width="70" height="56" rx="10" fill="#14141f" stroke="#ff6b1a" stroke-width="2"/>
+                        <rect x="152" y="192" width="36" height="12" rx="4" fill="#555"/>
+                        <rect x="238" y="192" width="36" height="12" rx="4" fill="#555"/>
+                        <rect x="217" y="50" width="30" height="18" rx="6" fill="#1a1a2e" stroke="#888" stroke-width="1.5"/>
+                        <line x1="240" y1="95" x2="320" y2="148" stroke="#c8c4bc" stroke-width="10" stroke-linecap="round"/>
+                        <circle cx="320" cy="190" r="65" stroke="#334" stroke-width="12" fill="#1a1a2e"/>
+                        <circle cx="320" cy="190" r="40" stroke="#444" stroke-width="3" fill="none" stroke-dasharray="8 8"/>
+                        <circle cx="320" cy="190" r="12" fill="#555"/>
+                        <path d="M258 176 Q295 188 318 181 Q330 174 326 164" stroke="#666" stroke-width="8" fill="none" stroke-linecap="round"/>
+                        <ellipse cx="247" cy="44" rx="16" ry="11" fill="#ffc947" opacity="0.8"/>
+                        <ellipse cx="247" cy="44" rx="9" ry="6" fill="white"/>
+                        <ellipse cx="210" cy="252" rx="115" ry="9" fill="rgba(255,107,26,0.15)"/>
+                    </svg>
+                </div>
+            </div>
+
+            <div>
+                <div class="controls-panel">
+                    <button class="control-btn" onclick="showControl('clutch')" data-ctrl="clutch" aria-label="Learn about the clutch lever">
+                        <span class="cb-icon">✊</span>
+                        <div><div class="cb-name">Clutch Lever</div><div class="cb-sub">Left Hand</div></div>
+                    </button>
+                    <button class="control-btn" onclick="showControl('throttle')" data-ctrl="throttle">
+                        <span class="cb-icon">🔄</span>
+                        <div><div class="cb-name">Throttle & Front Brake</div><div class="cb-sub">Right Hand</div></div>
+                    </button>
+                    <button class="control-btn" onclick="showControl('gears')" data-ctrl="gears">
+                        <span class="cb-icon">⚙️</span>
+                        <div><div class="cb-name">Gear Shift Lever</div><div class="cb-sub">Left Foot</div></div>
+                    </button>
+                    <button class="control-btn" onclick="showControl('rearbrake')" data-ctrl="rearbrake">
+                        <span class="cb-icon">🦶</span>
+                        <div><div class="cb-name">Rear Brake Pedal</div><div class="cb-sub">Right Foot</div></div>
+                    </button>
+                    <button class="control-btn" onclick="showControl('dash')" data-ctrl="dash">
+                        <span class="cb-icon">🖥️</span>
+                        <div><div class="cb-name">Instruments & Dash</div><div class="cb-sub">Centre Console</div></div>
+                    </button>
+                </div>
+                <div class="control-info-box" id="controlInfo">
+                    <span class="highlight-ring"></span>Select a control above to learn its function.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ UNIT 3: YARD MANEUVERS ═════════════════════════════ -->
+<section class="section" id="unit3">
+    <div class="section-label">Unit 3 (6 Hours)</div>
+    <h2 class="section-title">Yard Maneuvers</h2>
+    <p class="section-subtitle">Before hitting live traffic, you must master the physics of the motorcycle in a controlled environment.</p>
+
+    <!-- NEW: Animated Slalom SVG Component -->
+    <div class="animated-svg-box reveal">
+        <h3>Figure-8 / Slalom Simulation</h3>
+        <p style="color:var(--muted); font-size:14px; margin-bottom:20px;">Observe how the rider maintains a smooth trajectory around the cones, coordinating speed and balance.</p>
+        
+        <svg class="custom-svg" viewBox="0 0 600 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Pavement markings -->
+            <line x1="20" y1="20" x2="20" y2="180" stroke="rgba(255,255,255,0.1)" stroke-width="4" stroke-dasharray="10 10"/>
+            <line x1="580" y1="20" x2="580" y2="180" stroke="rgba(255,255,255,0.1)" stroke-width="4" stroke-dasharray="10 10"/>
+            
+            <!-- Mathematical Sine-Wave Tracking Path -->
+            <path id="slalomPath" d="M 50 100 Q 100 20 150 100 T 250 100 T 350 100 T 450 100 T 550 100" fill="none" stroke="rgba(255,107,26,0.3)" stroke-width="4" stroke-dasharray="8 8"/>
+            
+            <!-- Target Cones positioned perfectly at the inflection points -->
+            <g fill="#ff6b1a" stroke="#fff" stroke-width="2">
+                <circle cx="100" cy="100" r="7"/>
+                <circle cx="200" cy="100" r="7"/>
+                <circle cx="300" cy="100" r="7"/>
+                <circle cx="400" cy="100" r="7"/>
+                <circle cx="500" cy="100" r="7"/>
+            </g>
+
+            <!-- Top-Down Animated Motorcycle -->
+            <g>
+                <!-- Tires -->
+                <rect x="-12" y="-5" width="24" height="10" rx="3" fill="#333"/>
+                <!-- Fuel Tank & Chassis -->
+                <rect x="-8" y="-6" width="16" height="12" rx="4" fill="#ffc947"/>
+                <!-- Rider Helmet -->
+                <circle cx="0" cy="0" r="5" fill="#fff"/>
+                <!-- Headlight Beam -->
+                <polygon points="10,-12 45,-30 45,30 10,12" fill="url(#headlight-beam)" opacity="0.6"/>
+                
+                <!-- Magic Motion Tag -->
+                <animateMotion dur="6s" repeatCount="indefinite" rotate="auto">
+                    <mpath href="#slalomPath" />
+                </animateMotion>
+            </g>
+        </svg>
+    </div>
+
+    <div class="timeline reveal">
+        <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-step">Maneuver 01</div>
+            <div class="tl-title">Moving Off & Balance</div>
+            <div class="tl-desc">Smoothly coordinate the clutch (left hand) and throttle (right hand) to start moving without stalling. Understand how speed creates gyroscopic stability.</div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-step">Maneuver 02</div>
+            <div class="tl-title">Gear Changes</div>
+            <div class="tl-desc">Shift up and down through the gears smoothly using the left foot lever, coordinating with the clutch to maintain control of the bike's momentum.</div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-step">Maneuver 03</div>
+            <div class="tl-title">U-Turns & Figure Eights</div>
+            <div class="tl-desc">Master low-speed steering. Crucial rule: Always turn your head and look at your intended destination — the motorcycle goes where your eyes look.</div>
+        </div>
+        <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-step">Maneuver 04</div>
+            <div class="tl-title">Hard / Emergency Braking</div>
+            <div class="tl-desc">Achieve optimum braking without locking the wheels. Apply progressive pressure to the front brake (~70% power) and light pressure to the rear (~30%), pulling the clutch just before stopping.</div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider">
+
+<!-- ══ UNIT 4: ROAD RIDING ════════════════════════════════ -->
+<section class="section" id="unit4">
+    <div class="section-label">Unit 4 (15 Hours)</div>
+    <h2 class="section-title">Road Riding & Defensive Tactics</h2>
+    <p class="section-subtitle">Navigating live traffic requires constant observation, anticipation, and correct positioning to "see and be seen".</p>
+
+    <!-- NEW: Animated Overtaking SVG Component -->
+    <div class="animated-svg-box reveal">
+        <h3>MSM Overtaking Simulation</h3>
+        <p style="color:var(--muted); font-size:14px; margin-bottom:20px;">Watch the Mirror, Signal, Maneuver sequence in action. Notice the turn indicators activating before each lane change.</p>
+        
+        <svg class="custom-svg" viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Road Center dashed line (Animated to create speed illusion) -->
+            <line x1="0" y1="100" x2="800" y2="100" stroke="#fff" stroke-dasharray="40 40" stroke-width="4" opacity="0.3">
+                <animate attributeName="stroke-dashoffset" from="80" to="0" dur="0.8s" repeatCount="indefinite"/>
+            </line>
+            <!-- Road solid edges -->
+            <line x1="0" y1="20" x2="800" y2="20" stroke="#fff" stroke-width="4" opacity="0.5"/>
+            <line x1="0" y1="180" x2="800" y2="180" stroke="#fff" stroke-width="4" opacity="0.5"/>
+            
+            <!-- Slower Car moving right to left relative to rider (Creating closing speed) -->
+            <g>
+                <rect x="0" y="120" width="80" height="40" rx="8" fill="#1c1c2e" stroke="#8a8a9a" stroke-width="2"/>
+                <!-- Headlights -->
+                <circle cx="80" cy="128" r="4" fill="#fff"/>
+                <circle cx="80" cy="152" r="4" fill="#fff"/>
+                <!-- Taillights -->
+                <rect x="-2" y="125" width="4" height="10" fill="#ef4444"/>
+                <rect x="-2" y="145" width="4" height="10" fill="#ef4444"/>
+                
+                <animateTransform attributeName="transform" type="translate" from="600 0" to="200 0" dur="8s" repeatCount="indefinite"/>
+            </g>
+
+            <!-- Overtaking Path -->
+            <path id="overtakePath" d="M 50 140 L 250 140 Q 300 140 330 100 T 400 60 L 500 60 Q 550 60 580 100 T 650 140 L 850 140" fill="none"/>
+            
+            <!-- Rider (Animated) -->
+            <g>
+                <!-- Right Turn Signal (Blinking during first half) -->
+                <circle cx="0" cy="15" r="4" fill="#ffc947">
+                    <animate attributeName="opacity" values="0;1;0" dur="0.5s" begin="2.5s" repeatCount="3"/>
+                </circle>
+                <!-- Left Turn Signal (Blinking during second half) -->
+                <circle cx="0" cy="-15" r="4" fill="#ffc947">
+                    <animate attributeName="opacity" values="0;1;0" dur="0.5s" begin="5.5s" repeatCount="3"/>
+                </circle>
+                
+                <!-- Bike body -->
+                <rect x="-15" y="-8" width="30" height="16" rx="5" fill="#333"/>
+                <rect x="-10" y="-10" width="20" height="20" rx="4" fill="#ff6b1a"/>
+                <circle cx="0" cy="0" r="7" fill="#fff"/>
+                
+                <!-- Headlight beam -->
+                <polygon points="15,-20 80,-40 80,40 15,20" fill="url(#headlight-beam)" opacity="0.7"/>
+
+                <animateMotion dur="8s" repeatCount="indefinite" rotate="auto">
+                    <mpath href="#overtakePath" />
+                </animateMotion>
+            </g>
+        </svg>
+    </div>
+
+    <div class="gear-grid reveal">
+        <div class="gear-card">
+            <div class="gear-icon">🛑</div>
+            <div class="gear-name">Junctions</div>
+            <div class="gear-desc">Always apply the MSM (Mirror, Signal, Maneuver) routine. Approach slowly and anticipate vehicles pulling out unexpectedly.</div>
+        </div>
+        <div class="gear-card">
+            <div class="gear-icon">🔄</div>
+            <div class="gear-name">Roundabouts</div>
+            <div class="gear-desc">Choose the correct lane early. Yield to traffic already in the roundabout (coming from the right). Signal before exiting.</div>
+        </div>
+        <div class="gear-card">
+            <div class="gear-icon">🏎️</div>
+            <div class="gear-name">Overtaking</div>
+            <div class="gear-desc">Ensure you have a clear view ahead. Check mirrors AND blind spots over your shoulder before changing lanes.</div>
+        </div>
+        <div class="gear-card">
+            <div class="gear-icon">🌙</div>
+            <div class="gear-name">Night Riding</div>
+            <div class="gear-desc">Visibility drops drastically. Reduce your speed, increase following distance, and maximize your conspicuity with reflective gear.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ QUIZ CTA ════════════════════════════════════════════ -->
+<section class="section">
+    <div class="quiz-cta reveal">
+        <div class="section-label" style="justify-content:center;display:flex;">Knowledge Check</div>
+        <h2 class="section-title" style="margin-bottom:16px;">Ready for the Test?</h2>
+        <p style="color:var(--muted);max-width:500px;margin:0 auto 36px;font-size:16px;line-height:1.7;">Take the comprehensive 10-question quiz covering Categories, Controls, Yard Skills, and Road Riding. You need 70% to pass.</p>
+        <a href="quiz.html" class="btn btn-fire" style="font-size:17px;padding:16px 40px;">🎯 Start Masterclass Quiz</a>
+    </div>
+</section>
+
+<script>
+    const controlData = {
+        clutch: {
+            icon: '✊',
+            text: '<strong>Clutch Lever (Left Hand):</strong> Disengages engine power from the transmission. Squeeze it to shift gears or stop without stalling the engine.'
+        },
+        throttle: {
+            icon: '🔄',
+            text: '<strong>Throttle & Front Brake (Right Hand):</strong> Twist grip to accelerate. Squeeze the lever for the Front Brake — which provides roughly 70% of your stopping power.'
+        },
+        gears: {
+            icon: '⚙️',
+            text: '<strong>Gear Shift Lever (Left Foot):</strong> Used to change gears. Standard pattern is 1 down, then up for 2, 3, 4, 5. Neutral is a half-click between 1st and 2nd.'
+        },
+        rearbrake: {
+            icon: '🦶',
+            text: '<strong>Rear Brake Pedal (Right Foot):</strong> Provides the remaining 30% of stopping power. Highly useful for low-speed maneuvers and stabilizing the bike.'
+        },
+        dash: {
+            icon: '🖥️',
+            text: '<strong>Instruments Panel:</strong> Houses the speedometer, warning lights, neutral indicator (N), and turn signal lights. Always monitor these while riding.'
+        }
+    };
+
+    function showControl(key) {
+        document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`[data-ctrl="${key}"]`).classList.add('active');
+
+        const d = controlData[key];
+        const box = document.getElementById('controlInfo');
+        box.style.opacity = '0';
+        setTimeout(() => {
+            box.innerHTML = `<span style="font-size:22px;margin-right:10px;">${d.icon}</span>${d.text}`;
+            box.style.opacity = '1';
+        }, 200);
+    }
+
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+        });
+    }, { threshold: 0.12 });
+    reveals.forEach(r => io.observe(r));
+</script>
+</body>
+</html>

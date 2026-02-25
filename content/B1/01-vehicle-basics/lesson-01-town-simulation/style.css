@@ -1,0 +1,446 @@
+/* =========================================
+   NTSA Driving Simulator – style.css
+   Mobile-first, NTSA Kenya themed
+   ========================================= */
+
+:root {
+    --ntsa-green: #00a651;
+    --ntsa-red: #cc2929;
+    --ntsa-gold: #f5a623;
+    --bg-dark: #0a1628;
+    --bg-card: rgba(10,22,40,0.95);
+    --glass: rgba(255,255,255,0.07);
+    --text: #e8edf5;
+    --text-dim: #7a8fa8;
+    --accent: #00d4ff;
+    --hud-bg: rgba(5,15,30,0.88);
+    --border: rgba(0,166,81,0.35);
+    --radius: 12px;
+    --radius-sm: 8px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg-dark);
+    color: var(--text);
+    font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    font-size: 15px;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+/* ── CANVAS ── */
+#canvas-container {
+    position: fixed; inset: 0;
+    width: 100vw; height: 100vh;
+}
+#canvas-container canvas {
+    display: block; width: 100%; height: 100%;
+}
+
+/* ── OVERLAY SCREENS ── */
+.overlay-screen {
+    position: fixed; inset: 0; z-index: 300;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(160deg, rgba(10,22,40,0.97) 60%, rgba(0,60,30,0.85) 100%);
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.welcome-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 28px 24px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 0 60px rgba(0,166,81,0.15), 0 20px 60px rgba(0,0,0,0.6);
+    animation: fadeUp 0.5s ease both;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.ntsa-badge {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px;
+    padding: 12px 16px;
+    background: var(--glass);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+}
+.badge-flag { font-size: 2rem; }
+.badge-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.4rem; font-weight: 900;
+    color: var(--ntsa-green); letter-spacing: 3px;
+}
+.badge-sub { font-size: 0.78rem; color: var(--text-dim); margin-top: 2px; }
+
+.welcome-card h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+.tagline { color: var(--ntsa-gold); font-size: 0.9rem; margin-bottom: 20px; letter-spacing: 1px; }
+
+.curriculum-list {
+    margin: 16px 0;
+    display: flex; flex-direction: column; gap: 10px;
+}
+.curriculum-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 14px;
+    background: var(--glass);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--ntsa-green);
+    font-size: 0.88rem;
+}
+.ci-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+.control-guide {
+    margin: 18px 0;
+    padding: 14px;
+    background: var(--glass);
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.cg-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem; letter-spacing: 2px;
+    color: var(--text-dim); margin-bottom: 12px;
+    text-transform: uppercase;
+}
+.cg-grid {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 8px 16px; align-items: center;
+    font-size: 0.85rem;
+}
+.cg-key {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-align: center; white-space: nowrap;
+}
+.cg-desc { color: var(--text-dim); }
+
+.mobile-note {
+    text-align: center;
+    color: var(--ntsa-gold);
+    font-size: 0.85rem;
+    margin: 10px 0;
+    padding: 8px;
+    background: rgba(245,166,35,0.1);
+    border-radius: var(--radius-sm);
+}
+
+.btn-start {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--ntsa-green), #007a3d);
+    color: #fff;
+    border: none; border-radius: var(--radius);
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem; font-weight: 700;
+    letter-spacing: 2px; text-transform: uppercase;
+    cursor: pointer; margin-top: 8px;
+    box-shadow: 0 6px 20px rgba(0,166,81,0.4);
+    transition: all 0.2s;
+}
+.btn-start:hover, .btn-start:active {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,166,81,0.5);
+}
+
+.btn-outline {
+    flex: 1;
+    padding: 14px;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: 'Orbitron', monospace;
+    font-size: 0.85rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+}
+.btn-outline:hover { background: var(--glass); }
+
+.btn-row { display: flex; gap: 12px; margin-top: 16px; }
+
+.result-icon { font-size: 3rem; text-align: center; margin-bottom: 12px; }
+.score-big {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem; font-weight: 900;
+    color: var(--ntsa-green); text-align: center;
+    margin: 12px 0;
+}
+
+/* ── HUD ── */
+.hud {
+    position: fixed; top: 12px; left: 12px; z-index: 100;
+    background: var(--hud-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    min-width: 160px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.hud-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 10px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+}
+.hud-logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.7rem; letter-spacing: 3px;
+    color: var(--ntsa-green); font-weight: 900;
+}
+.hud-mode { font-size: 0.72rem; color: var(--text-dim); }
+
+.hud-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+.hud-cell {
+    background: var(--glass);
+    border-radius: var(--radius-sm);
+    padding: 8px;
+    text-align: center;
+}
+.hud-val {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.2rem; font-weight: 700;
+    color: #fff; line-height: 1;
+}
+.hud-val.danger { color: var(--ntsa-red); }
+.hud-lbl { font-size: 0.65rem; color: var(--text-dim); margin-top: 3px; text-transform: uppercase; }
+
+.hud-lights-row {
+    display: flex; gap: 8px; justify-content: center;
+    margin-top: 10px; padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+.indicator { font-size: 1rem; opacity: 0.25; transition: opacity 0.3s; }
+.indicator.on { opacity: 1; }
+
+/* ── MINIMAP ── */
+.minimap-wrap {
+    position: fixed; top: 12px; right: 12px; z-index: 100;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    border: 2px solid var(--ntsa-green);
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,166,81,0.3), 0 4px 16px rgba(0,0,0,0.5);
+    backdrop-filter: blur(6px);
+}
+.minimap-wrap canvas { display: block; }
+.minimap-label {
+    position: absolute; bottom: 6px; left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Orbitron', monospace;
+    font-size: 0.6rem; letter-spacing: 2px;
+    color: var(--ntsa-green); opacity: 0.7;
+}
+
+/* ── TRAFFIC LIGHT STATUS ── */
+.traffic-status {
+    position: fixed; right: 12px; top: 188px; z-index: 100;
+    background: var(--hud-bg);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    padding: 10px 6px;
+    display: flex; flex-direction: column; gap: 8px;
+    align-items: center;
+    backdrop-filter: blur(12px);
+}
+.tl-light {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #333;
+    border: 2px solid rgba(255,255,255,0.1);
+    transition: all 0.3s;
+}
+.tl-light.red-on    { background: #ff3333; box-shadow: 0 0 12px #ff3333; border-color: #ff6666; }
+.tl-light.yellow-on { background: #ffcc00; box-shadow: 0 0 12px #ffcc00; border-color: #ffe44d; }
+.tl-light.green-on  { background: #00ff88; box-shadow: 0 0 12px #00ff88; border-color: #66ffbb; }
+
+/* ── SCENARIO PANEL ── */
+.scenario-panel {
+    position: fixed; bottom: 12px; left: 12px; z-index: 100;
+    background: var(--hud-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    max-width: 260px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+.sp-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem; color: var(--ntsa-green);
+    letter-spacing: 1px; margin-bottom: 8px;
+    text-transform: uppercase;
+}
+.sp-body { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; margin-bottom: 10px; }
+.btn-sm {
+    padding: 8px 16px;
+    background: var(--ntsa-green);
+    color: #fff; border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Orbitron', monospace;
+    font-size: 0.72rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+}
+.btn-sm:hover { background: #007a3d; }
+
+/* ── ALERTS ── */
+.violation-toast {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 250;
+    background: rgba(204,41,41,0.95);
+    color: #fff;
+    padding: 16px 28px;
+    border-radius: var(--radius);
+    font-family: 'Orbitron', monospace;
+    font-size: 1rem; font-weight: 700;
+    letter-spacing: 1px;
+    box-shadow: 0 0 30px rgba(255,0,0,0.4);
+    animation: shake 0.4s ease;
+    pointer-events: none;
+}
+@keyframes shake {
+    0%,100% { transform: translate(-50%,-50%) rotate(0deg); }
+    20%      { transform: translate(-48%,-50%) rotate(-2deg); }
+    40%      { transform: translate(-52%,-50%) rotate(2deg); }
+    60%      { transform: translate(-48%,-50%) rotate(-1deg); }
+    80%      { transform: translate(-52%,-50%) rotate(1deg); }
+}
+
+.ntsa-tip {
+    position: fixed; bottom: 12px; right: 12px; z-index: 150;
+    background: rgba(0,100,50,0.9);
+    border: 1px solid var(--ntsa-green);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    max-width: 280px;
+    font-size: 0.82rem; line-height: 1.5;
+    backdrop-filter: blur(10px);
+    animation: slideUp 0.4s ease;
+    display: flex; gap: 10px; align-items: flex-start;
+}
+.tip-icon { font-size: 1.1rem; flex-shrink: 0; }
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── MOBILE CONTROLS ── */
+.mobile-controls {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    pointer-events: none;
+    display: flex; justify-content: space-between; align-items: flex-end;
+    padding: 0 16px 24px;
+}
+
+.joystick-zone {
+    pointer-events: all;
+    width: 140px; height: 140px;
+    display: flex; align-items: center; justify-content: center;
+}
+.joystick-base {
+    width: 120px; height: 120px;
+    background: rgba(0,166,81,0.15);
+    border: 2px solid rgba(0,166,81,0.4);
+    border-radius: 50%;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+}
+.joystick-stick {
+    width: 50px; height: 50px;
+    background: radial-gradient(circle at 40% 35%, rgba(0,220,100,0.9), var(--ntsa-green));
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 4px 16px rgba(0,166,81,0.6);
+    transition: none;
+}
+
+.action-btns {
+    pointer-events: all;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.act-btn {
+    width: 64px; height: 64px;
+    background: var(--hud-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    color: #fff;
+    font-size: 1.1rem; line-height: 1.2;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
+.act-btn:active { background: rgba(0,166,81,0.3); transform: scale(0.94); }
+.act-btn small { font-size: 0.65rem; color: var(--text-dim); font-family: 'Rajdhani', sans-serif; }
+
+/* ── UTILITIES ── */
+.hidden { display: none !important; }
+
+/* ── RESPONSIVE BREAKPOINTS ── */
+
+/* Small phones */
+@media (max-width: 380px) {
+    .welcome-card { padding: 20px 16px; }
+    .welcome-card h1 { font-size: 1.3rem; }
+    .hud { min-width: 140px; padding: 10px; }
+    .hud-val { font-size: 1rem; }
+    .minimap-wrap { width: 120px; height: 120px; }
+    .minimap-wrap canvas { width: 120px; height: 120px; }
+    .act-btn { width: 56px; height: 56px; }
+    .joystick-base { width: 100px; height: 100px; }
+}
+
+/* Tablets and larger */
+@media (min-width: 768px) {
+    .hud { padding: 14px 18px; min-width: 200px; }
+    .hud-val { font-size: 1.5rem; }
+    .minimap-wrap { width: 200px; height: 200px; }
+    .minimap-wrap canvas { width: 200px; height: 200px; }
+    .traffic-status { top: 228px; }
+    .scenario-panel { max-width: 320px; }
+}
+
+/* Desktop – hide mobile joystick */
+@media (min-width: 1024px) {
+    .mobile-controls { display: none !important; }
+}
+
+/* Landscape phones – compact layout */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hud { top: 8px; left: 8px; padding: 8px 10px; min-width: 130px; }
+    .hud-grid { gap: 4px; }
+    .hud-val { font-size: 0.9rem; }
+    .hud-header { margin-bottom: 6px; padding-bottom: 6px; }
+    .minimap-wrap { width: 100px; height: 100px; top: 8px; right: 8px; }
+    .traffic-status { top: 120px; }
+    .mobile-controls { padding: 0 12px 12px; }
+    .joystick-base { width: 90px; height: 90px; }
+    .act-btn { width: 52px; height: 52px; font-size: 0.9rem; }
+    .scenario-panel { max-width: 200px; bottom: 8px; }
+}

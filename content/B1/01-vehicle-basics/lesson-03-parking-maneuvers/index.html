@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Parking Maneuvers - B1 Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .premium-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #000;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 18px;
+        }
+
+        .video-section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #FFD700;
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .parking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .parking-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 4px solid #667eea;
+        }
+
+        .parking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .parking-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .step-list {
+            list-style: none;
+            counter-reset: step-counter;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin: 15px 0;
+            padding-left: 40px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #667eea;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .interactive-demo {
+            background: #1a1a2e;
+            padding: 40px;
+            border-radius: 15px;
+            margin: 30px 0;
+            color: white;
+        }
+
+        .demo-canvas {
+            background: #2d2d44;
+            border-radius: 10px;
+            margin: 20px 0;
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .parking-space {
+            position: absolute;
+            border: 3px dashed #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .car {
+            position: absolute;
+            background: #FF4444;
+            border-radius: 5px;
+            transition: all 0.5s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .car::before {
+            content: '🚗';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+        }
+
+        .control-panel {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .tip-box {
+            background: #d1ecf1;
+            border-left: 5px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .quiz-section {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            margin: 30px 0;
+        }
+
+        .quiz-question {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .quiz-option {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: white;
+        }
+
+        .quiz-option.selected {
+            background: rgba(76, 175, 80, 0.5);
+            border-color: #4CAF50;
+        }
+
+        .quiz-option.correct {
+            background: rgba(76, 175, 80, 0.7);
+            border-color: #4CAF50;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(244, 67, 54, 0.7);
+            border-color: #F44336;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .parking-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="premium-badge">
+        ⭐ PREMIUM CONTENT
+    </div>
+
+    <div class="container">
+        <h1>🅿️ Advanced Parking Maneuvers</h1>
+        <p class="subtitle">Master all parking techniques for your B1 driving test</p>
+
+        <!-- Video Introduction -->
+        <div class="video-section">
+            <h2>📹 Introduction to Parking Techniques</h2>
+            <p>Watch this comprehensive guide to parking maneuvers:</p>
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/nP-nMZpLM1A" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- Section 1: Parallel Parking -->
+        <div class="section">
+            <h2>1. Parallel Parking</h2>
+            <p>The most challenging parking maneuver - essential for urban driving and your test.</p>
+
+            <div class="parking-grid">
+                <div class="parking-card">
+                    <h3>Step-by-Step Guide</h3>
+                    <ol class="step-list">
+                        <li>Pull alongside the front car, leaving 30cm gap</li>
+                        <li>Align your side mirror with their rear bumper</li>
+                        <li>Put car in reverse, check all mirrors</li>
+                        <li>Turn steering wheel fully right</li>
+                        <li>Reverse slowly until 45° angle</li>
+                        <li>Straighten wheel, continue reversing</li>
+                        <li>Turn wheel fully left when rear is in</li>
+                        <li>Straighten up, center in space</li>
+                    </ol>
+                </div>
+
+                <div class="parking-card">
+                    <h3>Common Mistakes</h3>
+                    <ul>
+                        <li>❌ Starting too far from front car</li>
+                        <li>❌ Turning steering wheel too early</li>
+                        <li>❌ Reversing too fast</li>
+                        <li>❌ Not checking blind spots</li>
+                        <li>❌ Hitting the kerb</li>
+                        <li>❌ Ending up too far from kerb</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Pro Tip:</strong> Practice makes perfect! The key is smooth, slow movements and constant observation. Use your mirrors more than looking back.
+            </div>
+
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/VOihbZMVQWE" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- Interactive Demo -->
+        <div class="interactive-demo">
+            <h2>🎮 Interactive Parking Simulator</h2>
+            <p>Practice different parking scenarios with our interactive simulator:</p>
+
+            <div class="control-panel">
+                <button class="btn" onclick="startParking('parallel')">Parallel Parking</button>
+                <button class="btn" onclick="startParking('bay')">Bay Parking</button>
+                <button class="btn" onclick="startParking('angle')">Angle Parking</button>
+                <button class="btn btn-secondary" onclick="resetDemo()">Reset</button>
+            </div>
+
+            <div class="demo-canvas" id="parkingCanvas">
+                <div id="parkingScene"></div>
+            </div>
+
+            <div class="control-panel">
+                <button class="btn" onclick="moveCar('forward')">↑ Forward</button>
+                <button class="btn" onclick="moveCar('back')">↓ Reverse</button>
+                <button class="btn" onclick="moveCar('left')">← Turn Left</button>
+                <button class="btn" onclick="moveCar('right')">→ Turn Right</button>
+            </div>
+
+            <div id="feedback" style="text-align: center; margin-top: 20px; font-size: 18px;"></div>
+        </div>
+
+        <!-- Section 2: Bay Parking -->
+        <div class="section">
+            <h2>2. Bay Parking (90° Parking)</h2>
+            <p>Forward and reverse bay parking for shopping centers and parking lots.</p>
+
+            <div class="parking-grid">
+                <div class="parking-card">
+                    <h3>Forward Bay Parking</h3>
+                    <ol class="step-list">
+                        <li>Approach slowly, indicator on</li>
+                        <li>Position car 1 meter from bay</li>
+                        <li>When front wheel aligns with bay line, turn wheel</li>
+                        <li>Drive forward into bay</li>
+                        <li>Straighten wheel as you enter</li>
+                        <li>Center between lines</li>
+                    </ol>
+                </div>
+
+                <div class="parking-card">
+                    <h3>Reverse Bay Parking</h3>
+                    <ol class="step-list">
+                        <li>Drive past bay, align mirror with bay line</li>
+                        <li>Stop, engage reverse</li>
+                        <li>Check all around for pedestrians</li>
+                        <li>Reverse slowly, turn wheel when aligned</li>
+                        <li>Guide car into bay using mirrors</li>
+                        <li>Straighten up, center in bay</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Safety First:</strong> Always check for pedestrians, especially children, before reversing. Use your mirrors and look over your shoulder.
+            </div>
+
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/5_oIH7Gg-Ow" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- Section 3: Angle Parking -->
+        <div class="section">
+            <h2>3. Angle Parking (45° Parking)</h2>
+            <p>Common in parking lots with angled bays - easier than 90° parking.</p>
+
+            <div class="parking-card">
+                <h3>Technique</h3>
+                <ol class="step-list">
+                    <li>Approach at slow speed</li>
+                    <li>Signal your intention</li>
+                    <li>Position car in center of lane</li>
+                    <li>When front of car reaches bay, turn wheel</li>
+                    <li>Follow the angle of the bay</li>
+                    <li>Straighten wheel, center in space</li>
+                    <li>Leave equal space on both sides</li>
+                </ol>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Advantage:</strong> Angle parking is easier to enter and exit than 90° bays. It's also safer as you can see oncoming traffic when leaving.
+            </div>
+        </div>
+
+        <!-- Section 4: Hill Start Parking -->
+        <div class="section">
+            <h2>4. Hill Start & Parking on Slopes</h2>
+            <p>Special techniques for parking on inclines and declines.</p>
+
+            <div class="parking-grid">
+                <div class="parking-card">
+                    <h3>Parking Uphill</h3>
+                    <ul>
+                        <li>Turn wheels AWAY from kerb</li>
+                        <li>If car rolls back, it hits kerb and stops</li>
+                        <li>Apply handbrake firmly</li>
+                        <li>Leave in 1st gear (manual)</li>
+                    </ul>
+                </div>
+
+                <div class="parking-card">
+                    <h3>Parking Downhill</h3>
+                    <ul>
+                        <li>Turn wheels TOWARDS kerb</li>
+                        <li>If car rolls forward, kerb stops it</li>
+                        <li>Apply handbrake firmly</li>
+                        <li>Leave in reverse gear (manual)</li>
+                    </ul>
+                </div>
+
+                <div class="parking-card">
+                    <h3>Hill Start Technique</h3>
+                    <ol class="step-list">
+                        <li>Handbrake on, foot on brake</li>
+                        <li>Select 1st gear</li>
+                        <li>Set gas to 1500-2000 RPM</li>
+                        <li>Find clutch biting point</li>
+                        <li>Release handbrake smoothly</li>
+                        <li>Increase gas, release clutch</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/fJWmbMQb6P0" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <!-- Section 5: Reference Points -->
+        <div class="section">
+            <h2>5. Using Reference Points</h2>
+            <p>Learn to use your car's reference points for accurate parking.</p>
+
+            <div class="image-gallery">
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?w=400" alt="Side mirror reference">
+                    <p style="padding: 10px; text-align: center;">Side Mirror Alignment</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?w=400" alt="Bonnet reference">
+                    <p style="padding: 10px; text-align: center;">Bonnet Edge Reference</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=400" alt="Window pillar">
+                    <p style="padding: 10px; text-align: center;">A-Pillar Reference</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Key Reference Points:</strong>
+                <ul>
+                    <li>Side mirrors - for parallel parking alignment</li>
+                    <li>Bonnet edge - for distance to obstacles</li>
+                    <li>A-pillar - for turning points</li>
+                    <li>Door handle - for kerb distance</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="quiz-section">
+            <h2>📝 Test Your Knowledge</h2>
+            <p>Answer these questions to check your understanding:</p>
+
+            <div class="quiz-question">
+                <p><strong>Question 1:</strong> When parallel parking, at what angle should your car be before straightening the wheel?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">A) 30 degrees</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">B) 45 degrees</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">C) 60 degrees</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">D) 90 degrees</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <p><strong>Question 2:</strong> When parking uphill, which direction should you turn your wheels?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">A) Away from the kerb</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">B) Towards the kerb</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">C) Straight ahead</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">D) It doesn't matter</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <p><strong>Question 3:</strong> What is the recommended gap between your car and the front car when starting parallel parking?</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">A) 10cm</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, true)">B) 30cm</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">C) 50cm</div>
+                    <div class="quiz-option" onclick="checkAnswer(this, false)">D) 1 meter</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Tips -->
+        <div class="section">
+            <h2>🎯 Final Tips for Success</h2>
+            <ul>
+                <li><strong>Practice regularly:</strong> Book time with your instructor to practice all maneuvers</li>
+                <li><strong>Use your mirrors:</strong> They're your best friends during parking</li>
+                <li><strong>Go slow:</strong> Speed is your enemy in parking maneuvers</li>
+                <li><strong>Stay calm:</strong> Take your time, especially during the test</li>
+                <li><strong>Check blind spots:</strong> Always look before moving</li>
+                <li><strong>Know your car:</strong> Every car has different dimensions and turning circles</li>
+                <li><strong>Use reference points:</strong> They make parking consistent and accurate</li>
+            </ul>
+
+            <div class="success-box">
+                <strong>✅ Remember:</strong> The examiner wants you to pass! Show confidence, control, and safety awareness. You've got this!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentParkingType = null;
+        let carPosition = { x: 50, y: 300, angle: 0 };
+
+        function startParking(type) {
+            currentParkingType = type;
+            const canvas = document.getElementById('parkingCanvas');
+            const scene = document.getElementById('parkingScene');
+            scene.innerHTML = '';
+
+            // Create parking space
+            const space = document.createElement('div');
+            space.className = 'parking-space';
+            
+            if (type === 'parallel') {
+                space.style.width = '200px';
+                space.style.height = '80px';
+                space.style.left = '400px';
+                space.style.top = '200px';
+                carPosition = { x: 200, y: 200, angle: 0 };
+            } else if (type === 'bay') {
+                space.style.width = '100px';
+                space.style.height = '150px';
+                space.style.left = '450px';
+                space.style.top = '150px';
+                carPosition = { x: 300, y: 250, angle: 0 };
+            } else if (type === 'angle') {
+                space.style.width = '120px';
+                space.style.height = '150px';
+                space.style.left = '450px';
+                space.style.top = '150px';
+                space.style.transform = 'rotate(-30deg)';
+                carPosition = { x: 250, y: 250, angle: 0 };
+            }
+            
+            scene.appendChild(space);
+
+            // Create car
+            const car = document.createElement('div');
+            car.className = 'car';
+            car.id = 'demoCar';
+            car.style.width = '60px';
+            car.style.height = '100px';
+            updateCarPosition(car);
+            scene.appendChild(car);
+
+            document.getElementById('feedback').textContent = `Starting ${type} parking. Use controls to park the car.`;
+        }
+
+        function updateCarPosition(car) {
+            car.style.left = carPosition.x + 'px';
+            car.style.top = carPosition.y + 'px';
+            car.style.transform = `rotate(${carPosition.angle}deg)`;
+        }
+
+        function moveCar(direction) {
+            const car = document.getElementById('demoCar');
+            if (!car) return;
+
+            const speed = 10;
+            const turnSpeed = 15;
+
+            switch(direction) {
+                case 'forward':
+                    carPosition.x += speed * Math.sin(carPosition.angle * Math.PI / 180);
+                    carPosition.y -= speed * Math.cos(carPosition.angle * Math.PI / 180);
+                    break;
+                case 'back':
+                    carPosition.x -= speed * Math.sin(carPosition.angle * Math.PI / 180);
+                    carPosition.y += speed * Math.cos(carPosition.angle * Math.PI / 180);
+                    break;
+                case 'left':
+                    carPosition.angle -= turnSpeed;
+                    break;
+                case 'right':
+                    carPosition.angle += turnSpeed;
+                    break;
+            }
+
+            updateCarPosition(car);
+            checkParkingSuccess();
+        }
+
+        function checkParkingSuccess() {
+            // Simple success check based on position
+            if (currentParkingType === 'parallel' && 
+                carPosition.x > 380 && carPosition.x < 520 &&
+                carPosition.y > 180 && carPosition.y < 260 &&
+                Math.abs(carPosition.angle % 360) < 20) {
+                document.getElementById('feedback').textContent = '🎉 Perfect parallel parking! Well done!';
+                document.getElementById('feedback').style.color = '#4CAF50';
+            } else if (currentParkingType === 'bay' &&
+                carPosition.x > 430 && carPosition.x < 530 &&
+                carPosition.y > 130 && carPosition.y < 280 &&
+                Math.abs(carPosition.angle % 360) < 15) {
+                document.getElementById('feedback').textContent = '🎉 Excellent bay parking!';
+                document.getElementById('feedback').style.color = '#4CAF50';
+            }
+        }
+
+        function resetDemo() {
+            document.getElementById('parkingScene').innerHTML = '';
+            document.getElementById('feedback').textContent = 'Select a parking type to begin.';
+            document.getElementById('feedback').style.color = 'white';
+            currentParkingType = null;
+        }
+
+        function checkAnswer(element, isCorrect) {
+            // Remove previous selections in this question
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            // Mark the selected answer
+            element.classList.add('selected');
+            
+            setTimeout(() => {
+                if (isCorrect) {
+                    element.classList.add('correct');
+                    element.innerHTML += ' ✓';
+                } else {
+                    element.classList.add('incorrect');
+                    element.innerHTML += ' ✗';
+                    // Show correct answer
+                    options.forEach(opt => {
+                        if (opt.onclick.toString().includes('true')) {
+                            opt.classList.add('correct');
+                            opt.innerHTML += ' ✓ (Correct)';
+                        }
+                    });
+                }
+            }, 300);
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            document.getElementById('feedback').textContent = 'Select a parking type to begin practice.';
+        });
+    </script>
+</body>
+</html>

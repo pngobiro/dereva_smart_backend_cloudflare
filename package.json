@@ -1,0 +1,41 @@
+{
+  "name": "dereva-smart-backend",
+  "version": "1.0.0",
+  "description": "Cloudflare-based backend for Dereva Smart driving school platform",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail",
+    "db:migrate": "wrangler d1 migrations apply dereva-db",
+    "db:migrate:local": "wrangler d1 migrations apply dereva-db --local",
+    "db:create": "wrangler d1 migrations create dereva-db",
+    "test": "vitest",
+    "type-check": "tsc --noEmit",
+    "content:list": "node scripts/manage_content.js --list",
+    "content:sync": "node scripts/manage_content.js",
+    "content:watch": "node scripts/manage_content.js --watch",
+    "content:force": "node scripts/manage_content.js --force",
+    "content:stats": "node scripts/manage_content.js --stats",
+    "content:reset": "node scripts/manage_content.js --reset"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "driving-school",
+    "education"
+  ],
+  "author": "Dereva Smart",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20231218.0",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4",
+    "wrangler": "^3.22.0"
+  },
+  "dependencies": {
+    "hono": "^3.12.0",
+    "zod": "^3.22.4"
+  }
+}

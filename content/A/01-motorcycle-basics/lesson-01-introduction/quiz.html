@@ -1,0 +1,475 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masterclass Quiz | NTSA Kenya</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fire: #ff6b1a; --ember: #ff3f00; --gold: #ffc947;
+            --dark: #0d0d14; --surface: #14141f; --card: #1c1c2e;
+            --border: rgba(255,107,26,0.2); --text: #e8e4dc;
+            --muted: #8a8a9a; --success: #22c55e; --danger: #ef4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'DM Sans', sans-serif; background: var(--dark); color: var(--text);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0;
+            background-image: linear-gradient(rgba(255,107,26,0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,107,26,0.05) 1px, transparent 1px);
+            background-size: 50px 50px; animation: gridMove 20s linear infinite; pointer-events: none; z-index: 0;
+        }
+        @keyframes gridMove { 0% { background-position: 0 0; } 100% { background-position: 50px 50px; } }
+
+        .quiz-wrap { position: relative; width: 100%; max-width: 740px; z-index: 1; }
+        .top-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        .back-link { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+        .back-link:hover { color: var(--fire); }
+        .streaks { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--gold); font-weight: 700; }
+
+        .quiz-card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 24px;
+            padding: 40px; box-shadow: 0 40px 80px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+        }
+        .quiz-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--ember), var(--fire), var(--gold));
+        }
+
+        .progress-area { margin-bottom: 32px; }
+        .progress-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px; color: var(--muted); }
+        .q-counter { font-weight: 700; font-size: 14px; color: var(--fire); }
+        .progress-track { width: 100%; height: 6px; background: rgba(255,255,255,0.07); border-radius: 100px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; border-radius: 100px; background: linear-gradient(90deg, var(--ember), var(--gold)); transition: width 0.5s cubic-bezier(0.4,0,0.2,1); }
+
+        .timer-ring-wrap { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+        .timer-ring { position: relative; width: 36px; height: 36px; }
+        .timer-ring svg { transform: rotate(-90deg); }
+        .timer-ring circle { fill: none; stroke-width: 3; }
+        .timer-ring .bg { stroke: rgba(255,255,255,0.1); }
+        .timer-ring .fg { stroke: var(--fire); stroke-dasharray: 97.4; stroke-dashoffset: 0; stroke-linecap: round; transition: stroke-dashoffset 1s linear, stroke 0.3s; }
+        .timer-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+
+        .question-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--fire); margin-bottom: 14px; }
+        .question-text { font-size: 20px; font-weight: 700; line-height: 1.5; margin-bottom: 28px; min-height: 60px; }
+
+        .options-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+        .option-item {
+            display: flex; align-items: center; gap: 14px; padding: 16px 20px;
+            background: rgba(255,255,255,0.03); border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 12px; cursor: pointer; transition: all 0.22s; font-size: 15px;
+        }
+        .option-item:hover:not(.locked) { background: rgba(255,107,26,0.08); border-color: rgba(255,107,26,0.5); transform: translateX(4px); }
+        .option-item.selected { background: rgba(255,107,26,0.1); border-color: var(--fire); }
+        .option-item.correct  { background: rgba(34,197,94,0.12); border-color: var(--success); animation: correctPop 0.4s ease; }
+        .option-item.wrong    { background: rgba(239,68,68,0.1);  border-color: var(--danger);  animation: wrongShake 0.4s ease; }
+        @keyframes correctPop  { 0%,100%{transform:scale(1)}50%{transform:scale(1.02)} }
+        @keyframes wrongShake  { 0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)} }
+
+        .opt-letter {
+            width: 30px; height: 30px; border-radius: 8px; background: rgba(255,255,255,0.06);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 13px; flex-shrink: 0; transition: background 0.2s;
+        }
+        .option-item.selected .opt-letter { background: var(--fire); color:#fff; }
+        .option-item.correct .opt-letter  { background: var(--success); color:#fff; }
+        .option-item.wrong .opt-letter    { background: var(--danger);  color:#fff; }
+
+        .feedback-box { margin-top: 22px; padding: 16px 20px; border-radius: 12px; font-size: 14px; line-height: 1.7; display: none; border-left: 4px solid; }
+        .feedback-box.show { display: flex; gap: 12px; align-items: flex-start; animation: feedIn 0.35s ease; }
+        .feedback-box.correct-fb { background: rgba(34,197,94,0.1); border-color: var(--success); color: #86efac; }
+        .feedback-box.wrong-fb   { background: rgba(239,68,68,0.1); border-color: var(--danger);  color: #fca5a5; }
+        @keyframes feedIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+        .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 28px; }
+        .score-badge { font-size: 13px; color: var(--muted); }
+        .score-badge strong { color: var(--gold); font-size: 16px; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px; padding: 13px 28px; border-radius: 10px;
+            font-size: 15px; font-weight: 700; border: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .btn-fire { background: linear-gradient(135deg, var(--fire), var(--ember)); color: #fff; box-shadow: 0 6px 20px rgba(255,63,0,0.4); }
+        .btn-fire:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,63,0,0.5); }
+        .btn-fire:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-ghost { background: transparent; border: 1.5px solid var(--border); color: var(--muted); }
+        .btn-ghost:hover { border-color: var(--fire); color: var(--fire); transform: translateY(-2px); }
+
+        .result-scene { position: relative; margin: 0 auto 36px; width: 180px; height: 180px; }
+        .result-ring  { width: 180px; height: 180px; }
+        .result-ring circle { fill: none; stroke-width: 12; }
+        .ring-bg { stroke: rgba(255,255,255,0.06); }
+        .ring-score { stroke-dasharray: 490; stroke-dashoffset: 490; stroke-linecap: round; transition: stroke-dashoffset 1.4s cubic-bezier(0.4,0,0.2,1) 0.3s; }
+        .result-inner { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .result-pct   { font-family: 'Bebas Neue', sans-serif; font-size: 56px; line-height: 1; }
+        .result-label { font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+        .result-title { font-family: 'Bebas Neue', sans-serif; font-size: 42px; margin-bottom: 10px; }
+        .result-sub   { color: var(--muted); font-size: 15px; max-width: 440px; margin: 0 auto 36px; line-height: 1.7; }
+        .result-breakdown { display: flex; justify-content: center; gap: 30px; margin-bottom: 36px; flex-wrap: wrap; }
+        .rb-item { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 28px; text-align: center; }
+        .rb-val  { font-family: 'Bebas Neue', sans-serif; font-size: 36px; }
+        .rb-key  { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+        .result-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+        .combo-toast {
+            position: fixed; top: 24px; right: 24px; background: linear-gradient(135deg, var(--fire), var(--gold));
+            color: #000; font-weight: 800; font-size: 15px; padding: 12px 22px; border-radius: 100px; z-index: 999;
+            pointer-events: none; opacity: 0; transform: translateY(-10px) scale(0.9); transition: all 0.3s;
+        }
+        .combo-toast.show { opacity: 1; transform: translateY(0) scale(1); }
+
+        .confetti-particle { position: fixed; width: 8px; height: 8px; border-radius: 2px; pointer-events: none; z-index: 9999; animation: confettiFall linear forwards; }
+        @keyframes confettiFall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
+        @media (max-width: 540px) { .quiz-card { padding: 24px 20px; } .question-text { font-size: 17px; } }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
+    </style>
+</head>
+<body>
+
+<div class="quiz-wrap">
+    <div class="top-bar">
+        <a href="index.html" class="back-link">← Back to Lesson</a>
+        <div class="streaks" id="streakDisplay">🔥 Streak: 0</div>
+    </div>
+
+    <div class="quiz-card">
+        <!-- QUIZ VIEW -->
+        <div id="quizView">
+            <div class="progress-area">
+                <div class="progress-meta">
+                    <span class="q-counter" id="qCounter">Question 1 / 10</span>
+                    <div class="timer-ring-wrap">
+                        <div class="timer-ring">
+                            <svg viewBox="0 0 36 36" width="36" height="36">
+                                <circle class="bg" cx="18" cy="18" r="15.5"/>
+                                <circle class="fg" id="timerCircle" cx="18" cy="18" r="15.5" stroke-dasharray="97.4" stroke-dashoffset="0"/>
+                            </svg>
+                            <div class="timer-text" id="timerText">20</div>
+                        </div>
+                        <span>seconds</span>
+                    </div>
+                </div>
+                <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+            </div>
+
+            <div class="question-label" id="qCategory">Category Label</div>
+            <div class="question-text" id="questionText">Loading...</div>
+            <ul class="options-list" id="optionsList"></ul>
+            <div class="feedback-box" id="feedbackBox"></div>
+
+            <div class="card-footer">
+                <div class="score-badge">Score: <strong id="liveScore">0</strong> / <span id="maxScore">10</span></div>
+                <button class="btn btn-fire" id="actionBtn" onclick="handleAction()" disabled>Submit Answer</button>
+            </div>
+        </div>
+
+        <!-- RESULTS VIEW -->
+        <div id="resultsView" style="display:none; text-align:center;">
+            <div class="result-scene">
+                <svg class="result-ring" viewBox="0 0 180 180">
+                    <circle class="ring-bg" cx="90" cy="90" r="78"/>
+                    <circle class="ring-score" id="ringScore" cx="90" cy="90" r="78"/>
+                </svg>
+                <div class="result-inner">
+                    <div class="result-pct" id="resultPct">0%</div>
+                    <div class="result-label" id="resultLabel">Score</div>
+                </div>
+            </div>
+            <div class="result-title" id="resultTitle">Result</div>
+            <p class="result-sub" id="resultSub"></p>
+            <div class="result-breakdown">
+                <div class="rb-item"><div class="rb-val" id="rbCorrect" style="color:var(--success)">0</div><div class="rb-key">Correct</div></div>
+                <div class="rb-item"><div class="rb-val" id="rbWrong" style="color:var(--danger)">0</div><div class="rb-key">Wrong</div></div>
+                <div class="rb-item"><div class="rb-val" id="rbStreak" style="color:var(--gold)">0</div><div class="rb-key">Best Streak</div></div>
+                <div class="rb-item"><div class="rb-val" id="rbTime" style="color:var(--fire)">0s</div><div class="rb-key">Avg Time</div></div>
+            </div>
+            <div class="result-btns">
+                <button class="btn btn-ghost" onclick="restartQuiz()">🔄 Try Again</button>
+                <a href="index.html" class="btn btn-fire">📚 Back to Lesson</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="combo-toast" id="comboToast">🔥 Combo x3!</div>
+
+<script>
+const quizData =[
+    {
+        question: "To legally ride a Category A3 motorcycle taxi, what are the minimum age and experience requirements?",
+        options:["18 years, no experience needed", "21 years, 1 year A2 riding experience", "24 years, 2 years A1 experience", "21 years, Category B driving license"],
+        correct: 1,
+        explanation: "Category A3 (Taxi/Courier) requires the rider to be at least 21 years old and have 1 year of prior Category A2 experience.",
+        category: "Unit 1: Licensing"
+    },
+    {
+        question: "Why is defensive riding critical for motorcyclists compared to car drivers?",
+        options:["Motorcycles are faster", "Motorcyclists lack chassis protection in a crash", "It reduces fuel consumption", "NTSA fines are higher for motorcycles"],
+        correct: 1,
+        explanation: "Motorcycles offer zero chassis protection. In an accident, the rider's body absorbs the impact, making crash avoidance (defensive riding) critical to survival.",
+        category: "Unit 1: Statistics"
+    },
+    {
+        question: "Which limb operates the gear shift lever on a standard manual motorcycle?",
+        options: ["Right Hand", "Right Foot", "Left Hand", "Left Foot"],
+        correct: 3,
+        explanation: "The gear shift lever is operated with the left foot. You click down for 1st gear, and pull up for higher gears.",
+        category: "Unit 2: Controls"
+    },
+    {
+        question: "The front brake provides approximately what percentage of your motorcycle's stopping power?",
+        options:["30%", "50%", "70%", "100%"],
+        correct: 2,
+        explanation: "The front brake, operated by the right hand lever, provides roughly 70% of a motorcycle's total stopping power due to weight transfer during braking.",
+        category: "Unit 2: Controls"
+    },
+    {
+        question: "What is the primary function of wearing a reflective vest while riding?",
+        options:["To satisfy police checkpoints", "To keep the jacket clean", "To enhance conspicuity to other road users", "To protect against wind chill"],
+        correct: 2,
+        explanation: "A reflective vest drastically improves your visibility (conspicuity) to other drivers, particularly in low light or bad weather, preventing collisions.",
+        category: "Unit 2: Gear"
+    },
+    {
+        question: "When performing a U-turn during yard maneuvers, where should the rider look?",
+        options:["Down at the front wheel", "Straight ahead at the horizon", "At the clutch lever", "Over their shoulder at the intended destination"],
+        correct: 3,
+        explanation: "A motorcycle goes where your eyes look. Turn your head and look towards the exit of your turn to maintain balance and direction.",
+        category: "Unit 3: Yard Maneuvers"
+    },
+    {
+        question: "What is the correct technique for an emergency stop?",
+        options:["Stomp hard on the rear brake only", "Grab the front brake as fast as possible", "Apply progressive pressure to the front and light pressure to the rear", "Downshift rapidly without using brakes"],
+        correct: 2,
+        explanation: "Emergency braking requires smooth, progressive squeezing of the front brake (to avoid locking) combined with light pressure on the rear.",
+        category: "Unit 3: Yard Maneuvers"
+    },
+    {
+        question: "When approaching a junction, you should apply the MSM routine. What does MSM stand for?",
+        options:["Mirror, Stop, Move", "Mirror, Signal, Maneuver", "Move, Signal, Mirror", "Motorcycle, Speed, Monitor"],
+        correct: 1,
+        explanation: "MSM (Mirror, Signal, Maneuver) is the standard safety routine to ensure the path is clear, communicate your intent, and execute the move safely.",
+        category: "Unit 4: Road Riding"
+    },
+    {
+        question: "What is a critical safety adjustment you must make when riding at night?",
+        options:["Increase your speed to spend less time in the dark", "Ride closer to the vehicle ahead to use their headlights", "Reduce your speed and increase following distance", "Turn off your headlights to avoid blinding others"],
+        correct: 2,
+        explanation: "Visibility drops significantly at night. Reducing speed and increasing following distance gives you the time needed to react to hazards in your headlights.",
+        category: "Unit 4: Road Riding"
+    },
+    {
+        question: "When approaching a roundabout, who holds the right-of-way?",
+        options:["The largest vehicle", "Traffic already in the roundabout coming from your right", "Traffic entering the roundabout from your left", "Whoever gets to the line first"],
+        correct: 1,
+        explanation: "You must yield (give way) to traffic already circulating within the roundabout, which approaches from your right.",
+        category: "Unit 4: Road Riding"
+    }
+];
+
+const TIME_PER_Q = 20;
+let currentQ = 0, score = 0, streak = 0, bestStreak = 0;
+let hasAnswered = false, timerInterval = null, timeLeft = TIME_PER_Q;
+let totalTimeUsed = 0, questionStartTime = 0;
+
+function loadQuestion() {
+    hasAnswered = false;
+    timeLeft = TIME_PER_Q;
+    questionStartTime = Date.now();
+    const actionBtn = document.getElementById('actionBtn');
+    actionBtn.textContent = 'Submit Answer';
+    actionBtn.disabled = true;
+    actionBtn.dataset.state = '';
+    
+    const fb = document.getElementById('feedbackBox');
+    fb.className = 'feedback-box';
+    fb.style.display = 'none';
+
+    const q = quizData[currentQ];
+    document.getElementById('qCounter').textContent = `Question ${currentQ + 1} / ${quizData.length}`;
+    document.getElementById('qCategory').textContent = q.category;
+    document.getElementById('questionText').textContent = q.question;
+    document.getElementById('liveScore').textContent = score;
+    document.getElementById('progressFill').style.width = `${(currentQ / quizData.length) * 100}%`;
+
+    const ol = document.getElementById('optionsList');
+    ol.innerHTML = '';['A','B','C','D'].forEach((letter, i) => {
+        const li = document.createElement('li');
+        li.className = 'option-item';
+        li.innerHTML = `<span class="opt-letter">${letter}</span><span>${q.options[i]}</span>`;
+        li.onclick = () => selectOption(i, li);
+        ol.appendChild(li);
+    });
+    startTimer();
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+    updateTimer();
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimer();
+        if (timeLeft <= 0) { clearInterval(timerInterval); if (!hasAnswered) timeOut(); }
+    }, 1000);
+}
+
+function updateTimer() {
+    document.getElementById('timerText').textContent = timeLeft;
+    const offset = 97.4 - (timeLeft / TIME_PER_Q) * 97.4;
+    const circle = document.getElementById('timerCircle');
+    circle.style.strokeDashoffset = offset;
+    circle.style.stroke = timeLeft <= 5 ? '#ef4444' : timeLeft <= 10 ? '#ffc947' : 'var(--fire)';
+}
+
+function timeOut() {
+    hasAnswered = true;
+    streak = 0;
+    document.getElementById('streakDisplay').textContent = `🔥 Streak: 0`;
+    const q = quizData[currentQ];
+    document.querySelectorAll('.option-item').forEach(i => i.classList.add('locked'));
+    document.querySelectorAll('.option-item')[q.correct].classList.add('correct');
+    showFeedback(false, '⏰ Time\'s up! ' + q.explanation);
+    
+    const btn = document.getElementById('actionBtn');
+    btn.textContent = currentQ === quizData.length - 1 ? 'See Results →' : 'Next Question →';
+    btn.disabled = false;
+    btn.dataset.state = 'next';
+}
+
+function selectOption(index, li) {
+    if (hasAnswered) return;
+    document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+    li.classList.add('selected');
+    li.dataset.idx = index;
+    document.getElementById('actionBtn').disabled = false;
+}
+
+function handleAction() {
+    const btn = document.getElementById('actionBtn');
+    if (btn.dataset.state === 'next') { btn.dataset.state = ''; nextQuestion(); return; }
+    const selected = document.querySelector('.option-item.selected');
+    if (!selected || hasAnswered) return;
+    submitAnswer(parseInt(selected.dataset.idx));
+}
+
+function submitAnswer(selectedIdx) {
+    hasAnswered = true;
+    clearInterval(timerInterval);
+    totalTimeUsed += Math.round((Date.now() - questionStartTime) / 1000);
+
+    const q = quizData[currentQ];
+    document.querySelectorAll('.option-item').forEach(i => i.classList.add('locked'));
+    const isCorrect = selectedIdx === q.correct;
+
+    if (isCorrect) {
+        document.querySelectorAll('.option-item')[selectedIdx].classList.add('correct');
+        score++;
+        streak++;
+        if (streak > bestStreak) bestStreak = streak;
+        document.getElementById('liveScore').textContent = score;
+        document.getElementById('streakDisplay').textContent = `🔥 Streak: ${streak}`;
+        if (streak >= 3) showCombo(streak);
+        showFeedback(true, '✅ Correct! ' + q.explanation);
+    } else {
+        document.querySelectorAll('.option-item')[selectedIdx].classList.add('wrong');
+        document.querySelectorAll('.option-item')[q.correct].classList.add('correct');
+        streak = 0;
+        document.getElementById('streakDisplay').textContent = `🔥 Streak: 0`;
+        showFeedback(false, '❌ Incorrect. ' + q.explanation);
+    }
+    
+    const btn = document.getElementById('actionBtn');
+    btn.textContent = currentQ === quizData.length - 1 ? 'See Results →' : 'Next Question →';
+    btn.disabled = false;
+    btn.dataset.state = 'next';
+}
+
+function showFeedback(correct, msg) {
+    const fb = document.getElementById('feedbackBox');
+    fb.className = `feedback-box show ${correct ? 'correct-fb' : 'wrong-fb'}`;
+    fb.style.display = 'flex';
+    fb.innerHTML = `<span style="font-size:18px;flex-shrink:0">${correct ? '💡' : '📖'}</span><span>${msg}</span>`;
+}
+
+function nextQuestion() {
+    currentQ++;
+    if (currentQ < quizData.length) { loadQuestion(); } else { showResults(); }
+}
+
+function showResults() {
+    document.getElementById('quizView').style.display = 'none';
+    document.getElementById('resultsView').style.display = 'block';
+
+    const pct = Math.round((score / quizData.length) * 100);
+    const avgTime = Math.round(totalTimeUsed / quizData.length);
+
+    document.getElementById('resultPct').textContent = `${pct}%`;
+    document.getElementById('rbCorrect').textContent = score;
+    document.getElementById('rbWrong').textContent = quizData.length - score;
+    document.getElementById('rbStreak').textContent = bestStreak;
+    document.getElementById('rbTime').textContent = `${avgTime}s`;
+
+    const ring = document.getElementById('ringScore');
+    const offset = 490 - (pct / 100) * 490;
+
+    if (pct >= 70) {
+        ring.style.stroke = '#22c55e';
+        document.getElementById('resultTitle').textContent = 'Master Rider! 🏆';
+        document.getElementById('resultSub').textContent = 'Outstanding! You have a solid command of the NTSA Category A Masterclass material.';
+        document.getElementById('resultLabel').textContent = 'Pass';
+        document.getElementById('resultPct').style.color = '#22c55e';
+        if (pct === 100) launchConfetti();
+    } else {
+        ring.style.stroke = '#ef4444';
+        document.getElementById('resultTitle').textContent = 'Needs More Study 📖';
+        document.getElementById('resultSub').textContent = 'Go back through the Units 1-4 material, then retake the quiz. A 70% is required to pass.';
+        document.getElementById('resultLabel').textContent = 'Fail';
+        document.getElementById('resultPct').style.color = '#ef4444';
+    }
+    
+    ring.style.strokeDasharray = 490;
+    ring.style.strokeDashoffset = 490;
+    setTimeout(() => { ring.style.strokeDashoffset = offset; }, 100);
+}
+
+function showCombo(n) {
+    const toast = document.getElementById('comboToast');
+    toast.textContent = `🔥 ${n} in a Row!`;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+function launchConfetti() {
+    const colors =['#ff6b1a','#ffc947','#22c55e','#60a5fa','#f472b6','#fff'];
+    for (let i = 0; i < 80; i++) {
+        setTimeout(() => {
+            const el = document.createElement('div');
+            el.className = 'confetti-particle';
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.background = colors[Math.floor(Math.random() * colors.length)];
+            el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 3500);
+        }, i * 30);
+    }
+}
+
+function restartQuiz() {
+    currentQ = 0; score = 0; streak = 0; bestStreak = 0;
+    totalTimeUsed = 0; hasAnswered = false;
+    document.getElementById('resultsView').style.display = 'none';
+    document.getElementById('quizView').style.display = 'block';
+    document.getElementById('streakDisplay').textContent = '🔥 Streak: 0';
+    loadQuestion();
+}
+
+loadQuestion();
+</script>
+</body>
+</html>
