@@ -8,13 +8,22 @@
   "timeLimit": 30,
   "passingScore": 70,
   "isPaid": false,
-  "version": 1,
+  "version": 2,
   "order": 1,
   "questions": [
     {
-      "id": "q1",
+      "id": "q_signs_01",
       "type": "multiple-choice",
-      "question": "What does a red octagonal sign mean?",
+      "question": {
+        "format": "text",
+        "value": "What does a red octagonal sign mean?",
+        "media": {
+          "type": "image",
+          "url": "./stop-sign.png",
+          "caption": "A red octagonal road sign on a white post",
+          "position": "before"
+        }
+      },
       "points": 10,
       "options": [
         { "id": "a", "text": "Give way", "isCorrect": false },
@@ -22,22 +31,26 @@
         { "id": "c", "text": "No entry", "isCorrect": false },
         { "id": "d", "text": "Speed limit", "isCorrect": false }
       ],
-      "explanation": "A red octagonal (8-sided) sign is universally recognized as a STOP sign. You must come to a complete stop before proceeding.",
-      "hint": "Think about the shape - how many sides does it have?",
-      "media": {
-        "type": "image",
-        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Kenya_road_sign_R1.svg/200px-Kenya_road_sign_R1.svg.png",
-        "caption": "Kenya STOP sign - Red octagonal shape"
-      },
-      "richContent": {
-        "type": "html",
-        "content": "<div style='padding:10px;background:#f5f5f5;border-radius:8px;'><h3 style='color:#d32f2f;margin:0 0 10px 0;'>🛑 STOP Sign Facts</h3><ul style='margin:0;padding-left:20px;'><li><strong>Shape:</strong> Octagon (8 sides)</li><li><strong>Color:</strong> Red background with white text</li><li><strong>Action:</strong> Come to a <u>complete stop</u></li><li><strong>Location:</strong> At intersections and railway crossings</li></ul><p style='margin:10px 0 0 0;font-size:0.9em;color:#666;'>💡 <em>Remember: Even if the road looks clear, you MUST stop completely at a STOP sign!</em></p></div>"
+      "explanation": "A red octagonal (8-sided) sign is universally recognised as a STOP sign. You must come to a complete stop before the line and check that it is safe to proceed.",
+      "hint": "Count the sides of the shape — what does that number suggest?",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Road Sign Shapes</h4><p style='line-height:1.6;font-size:0.9em;'>Different shapes help drivers recognise sign categories instantly, even at speed or in poor visibility.</p><ul style='font-size:0.85em;margin:0;padding-left:20px;'><li><strong>Octagon (8 sides)</strong> — Critical regulatory signs</li><li><strong>Triangle</strong> — Warning signs</li><li><strong>Circle</strong> — Regulatory instructions</li><li><strong>Rectangle</strong> — Information and guidance</li></ul></div>"
       }
     },
     {
-      "id": "q2",
+      "id": "q_signs_02",
       "type": "multiple-choice",
-      "question": "What does a triangular sign with a red border mean?",
+      "question": {
+        "format": "text",
+        "value": "What does a triangular sign with a red border mean?",
+        "media": {
+          "type": "image",
+          "url": "./warning-sign.png",
+          "caption": "Triangular road sign with red border",
+          "position": "before"
+        }
+      },
       "points": 10,
       "options": [
         { "id": "a", "text": "Information", "isCorrect": false },
@@ -45,18 +58,26 @@
         { "id": "c", "text": "Prohibition", "isCorrect": false },
         { "id": "d", "text": "Mandatory instruction", "isCorrect": false }
       ],
-      "explanation": "Triangular signs with red borders are warning signs that alert drivers to potential hazards ahead.",
-      "hint": "These signs warn you about dangers on the road",
-      "media": {
-        "type": "video",
-        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        "caption": "Understanding Warning Signs - Educational Video"
+      "explanation": "Triangular signs with red borders are warning signs. They alert drivers to potential hazards ahead — such as sharp bends, pedestrian crossings, or animal crossings.",
+      "hint": "These signs prepare you for what lies ahead — they are not commands.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Sign Shapes and Colours</h4><p style='line-height:1.6;font-size:0.9em;'>Road signs use consistent shapes and colours so drivers can categorise a sign before reading its detail.</p><ul style='font-size:0.85em;margin:0;padding-left:20px;'><li><strong>Triangle (pointing up)</strong> — Red border, white background: warning</li><li><strong>Circle with red border</strong> — Prohibition</li><li><strong>Circle with blue background</strong> — Mandatory instruction</li><li><strong>Rectangle</strong> — Various colours: information</li></ul></div>"
       }
     },
     {
-      "id": "q3",
+      "id": "q_signs_03",
       "type": "multiple-choice",
-      "question": "What does a circular sign with a red border and diagonal line mean?",
+      "question": {
+        "format": "text",
+        "value": "What does a circular sign with a red border and a diagonal line through it mean?",
+        "media": {
+          "type": "image",
+          "url": "./prohibition-sign.png",
+          "caption": "Circular sign with red border and diagonal line",
+          "position": "before"
+        }
+      },
       "points": 10,
       "options": [
         { "id": "a", "text": "Warning", "isCorrect": false },
@@ -64,86 +85,95 @@
         { "id": "c", "text": "End of restriction", "isCorrect": false },
         { "id": "d", "text": "Mandatory action", "isCorrect": false }
       ],
-      "explanation": "A red circle with a diagonal line indicates prohibition - something is not allowed.",
-      "hint": "The diagonal line means 'no' or 'not allowed'",
-      "media": {
-        "type": "image",
-        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/No_entry_sign.svg/200px-No_entry_sign.svg.png",
-        "caption": "Prohibition sign example - Red circle with diagonal line"
-      },
-      "richContent": {
-        "type": "html",
-        "content": "<div style='padding:12px;background:linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);border-left:4px solid #d32f2f;border-radius:6px;'><h4 style='color:#c62828;margin:0 0 8px 0;'>🚫 Prohibition Signs</h4><table style='width:100%;border-collapse:collapse;'><tr><td style='padding:4px 0;'><strong>Shape:</strong></td><td>Circle</td></tr><tr><td style='padding:4px 0;'><strong>Border:</strong></td><td>Red</td></tr><tr><td style='padding:4px 0;'><strong>Diagonal:</strong></td><td>Red line (means NO)</td></tr><tr><td style='padding:4px 0;'><strong>Examples:</strong></td><td>No entry, No parking, No U-turn</td></tr></table></div>"
+      "explanation": "A red circle with a diagonal line (slash) indicates prohibition — something is not permitted. The symbol inside shows what is prohibited, for example a horn symbol means no sounding of horns.",
+      "hint": "The diagonal line means 'no' or 'not allowed' — like a universal cancel symbol.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Red on Road Signs</h4><p style='line-height:1.6;font-size:0.9em;'>Red is used internationally to communicate critical rules and restrictions. On Kenyan roads you will see red used in three ways:</p><ul style='font-size:0.85em;margin:0;padding-left:20px;'><li><strong>Red octagon</strong> — STOP sign</li><li><strong>Red triangle border</strong> — Hazard warning</li><li><strong>Red circle with diagonal</strong> — Prohibition (no doing X)</li><li><strong>Red circle border only</strong> — Speed limit or other restriction</li></ul></div>"
       }
     },
     {
-      "id": "q4",
+      "id": "q_signs_04",
       "type": "multiple-choice",
       "question": "What does a blue circular sign indicate?",
       "points": 10,
       "options": [
-        { "id": "a", "text": "Warning", "isCorrect": false },
-        { "id": "b", "text": "Prohibition", "isCorrect": false },
-        { "id": "c", "text": "Mandatory instruction", "isCorrect": true },
-        { "id": "d", "text": "Information", "isCorrect": false }
+        { "id": "a", "text": "A hazard warning", "isCorrect": false },
+        { "id": "b", "text": "A prohibition", "isCorrect": false },
+        { "id": "c", "text": "A mandatory instruction you must obey", "isCorrect": true },
+        { "id": "d", "text": "An advisory speed limit", "isCorrect": false }
       ],
-      "explanation": "Blue circular signs give mandatory instructions that must be followed.",
-      "hint": "Blue circles tell you what you MUST do",
-      "richContent": {
-        "type": "html",
-        "content": "<div style='padding:15px;background:#e3f2fd;border:2px solid #1976d2;border-radius:8px;'><h3 style='color:#0d47a1;margin:0 0 12px 0;'>🔵 Mandatory Signs Guide</h3><div style='background:white;padding:10px;border-radius:4px;margin-bottom:10px;'><strong style='color:#1565c0;'>Key Characteristics:</strong><ul style='margin:8px 0;padding-left:20px;'><li>Shape: <strong>Circle</strong></li><li>Color: <strong>Blue background</strong></li><li>Symbol: White pictogram</li><li>Meaning: <strong>MUST obey</strong></li></ul></div><div style='background:#fff3e0;padding:8px;border-radius:4px;border-left:3px solid #ff9800;'><strong>⚠️ Important:</strong> Ignoring mandatory signs can result in fines or accidents!</div></div>"
+      "explanation": "Blue circular signs give mandatory instructions that must be obeyed by law. Common examples include 'turn left ahead', 'keep right', and 'minimum speed' signs.",
+      "hint": "Blue circles tell you what you MUST do — not what to avoid.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#e3f2fd;border-left:4px solid #1976d2;border-radius:6px;'><h4 style='color:#0d47a1;margin:0 0 8px 0;'>Mandatory vs Prohibition Signs</h4><p style='line-height:1.6;font-size:0.9em;'>Both use circular shapes but are easy to tell apart:</p><ul style='font-size:0.85em;margin:0;padding-left:20px;'><li><strong>Blue circle</strong> — Mandatory: you <em>must</em> do this</li><li><strong>Red circle with diagonal</strong> — Prohibition: you must <em>not</em> do this</li><li><strong>Red circle border only</strong> — Restriction: e.g. speed limit</li></ul><p style='font-size:0.85em;margin:8px 0 0 0;'>Ignoring a mandatory sign is a traffic offence under the Traffic Act of Kenya.</p></div>"
       }
     },
     {
-      "id": "q5",
+      "id": "q_markings_01",
       "type": "true-false",
       "question": "A broken white line on the road means you may cross it to overtake if it is safe to do so.",
       "points": 10,
       "correctAnswer": true,
-      "explanation": "A broken white line separates lanes and you may cross it to overtake if it is safe to do so.",
-      "hint": "Think about what 'broken' means - is it a barrier?",
-      "richContent": {
-        "type": "html",
-        "content": "<div style='padding:12px;background:#f5f5f5;border-radius:6px;'><h4 style='margin:0 0 10px 0;color:#424242;'>📏 Road Line Markings</h4><table style='width:100%;border-collapse:collapse;background:white;'><thead><tr style='background:#616161;color:white;'><th style='padding:8px;text-align:left;border:1px solid #ddd;'>Line Type</th><th style='padding:8px;text-align:left;border:1px solid #ddd;'>Meaning</th><th style='padding:8px;text-align:left;border:1px solid #ddd;'>Can Cross?</th></tr></thead><tbody><tr><td style='padding:8px;border:1px solid #ddd;'><strong>Broken White</strong></td><td style='padding:8px;border:1px solid #ddd;'>Lane separator</td><td style='padding:8px;border:1px solid #ddd;color:#2e7d32;'><strong>✓ YES</strong> (if safe)</td></tr><tr style='background:#f9f9f9;'><td style='padding:8px;border:1px solid #ddd;'><strong>Solid White</strong></td><td style='padding:8px;border:1px solid #ddd;'>Lane boundary</td><td style='padding:8px;border:1px solid #ddd;color:#c62828;'><strong>✗ NO</strong></td></tr><tr><td style='padding:8px;border:1px solid #ddd;'><strong>Double Solid</strong></td><td style='padding:8px;border:1px solid #ddd;'>No crossing zone</td><td style='padding:8px;border:1px solid #ddd;color:#c62828;'><strong>✗ NEVER</strong></td></tr></tbody></table></div>"
+      "explanation": "A broken (dashed) white centre line is a lane separator and may be crossed to overtake when it is safe. A solid white line must not be crossed.",
+      "hint": "Think about what a 'gap' in a line implies — can something pass through a gap?",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Road Centre-Line Markings</h4><table style='width:100%;border-collapse:collapse;background:white;font-size:0.85em;'><thead><tr style='background:#616161;color:white;'><th style='padding:8px;text-align:left;border:1px solid #ddd;'>Line Type</th><th style='padding:8px;text-align:left;border:1px solid #ddd;'>Meaning</th><th style='padding:8px;text-align:left;border:1px solid #ddd;'>May Cross?</th></tr></thead><tbody><tr><td style='padding:8px;border:1px solid #ddd;'><strong>Broken white</strong></td><td style='padding:8px;border:1px solid #ddd;'>Lane separator</td><td style='padding:8px;border:1px solid #ddd;color:#2e7d32;'><strong>Yes — if safe</strong></td></tr><tr style='background:#f9f9f9;'><td style='padding:8px;border:1px solid #ddd;'><strong>Solid white</strong></td><td style='padding:8px;border:1px solid #ddd;'>Lane boundary</td><td style='padding:8px;border:1px solid #ddd;color:#c62828;'><strong>No</strong></td></tr><tr><td style='padding:8px;border:1px solid #ddd;'><strong>Double solid white</strong></td><td style='padding:8px;border:1px solid #ddd;'>No-crossing zone</td><td style='padding:8px;border:1px solid #ddd;color:#c62828;'><strong>Never</strong></td></tr></tbody></table></div>"
       }
     },
     {
-      "id": "q6",
+      "id": "q_markings_02",
       "type": "multiple-choice",
-      "question": "What does a continuous yellow line at the edge of the road mean?",
+      "question": "What does a continuous yellow line painted at the edge of the road mean?",
       "points": 10,
       "options": [
-        { "id": "a", "text": "No stopping", "isCorrect": false },
-        { "id": "b", "text": "No parking", "isCorrect": true },
-        { "id": "c", "text": "Bus lane", "isCorrect": false },
+        { "id": "a", "text": "No stopping at any time", "isCorrect": false },
+        { "id": "b", "text": "No parking at any time", "isCorrect": true },
+        { "id": "c", "text": "Bus lane ahead", "isCorrect": false },
         { "id": "d", "text": "Cycle lane", "isCorrect": false }
       ],
-      "explanation": "A continuous yellow line at the road edge means no parking is allowed at any time.",
-      "hint": "Yellow lines are about parking restrictions",
-      "richContent": {
-        "type": "html",
-        "content": "<div style='padding:14px;background:linear-gradient(to right, #fff9c4, #fff59d);border:2px solid #f57f17;border-radius:8px;'><h4 style='color:#f57f17;margin:0 0 10px 0;'>🟨 Yellow Line Parking Rules</h4><div style='background:white;padding:12px;border-radius:6px;box-shadow:0 2px 4px rgba(0,0,0,0.1);'><table style='width:100%;border-collapse:collapse;'><tr style='border-bottom:2px solid #fdd835;'><td style='padding:8px;'><strong>Line Type</strong></td><td style='padding:8px;'><strong>Restriction</strong></td><td style='padding:8px;'><strong>Time</strong></td></tr><tr><td style='padding:8px;border-bottom:1px solid #eee;'>Single Yellow</td><td style='padding:8px;border-bottom:1px solid #eee;'>No Parking</td><td style='padding:8px;border-bottom:1px solid #eee;'><span style='color:#e65100;'>Specific hours</span></td></tr><tr><td style='padding:8px;border-bottom:1px solid #eee;'>Double Yellow</td><td style='padding:8px;border-bottom:1px solid #eee;'>No Parking</td><td style='padding:8px;border-bottom:1px solid #eee;'><span style='color:#c62828;'><strong>ANY TIME</strong></span></td></tr><tr><td style='padding:8px;'>Continuous Yellow</td><td style='padding:8px;'>No Parking</td><td style='padding:8px;'><span style='color:#c62828;'><strong>24/7</strong></span></td></tr></table></div><p style='margin:10px 0 0 0;font-size:0.9em;color:#e65100;'><strong>💡 Tip:</strong> Always check nearby signs for specific time restrictions!</p></div>"
+      "explanation": "A continuous yellow kerb line means no parking at any time. You may stop briefly to drop off or pick up passengers, but you cannot leave the vehicle unattended.",
+      "hint": "Yellow edge lines are always about parking — the type of line tells you how strict the restriction is.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#fff8e1;border-left:4px solid #f57c00;border-radius:6px;'><h4 style='color:#e65100;margin:0 0 8px 0;'>Yellow Kerb Line Rules</h4><table style='width:100%;border-collapse:collapse;background:white;font-size:0.85em;'><thead><tr style='background:#f57c00;color:white;'><th style='padding:8px;border:1px solid #ddd;'>Line Type</th><th style='padding:8px;border:1px solid #ddd;'>Restriction</th><th style='padding:8px;border:1px solid #ddd;'>When</th></tr></thead><tbody><tr><td style='padding:8px;border:1px solid #ddd;'>Single yellow</td><td style='padding:8px;border:1px solid #ddd;'>No parking</td><td style='padding:8px;border:1px solid #ddd;'>Specific hours (check nearby sign)</td></tr><tr style='background:#f9f9f9;'><td style='padding:8px;border:1px solid #ddd;'>Double yellow</td><td style='padding:8px;border:1px solid #ddd;'>No parking</td><td style='padding:8px;border:1px solid #ddd;'>At any time</td></tr><tr><td style='padding:8px;border:1px solid #ddd;'>Continuous yellow</td><td style='padding:8px;border:1px solid #ddd;'>No parking</td><td style='padding:8px;border:1px solid #ddd;'>24 hours, 7 days</td></tr></tbody></table></div>"
       }
     },
     {
-      "id": "q7",
+      "id": "q_signals_01",
       "type": "multiple-choice",
-      "question": "What should you do when you see a yellow traffic light?",
+      "question": {
+        "format": "text",
+        "value": "What must you do when you see a yellow (amber) traffic light?",
+        "media": {
+          "type": "video",
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          "caption": "Understanding traffic light signals and proper response",
+          "position": "before"
+        }
+      },
       "points": 10,
       "options": [
-        { "id": "a", "text": "Speed up to cross", "isCorrect": false },
-        { "id": "b", "text": "Stop if safe to do so", "isCorrect": true },
-        { "id": "c", "text": "Continue at same speed", "isCorrect": false },
-        { "id": "d", "text": "Sound your horn", "isCorrect": false }
+        { "id": "a", "text": "Accelerate to clear the junction before it turns red", "isCorrect": false },
+        { "id": "b", "text": "Stop if you can do so safely", "isCorrect": true },
+        { "id": "c", "text": "Continue at your current speed", "isCorrect": false },
+        { "id": "d", "text": "Sound your horn and proceed", "isCorrect": false }
       ],
-      "explanation": "A yellow light means stop if you can do so safely. It warns that the light is about to turn red.",
-      "hint": "Yellow is a warning - what comes after yellow?"
+      "explanation": "A yellow light means stop if you can do so safely. It warns that the signal is about to turn red. Accelerating to 'beat' a yellow light is dangerous and may constitute running a red light if you cross after it has changed.",
+      "hint": "Yellow is a transition warning — what comes immediately after it?",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Traffic Light Sequence in Kenya</h4><ul style='font-size:0.85em;margin:0;padding-left:20px;line-height:1.8;'><li><strong>Red</strong> — Stop. Do not proceed.</li><li><strong>Red + Yellow together</strong> — Prepare to move; engine on, foot on clutch.</li><li><strong>Green</strong> — Proceed if the way is clear.</li><li><strong>Yellow (alone)</strong> — Stop if safe to do so; light is about to turn red.</li></ul><p style='font-size:0.85em;margin:8px 0 0 0;'>Note: Not all Kenyan junctions use the red+yellow combination phase.</p></div>"
+      }
     },
     {
-      "id": "q8",
+      "id": "q_signs_05",
       "type": "multiple-select",
-      "question": "Which of the following are types of road signs? (Select all that apply)",
+      "question": "Which of the following are officially recognised categories of road signs? (Select all that apply)",
       "points": 15,
+      "partialCredit": true,
       "options": [
         { "id": "a", "text": "Warning signs", "isCorrect": true },
         { "id": "b", "text": "Prohibition signs", "isCorrect": true },
@@ -151,41 +181,200 @@
         { "id": "d", "text": "Mandatory signs", "isCorrect": true },
         { "id": "e", "text": "Information signs", "isCorrect": true }
       ],
-      "partialCredit": true,
-      "explanation": "The main types of road signs are: Warning, Prohibition, Mandatory, and Information signs. There are no 'suggestion' signs.",
-      "hint": "Think about the four main categories of road signs",
-      "richContent": {
-        "type": "html",
-        "content": "<div style='padding:16px;background:#fafafa;border-radius:8px;'><h3 style='color:#1976d2;margin:0 0 14px 0;text-align:center;'>🚦 Complete Road Sign Classification</h3><table style='width:100%;border-collapse:collapse;background:white;box-shadow:0 2px 8px rgba(0,0,0,0.1);'><thead><tr style='background:#1976d2;color:white;'><th style='padding:12px;border:1px solid #ddd;'>Sign Type</th><th style='padding:12px;border:1px solid #ddd;'>Shape</th><th style='padding:12px;border:1px solid #ddd;'>Color</th><th style='padding:12px;border:1px solid #ddd;'>Purpose</th></tr></thead><tbody><tr><td style='padding:10px;border:1px solid #ddd;'><strong>⚠️ Warning</strong></td><td style='padding:10px;border:1px solid #ddd;'>Triangle</td><td style='padding:10px;border:1px solid #ddd;'>Red border, white background</td><td style='padding:10px;border:1px solid #ddd;'>Alert to hazards</td></tr><tr style='background:#f5f5f5;'><td style='padding:10px;border:1px solid #ddd;'><strong>🚫 Prohibition</strong></td><td style='padding:10px;border:1px solid #ddd;'>Circle</td><td style='padding:10px;border:1px solid #ddd;'>Red border/diagonal</td><td style='padding:10px;border:1px solid #ddd;'>Things NOT allowed</td></tr><tr><td style='padding:10px;border:1px solid #ddd;'><strong>🔵 Mandatory</strong></td><td style='padding:10px;border:1px solid #ddd;'>Circle</td><td style='padding:10px;border:1px solid #ddd;'>Blue background</td><td style='padding:10px;border:1px solid #ddd;'>Must obey</td></tr><tr style='background:#f5f5f5;'><td style='padding:10px;border:1px solid #ddd;'><strong>ℹ️ Information</strong></td><td style='padding:10px;border:1px solid #ddd;'>Rectangle/Square</td><td style='padding:10px;border:1px solid #ddd;'>Blue/Green/White</td><td style='padding:10px;border:1px solid #ddd;'>Guidance & directions</td></tr></tbody></table><div style='margin-top:12px;padding:10px;background:#e8f5e9;border-left:4px solid #4caf50;border-radius:4px;'><strong>✓ Remember:</strong> Each sign type has a specific shape and color to help you identify it quickly while driving!</div></div>"
+      "explanation": "The four recognised categories are Warning, Prohibition, Mandatory, and Information signs. 'Suggestion signs' is not an official category — road signs are legally binding, not advisory.",
+      "hint": "Think about the four main shapes and colours you see on Kenyan roads.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Road Sign Classification</h4><table style='width:100%;border-collapse:collapse;background:white;font-size:0.85em;'><thead><tr style='background:#424242;color:white;'><th style='padding:8px;border:1px solid #ddd;'>Category</th><th style='padding:8px;border:1px solid #ddd;'>Shape</th><th style='padding:8px;border:1px solid #ddd;'>Colour</th><th style='padding:8px;border:1px solid #ddd;'>Purpose</th></tr></thead><tbody><tr><td style='padding:8px;border:1px solid #ddd;'>Warning</td><td style='padding:8px;border:1px solid #ddd;'>Triangle</td><td style='padding:8px;border:1px solid #ddd;'>Red border, white background</td><td style='padding:8px;border:1px solid #ddd;'>Alert to hazards ahead</td></tr><tr style='background:#f9f9f9;'><td style='padding:8px;border:1px solid #ddd;'>Prohibition</td><td style='padding:8px;border:1px solid #ddd;'>Circle</td><td style='padding:8px;border:1px solid #ddd;'>Red border or diagonal</td><td style='padding:8px;border:1px solid #ddd;'>Things not allowed</td></tr><tr><td style='padding:8px;border:1px solid #ddd;'>Mandatory</td><td style='padding:8px;border:1px solid #ddd;'>Circle</td><td style='padding:8px;border:1px solid #ddd;'>Blue background</td><td style='padding:8px;border:1px solid #ddd;'>Must obey</td></tr><tr style='background:#f9f9f9;'><td style='padding:8px;border:1px solid #ddd;'>Information</td><td style='padding:8px;border:1px solid #ddd;'>Rectangle / Square</td><td style='padding:8px;border:1px solid #ddd;'>Blue, green, or white</td><td style='padding:8px;border:1px solid #ddd;'>Guidance and directions</td></tr></tbody></table></div>"
       }
     },
     {
-      "id": "q9",
+      "id": "q_markings_03",
       "type": "multiple-choice",
-      "question": "What does a white 'X' painted on the road mean?",
+      "question": "What does a white 'X' painted on the road surface warn drivers about?",
       "points": 10,
       "options": [
         { "id": "a", "text": "Pedestrian crossing ahead", "isCorrect": false },
         { "id": "b", "text": "No stopping zone", "isCorrect": false },
-        { "id": "c", "text": "Railway crossing ahead", "isCorrect": true },
+        { "id": "c", "text": "Railway level crossing ahead", "isCorrect": true },
         { "id": "d", "text": "Speed bump ahead", "isCorrect": false }
       ],
-      "explanation": "A white X painted on the road warns of a railway crossing ahead. Be prepared to stop if a train is approaching.",
-      "hint": "X marks the spot where trains cross the road"
+      "explanation": "A white X on the road surface warns of a railway level crossing ahead. You should reduce speed, listen for approaching trains, and be prepared to stop.",
+      "hint": "This marking is placed before a point where another type of transport crosses the road.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Road Surface Markings</h4><p style='font-size:0.85em;line-height:1.6;'>Road surface markings supplement signs and signals. Some common Kenyan examples:</p><ul style='font-size:0.85em;margin:0;padding-left:20px;'><li><strong>White X</strong> — Railway level crossing ahead</li><li><strong>White zigzag lines</strong> — Pedestrian crossing zone; no overtaking or parking</li><li><strong>Yellow box marking</strong> — Keep clear; only enter if your exit is clear</li><li><strong>White arrows</strong> — Direction of travel; lane guidance</li></ul></div>"
+      }
     },
     {
-      "id": "q10",
+      "id": "q_signs_06",
       "type": "multiple-choice",
-      "question": "What does a sign showing two cars side by side mean?",
+      "question": "What does a circular sign showing two cars side by side mean?",
       "points": 10,
       "options": [
-        { "id": "a", "text": "Overtaking allowed", "isCorrect": false },
+        { "id": "a", "text": "Overtaking is allowed here", "isCorrect": false },
         { "id": "b", "text": "No overtaking", "isCorrect": true },
-        { "id": "c", "text": "Two-way traffic", "isCorrect": false },
-        { "id": "d", "text": "Dual carriageway", "isCorrect": false }
+        { "id": "c", "text": "Two-way traffic ahead", "isCorrect": false },
+        { "id": "d", "text": "Dual carriageway begins", "isCorrect": false }
       ],
-      "explanation": "This sign prohibits overtaking in that section of road. It's usually placed where overtaking would be dangerous.",
-      "hint": "When two cars are shown together, what are you NOT allowed to do?"
+      "explanation": "A circular sign showing two cars side by side (one black, one red) prohibits overtaking. It is placed in sections where overtaking is particularly dangerous, such as on bends or near junctions.",
+      "hint": "The sign shows two vehicles at the same position — think about what that action is called.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Prohibition Signs — Common Examples</h4><ul style='font-size:0.85em;margin:0;padding-left:20px;line-height:1.8;'><li><strong>No overtaking</strong> — Two cars side by side</li><li><strong>No U-turn</strong> — Curved arrow with diagonal</li><li><strong>No horn</strong> — Horn symbol with diagonal</li><li><strong>No entry</strong> — White horizontal bar on red circle</li><li><strong>Speed limit</strong> — Number inside red circle</li></ul></div>"
+      }
+    },
+    {
+      "id": "q_signals_02",
+      "type": "multiple-choice",
+      "question": "A police officer at a junction is facing you with both arms outstretched sideways. What must you do?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Proceed — the officer is signalling you to go", "isCorrect": false },
+        { "id": "b", "text": "Stop — traffic facing the officer's front and back must halt", "isCorrect": true },
+        { "id": "c", "text": "Hoot to get the officer's attention", "isCorrect": false },
+        { "id": "d", "text": "Proceed slowly with caution", "isCorrect": false }
+      ],
+      "explanation": "When a police officer faces you with arms extended to each side, you are facing the officer's front. Traffic facing the front or back of the officer must stop. Only traffic facing the officer's side (left or right) may proceed.",
+      "hint": "The officer acts like a traffic light — which direction is the officer's 'front' facing?",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Police Officer Hand Signals</h4><ul style='font-size:0.85em;margin:0;padding-left:20px;line-height:1.8;'><li><strong>Officer facing you, arms out sideways</strong> — Stop. You are in the STOP direction.</li><li><strong>Officer's side facing you, arms out</strong> — Proceed. You are in the GO direction.</li><li><strong>Officer raises right hand (palm out)</strong> — All traffic must stop.</li><li><strong>Officer beckons with right hand</strong> — Traffic from that direction may proceed.</li></ul><p style='font-size:0.85em;margin:8px 0 0 0;'>Police signals override all other traffic signs and signals.</p></div>"
+      }
+    },
+    {
+      "id": "q_markings_04",
+      "type": "true-false",
+      "question": "White zigzag lines painted on the road near a pedestrian crossing mean you must not park or overtake in that area.",
+      "points": 10,
+      "correctAnswer": true,
+      "explanation": "White zigzag lines mark the approach to and exit from a pedestrian crossing. Parking and overtaking are prohibited in this zone to ensure pedestrians can be seen clearly by drivers.",
+      "hint": "Zigzag lines are designed to protect a specific type of road user — which one?",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Pedestrian Crossing Zones</h4><p style='font-size:0.85em;line-height:1.6;'>Kenyan roads use several types of pedestrian crossing markings:</p><ul style='font-size:0.85em;margin:0;padding-left:20px;'><li><strong>Zebra crossing</strong> — Black and white stripes; pedestrians have priority</li><li><strong>White zigzag lines</strong> — No parking, no overtaking in this zone</li><li><strong>Pelican crossing</strong> — Controlled by push-button traffic signals</li></ul><p style='font-size:0.85em;margin:8px 0 0 0;'>Always approach pedestrian crossings at a controlled speed.</p></div>"
+      }
+    },
+    {
+      "id": "q_signs_07",
+      "type": "multiple-choice",
+      "question": "A speed limit sign shows the number 50 inside a red circle. What does this mean?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "The recommended speed on this road is 50 km/h", "isCorrect": false },
+        { "id": "b", "text": "The maximum speed permitted is 50 km/h", "isCorrect": true },
+        { "id": "c", "text": "The minimum speed on this road is 50 km/h", "isCorrect": false },
+        { "id": "d", "text": "This road ends in 50 metres", "isCorrect": false }
+      ],
+      "explanation": "A number inside a red circle is a maximum speed limit sign. You must not exceed that speed. In Kenya, urban areas are typically limited to 50 km/h, with higher limits on highways.",
+      "hint": "Numbers inside red circles are always about speed — and red means restriction.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#f5f5f5;border-left:4px solid #666;border-radius:6px;'><h4 style='color:#333;margin:0 0 8px 0;'>Speed Limits in Kenya</h4><table style='width:100%;border-collapse:collapse;background:white;font-size:0.85em;'><thead><tr style='background:#424242;color:white;'><th style='padding:8px;border:1px solid #ddd;'>Road Type</th><th style='padding:8px;border:1px solid #ddd;'>Limit</th></tr></thead><tbody><tr><td style='padding:8px;border:1px solid #ddd;'>Urban / built-up area</td><td style='padding:8px;border:1px solid #ddd;'>50 km/h</td></tr><tr style='background:#f9f9f9;'><td style='padding:8px;border:1px solid #ddd;'>Rural road</td><td style='padding:8px;border:1px solid #ddd;'>80 km/h</td></tr><tr><td style='padding:8px;border:1px solid #ddd;'>Dual carriageway / highway</td><td style='padding:8px;border:1px solid #ddd;'>100 km/h</td></tr><tr style='background:#f9f9f9;'><td style='padding:8px;border:1px solid #ddd;'>Expressway</td><td style='padding:8px;border:1px solid #ddd;'>110 km/h</td></tr></tbody></table></div>"
+      }
+    },
+    {
+      "id": "q_markings_05",
+      "type": "multiple-choice",
+      "question": {
+        "format": "html",
+        "value": "<div><p><strong>Study the road marking descriptions below:</strong></p><table style='width:100%;border-collapse:collapse;margin:10px 0;font-size:0.9em;'><thead><tr style='background:#f5f5f5;'><th style='padding:8px;border:1px solid #ddd;text-align:left;'>Marking</th><th style='padding:8px;border:1px solid #ddd;text-align:left;'>Description</th></tr></thead><tbody><tr><td style='padding:8px;border:1px solid #ddd;'>A</td><td style='padding:8px;border:1px solid #ddd;'>Solid white line on the left edge of the road</td></tr><tr><td style='padding:8px;border:1px solid #ddd;'>B</td><td style='padding:8px;border:1px solid #ddd;'>Broken white line in the centre of the road</td></tr><tr><td style='padding:8px;border:1px solid #ddd;'>C</td><td style='padding:8px;border:1px solid #ddd;'>Solid yellow line on the left kerb</td></tr></tbody></table><p>Which marking prohibits parking at any time?</p></div>"
+      },
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Marking A", "isCorrect": false },
+        { "id": "b", "text": "Marking B", "isCorrect": false },
+        { "id": "c", "text": "Marking C", "isCorrect": true },
+        { "id": "d", "text": "All of the above", "isCorrect": false }
+      ],
+      "explanation": "Marking C — the solid yellow kerb line — indicates no parking at any time. Marking A is the road edge boundary. Marking B is a lane separator that may be crossed to overtake.",
+      "hint": "One of these markings is a kerb (edge) restriction — which colour signals parking rules?"
+    },
+    {
+      "id": "q_signs_08",
+      "type": "multiple-choice",
+      "question": "What does a triangular sign showing a silhouette of two children mean?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "School ahead — reduce speed and be prepared to stop", "isCorrect": true },
+        { "id": "b", "text": "Playground — children may not cross here", "isCorrect": false },
+        { "id": "c", "text": "No children allowed beyond this point", "isCorrect": false },
+        { "id": "d", "text": "Children's hospital ahead", "isCorrect": false }
+      ],
+      "explanation": "A triangular warning sign with children silhouettes indicates a school zone or area where children frequently cross. You must reduce speed and be prepared to stop.",
+      "hint": "It is a triangle — so it is a warning about something ahead. Who does it depict?",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#fff8e1;border-left:4px solid #f57c00;border-radius:6px;'><h4 style='color:#e65100;margin:0 0 8px 0;'>School Zone Rules in Kenya</h4><ul style='font-size:0.85em;margin:0;padding-left:20px;line-height:1.8;'><li>Reduce speed when approaching a school zone sign</li><li>Watch for children crossing from between parked vehicles</li><li>Do not park on zigzag lines or block pedestrian crossings near schools</li><li>Be especially alert during school arrival and dismissal times</li></ul></div>"
+      }
+    },
+    {
+      "id": "q_signals_03",
+      "type": "multiple-choice",
+      "question": "You are waiting at a red traffic light. The light changes to green. What should you do?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Move off immediately at full speed", "isCorrect": false },
+        { "id": "b", "text": "Wait for the car behind to hoot, then proceed", "isCorrect": false },
+        { "id": "c", "text": "Check that the junction is clear, then proceed", "isCorrect": true },
+        { "id": "d", "text": "Sound your horn to warn pedestrians, then go", "isCorrect": false }
+      ],
+      "explanation": "A green light permits you to proceed, but you must first ensure the junction is clear. Other vehicles or pedestrians may still be clearing the junction from the previous phase. Always observe before moving.",
+      "hint": "Green means permission to go — but permission does not remove the duty to observe.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#e8f5e9;border-left:4px solid #4caf50;border-radius:6px;'><h4 style='color:#2e7d32;margin:0 0 8px 0;'>Green Light — Proceed with Observation</h4><p style='font-size:0.85em;line-height:1.6;'>A green signal gives you the right of way, but it does not guarantee safety. Before moving:</p><ul style='font-size:0.85em;margin:0;padding-left:20px;'><li>Check for vehicles that have run the red from crossing traffic</li><li>Check for pedestrians still crossing</li><li>Check your mirrors before pulling away</li></ul></div>"
+      }
+    },
+    {
+      "id": "q_markings_06",
+      "type": "multiple-select",
+      "question": "Which of the following actions are prohibited in a yellow box junction? (Select all that apply)",
+      "points": 15,
+      "partialCredit": true,
+      "options": [
+        { "id": "a", "text": "Entering the box if your exit road is blocked", "isCorrect": true },
+        { "id": "b", "text": "Turning right while waiting for oncoming traffic to clear", "isCorrect": false },
+        { "id": "c", "text": "Parking inside the box", "isCorrect": true },
+        { "id": "d", "text": "Stopping inside the box due to queuing traffic ahead", "isCorrect": true }
+      ],
+      "explanation": "In a yellow box junction you must not enter unless your exit is clear, park inside it, or stop due to queuing — all of which block other traffic. The one exception is turning right: you may wait inside the box for a gap in oncoming traffic, provided your exit is clear.",
+      "hint": "The purpose of a box junction is to keep it clear at all times — with one specific exception.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#fff8e1;border-left:4px solid #f57c00;border-radius:6px;'><h4 style='color:#e65100;margin:0 0 8px 0;'>Yellow Box Junction Rule</h4><p style='font-size:0.85em;line-height:1.6;'>The rule is simple: <strong>do not enter the box unless your exit road is clear.</strong></p><p style='font-size:0.85em;line-height:1.6;'>The single exception: when turning right, you may enter the box and wait for oncoming traffic to pass — as long as your exit is not blocked by queuing vehicles.</p></div>"
+      }
+    },
+    {
+      "id": "q_signs_09",
+      "type": "true-false",
+      "question": "A sign showing a white horizontal bar on a red circle means 'No Entry'.",
+      "points": 10,
+      "correctAnswer": true,
+      "explanation": "The 'No Entry' sign is a white horizontal rectangle (bar) on a red circle. It is placed on one-way streets and restricted access roads to prevent vehicles from entering from the wrong direction.",
+      "hint": "Think about what a solid barrier (horizontal bar) inside a prohibition circle would mean.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#ffebee;border-left:4px solid #c62828;border-radius:6px;'><h4 style='color:#b71c1c;margin:0 0 8px 0;'>No Entry vs Do Not Enter vs Wrong Way</h4><p style='font-size:0.85em;line-height:1.6;'>These three concepts are communicated by different signs, sometimes used together:</p><ul style='font-size:0.85em;margin:0;padding-left:20px;line-height:1.8;'><li><strong>No Entry (red circle + white bar)</strong> — Do not enter this road from this direction</li><li><strong>Wrong Way sign</strong> — You are already travelling in the wrong direction; turn around</li><li><strong>One Way sign</strong> — Informs drivers of the direction of travel on that road</li></ul></div>"
+      }
+    },
+    {
+      "id": "q_signs_10",
+      "type": "multiple-choice",
+      "question": "What does a green rectangular sign on a Kenyan road typically provide?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "A speed restriction", "isCorrect": false },
+        { "id": "b", "text": "A hazard warning", "isCorrect": false },
+        { "id": "c", "text": "Direction and distance information", "isCorrect": true },
+        { "id": "d", "text": "A mandatory turn instruction", "isCorrect": false }
+      ],
+      "explanation": "Green rectangular signs are directional information signs. They show destinations, distances, and route numbers, helping drivers navigate. Blue rectangular signs serve a similar purpose in urban areas.",
+      "hint": "Green is the colour associated with 'go' and guidance — not restriction or warning.",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#e8f5e9;border-left:4px solid #4caf50;border-radius:6px;'><h4 style='color:#2e7d32;margin:0 0 8px 0;'>Information Sign Colours in Kenya</h4><ul style='font-size:0.85em;margin:0;padding-left:20px;line-height:1.8;'><li><strong>Green rectangle</strong> — Highway / inter-city directions and distances</li><li><strong>Blue rectangle</strong> — Urban directions, motorway information, services</li><li><strong>White rectangle</strong> — Local destinations, tourist routes</li><li><strong>Brown rectangle</strong> — Tourist attractions and heritage sites</li></ul></div>"
+      }
     }
   ]
 }
