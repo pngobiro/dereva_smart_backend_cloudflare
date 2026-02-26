@@ -23,7 +23,16 @@
         { "id": "d", "text": "Speed limit", "isCorrect": false }
       ],
       "explanation": "A red octagonal (8-sided) sign is universally recognized as a STOP sign. You must come to a complete stop before proceeding.",
-      "hint": "Think about the shape - how many sides does it have?"
+      "hint": "Think about the shape - how many sides does it have?",
+      "media": {
+        "type": "image",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Kenya_road_sign_R1.svg/200px-Kenya_road_sign_R1.svg.png",
+        "caption": "Kenya STOP sign - Red octagonal shape"
+      },
+      "richContent": {
+        "type": "html",
+        "content": "<div style='padding:10px;background:#f5f5f5;border-radius:8px;'><h3 style='color:#d32f2f;margin:0 0 10px 0;'>🛑 STOP Sign Facts</h3><ul style='margin:0;padding-left:20px;'><li><strong>Shape:</strong> Octagon (8 sides)</li><li><strong>Color:</strong> Red background with white text</li><li><strong>Action:</strong> Come to a <u>complete stop</u></li><li><strong>Location:</strong> At intersections and railway crossings</li></ul><p style='margin:10px 0 0 0;font-size:0.9em;color:#666;'>💡 <em>Remember: Even if the road looks clear, you MUST stop completely at a STOP sign!</em></p></div>"
+      }
     },
     {
       "id": "q2",
@@ -37,7 +46,12 @@
         { "id": "d", "text": "Mandatory instruction", "isCorrect": false }
       ],
       "explanation": "Triangular signs with red borders are warning signs that alert drivers to potential hazards ahead.",
-      "hint": "These signs warn you about dangers on the road"
+      "hint": "These signs warn you about dangers on the road",
+      "media": {
+        "type": "video",
+        "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+        "caption": "Understanding Warning Signs - Educational Video"
+      }
     },
     {
       "id": "q3",
@@ -51,7 +65,16 @@
         { "id": "d", "text": "Mandatory action", "isCorrect": false }
       ],
       "explanation": "A red circle with a diagonal line indicates prohibition - something is not allowed.",
-      "hint": "The diagonal line means 'no' or 'not allowed'"
+      "hint": "The diagonal line means 'no' or 'not allowed'",
+      "media": {
+        "type": "image",
+        "url": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/No_entry_sign.svg/200px-No_entry_sign.svg.png",
+        "caption": "Prohibition sign example - Red circle with diagonal line"
+      },
+      "richContent": {
+        "type": "html",
+        "content": "<div style='padding:12px;background:linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);border-left:4px solid #d32f2f;border-radius:6px;'><h4 style='color:#c62828;margin:0 0 8px 0;'>🚫 Prohibition Signs</h4><table style='width:100%;border-collapse:collapse;'><tr><td style='padding:4px 0;'><strong>Shape:</strong></td><td>Circle</td></tr><tr><td style='padding:4px 0;'><strong>Border:</strong></td><td>Red</td></tr><tr><td style='padding:4px 0;'><strong>Diagonal:</strong></td><td>Red line (means NO)</td></tr><tr><td style='padding:4px 0;'><strong>Examples:</strong></td><td>No entry, No parking, No U-turn</td></tr></table></div>"
+      }
     },
     {
       "id": "q4",
