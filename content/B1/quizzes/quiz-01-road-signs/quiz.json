@@ -1,0 +1,152 @@
+{
+  "id": "quiz-b1-road-signs-001",
+  "title": "Quiz 1: Road Signs and Markings",
+  "description": "Test your knowledge of Kenyan road signs, traffic signals, and road markings",
+  "licenseCategory": "B1",
+  "topicArea": "ROAD_SIGNS",
+  "difficulty": "EASY",
+  "timeLimit": 30,
+  "passingScore": 70,
+  "isPaid": false,
+  "version": 1,
+  "order": 1,
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "question": "What does a red octagonal sign mean?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Give way", "isCorrect": false },
+        { "id": "b", "text": "Stop", "isCorrect": true },
+        { "id": "c", "text": "No entry", "isCorrect": false },
+        { "id": "d", "text": "Speed limit", "isCorrect": false }
+      ],
+      "explanation": "A red octagonal (8-sided) sign is universally recognized as a STOP sign. You must come to a complete stop before proceeding.",
+      "hint": "Think about the shape - how many sides does it have?"
+    },
+    {
+      "id": "q2",
+      "type": "multiple-choice",
+      "question": "What does a triangular sign with a red border mean?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Information", "isCorrect": false },
+        { "id": "b", "text": "Warning", "isCorrect": true },
+        { "id": "c", "text": "Prohibition", "isCorrect": false },
+        { "id": "d", "text": "Mandatory instruction", "isCorrect": false }
+      ],
+      "explanation": "Triangular signs with red borders are warning signs that alert drivers to potential hazards ahead.",
+      "hint": "These signs warn you about dangers on the road"
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "question": "What does a circular sign with a red border and diagonal line mean?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Warning", "isCorrect": false },
+        { "id": "b", "text": "Prohibition", "isCorrect": true },
+        { "id": "c", "text": "End of restriction", "isCorrect": false },
+        { "id": "d", "text": "Mandatory action", "isCorrect": false }
+      ],
+      "explanation": "A red circle with a diagonal line indicates prohibition - something is not allowed.",
+      "hint": "The diagonal line means 'no' or 'not allowed'"
+    },
+    {
+      "id": "q4",
+      "type": "multiple-choice",
+      "question": "What does a blue circular sign indicate?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Warning", "isCorrect": false },
+        { "id": "b", "text": "Prohibition", "isCorrect": false },
+        { "id": "c", "text": "Mandatory instruction", "isCorrect": true },
+        { "id": "d", "text": "Information", "isCorrect": false }
+      ],
+      "explanation": "Blue circular signs give mandatory instructions that must be followed.",
+      "hint": "Blue circles tell you what you MUST do"
+    },
+    {
+      "id": "q5",
+      "type": "true-false",
+      "question": "A broken white line on the road means you may cross it to overtake if it is safe to do so.",
+      "points": 10,
+      "correctAnswer": true,
+      "explanation": "A broken white line separates lanes and you may cross it to overtake if it is safe to do so.",
+      "hint": "Think about what 'broken' means - is it a barrier?"
+    },
+    {
+      "id": "q6",
+      "type": "multiple-choice",
+      "question": "What does a continuous yellow line at the edge of the road mean?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "No stopping", "isCorrect": false },
+        { "id": "b", "text": "No parking", "isCorrect": true },
+        { "id": "c", "text": "Bus lane", "isCorrect": false },
+        { "id": "d", "text": "Cycle lane", "isCorrect": false }
+      ],
+      "explanation": "A continuous yellow line at the road edge means no parking is allowed at any time.",
+      "hint": "Yellow lines are about parking restrictions"
+    },
+    {
+      "id": "q7",
+      "type": "multiple-choice",
+      "question": "What should you do when you see a yellow traffic light?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Speed up to cross", "isCorrect": false },
+        { "id": "b", "text": "Stop if safe to do so", "isCorrect": true },
+        { "id": "c", "text": "Continue at same speed", "isCorrect": false },
+        { "id": "d", "text": "Sound your horn", "isCorrect": false }
+      ],
+      "explanation": "A yellow light means stop if you can do so safely. It warns that the light is about to turn red.",
+      "hint": "Yellow is a warning - what comes after yellow?"
+    },
+    {
+      "id": "q8",
+      "type": "multiple-select",
+      "question": "Which of the following are types of road signs? (Select all that apply)",
+      "points": 15,
+      "options": [
+        { "id": "a", "text": "Warning signs", "isCorrect": true },
+        { "id": "b", "text": "Prohibition signs", "isCorrect": true },
+        { "id": "c", "text": "Suggestion signs", "isCorrect": false },
+        { "id": "d", "text": "Mandatory signs", "isCorrect": true },
+        { "id": "e", "text": "Information signs", "isCorrect": true }
+      ],
+      "partialCredit": true,
+      "explanation": "The main types of road signs are: Warning, Prohibition, Mandatory, and Information signs. There are no 'suggestion' signs.",
+      "hint": "Think about the four main categories of road signs"
+    },
+    {
+      "id": "q9",
+      "type": "multiple-choice",
+      "question": "What does a white 'X' painted on the road mean?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Pedestrian crossing ahead", "isCorrect": false },
+        { "id": "b", "text": "No stopping zone", "isCorrect": false },
+        { "id": "c", "text": "Railway crossing ahead", "isCorrect": true },
+        { "id": "d", "text": "Speed bump ahead", "isCorrect": false }
+      ],
+      "explanation": "A white X painted on the road warns of a railway crossing ahead. Be prepared to stop if a train is approaching.",
+      "hint": "X marks the spot where trains cross the road"
+    },
+    {
+      "id": "q10",
+      "type": "multiple-choice",
+      "question": "What does a sign showing two cars side by side mean?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Overtaking allowed", "isCorrect": false },
+        { "id": "b", "text": "No overtaking", "isCorrect": true },
+        { "id": "c", "text": "Two-way traffic", "isCorrect": false },
+        { "id": "d", "text": "Dual carriageway", "isCorrect": false }
+      ],
+      "explanation": "This sign prohibits overtaking in that section of road. It's usually placed where overtaking would be dangerous.",
+      "hint": "When two cars are shown together, what are you NOT allowed to do?"
+    }
+  ]
+}

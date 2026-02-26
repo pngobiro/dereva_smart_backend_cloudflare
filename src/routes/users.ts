@@ -1,6 +1,5 @@
 import { Hono } from 'hono';
 import type { Env } from '../types';
-import { verifyToken } from '../utils/auth';
 
 const users = new Hono<{ Bindings: Env }>();
 

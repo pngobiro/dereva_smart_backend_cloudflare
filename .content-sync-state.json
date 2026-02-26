@@ -1,191 +1,197 @@
 {
   "files": {
-    "content/A1/01-motorcycle-basics/lesson-01-introduction/index.html": {
-      "hash": "bc952aee935aadc482f67b4d9cc68885",
-      "mtime": 1772012288038,
-      "size": 11119,
-      "lastUpload": 1772013122995
-    },
-    "content/A1/02-road-safety/lesson-01-defensive-riding/index.html": {
-      "hash": "e3779402efea62928c80e2e22fd6ee63",
-      "mtime": 1772012341109,
-      "size": 4479,
-      "lastUpload": 1772013140734
-    },
-    "content/STRUCTURE.md": {
-      "hash": "79f51e24ffd91a719e07beecc0342e70",
-      "mtime": 1772035400508,
-      "size": 55397,
-      "lastUpload": 1772035846616
-    },
-    "content/A1/01-motorcycle-basics/lesson-01-introduction/quiz.html": {
-      "hash": "2e15b2a8c2be702d6f6d62fdfaf46eca",
-      "mtime": 1772015081931,
-      "size": 24339,
-      "lastUpload": 1772015176211
-    },
-    "content/B1/01-vehicle-basics/lesson-01-town-simulation/index.html": {
-      "hash": "d674c932978f611a141a1322c951cc8f",
-      "mtime": 1772006126000,
-      "size": 6985,
-      "lastUpload": 1772017292291
-    },
-    "content/B1/01-vehicle-basics/lesson-01-town-simulation/files.zip": {
-      "hash": "3f4314486df28787415f632e6d143be2",
-      "mtime": 1772017019469,
-      "size": 15405,
-      "lastUpload": 1772017235589
-    },
-    "content/B1/01-vehicle-basics/lesson-01-town-simulation/game.js": {
-      "hash": "aa53d741293ad90cc7eb450b4813f238",
-      "mtime": 1772006126000,
-      "size": 35438,
-      "lastUpload": 1772017253504
-    },
-    "content/B1/01-vehicle-basics/lesson-01-town-simulation/mobile.js": {
-      "hash": "eb2d89dc7f0567796f2741095bd8a5e9",
-      "mtime": 1772006126000,
-      "size": 3993,
-      "lastUpload": 1772017340067
-    },
-    "content/B1/01-vehicle-basics/lesson-01-town-simulation/style.css": {
-      "hash": "8f3723cc0bcd7450fe10bb9d9066394e",
-      "mtime": 1772006126000,
-      "size": 13460,
-      "lastUpload": 1772017367504
-    },
-    "content/B1/01-vehicle-basics/files.zip": {
-      "hash": "7659f1b037192462cf6be36760b5b9cb",
-      "mtime": 1772018340782,
-      "size": 14291,
-      "lastUpload": 1772018788974
-    },
-    "content/B1/01-vehicle-basics/lesson-02-vehicle-controls/index.html": {
-      "hash": "4ab1e6bfc5f736d7456cc145044bd6af",
-      "mtime": 1772018668877,
-      "size": 26746,
-      "lastUpload": 1772018808439
-    },
-    "content/B1/01-vehicle-basics/nairobi_city_model.py": {
-      "hash": "6e493280e0125ecf6c754b835453ce7c",
-      "mtime": 1772007448000,
-      "size": 44031,
-      "lastUpload": 1772018822638
-    },
-    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/index.html": {
-      "hash": "13cd0a9907c33bedc614ceace9711e0e",
-      "mtime": 1772019219734,
-      "size": 27547,
-      "lastUpload": 1772020371305
-    },
-    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-angle.html": {
-      "hash": "d52edbd62007b37ee6889e9b7a568731",
-      "mtime": 1772020001198,
-      "size": 16833,
-      "lastUpload": 1772020386251
-    },
-    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-bay.html": {
-      "hash": "926a70a10fcab3864828f95562e6b1e4",
-      "mtime": 1772019935967,
-      "size": 17527,
-      "lastUpload": 1772020400322
-    },
-    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-final.html": {
-      "hash": "9da735696a84c5d9b3fefc252cb40b77",
-      "mtime": 1772020221988,
-      "size": 24102,
-      "lastUpload": 1772020416767
-    },
-    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-hill.html": {
-      "hash": "1094d570a61851f92091a0d6140a657c",
-      "mtime": 1772020104673,
-      "size": 17040,
-      "lastUpload": 1772020432590
-    },
-    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-parallel.html": {
-      "hash": "0097bbc344af361b154001837857ac4d",
-      "mtime": 1772019381151,
-      "size": 17184,
-      "lastUpload": 1772020448088
-    },
-    "content/New Driving Curriculum Ntsa.pdf": {
-      "hash": "73887caf4ceed87cb86ec884aeb8e709",
-      "mtime": 1772031761523,
-      "size": 2225291,
-      "lastUpload": 1772031936439
-    },
     "content/A/01-motorcycle-basics/lesson-01-introduction/files.zip": {
       "hash": "6781f36ac414ae8e17619cdae601d6f0",
       "mtime": 1772034908511,
       "size": 17008,
-      "lastUpload": 1772035481382
+      "lastUpload": 1772121564921
     },
     "content/A/01-motorcycle-basics/lesson-01-introduction/index.html": {
       "hash": "2ca562414d0455f2f3a97e81fb9198db",
       "mtime": 1772036649901,
       "size": 42274,
-      "lastUpload": 1772036748279
+      "lastUpload": 1772121578917
     },
     "content/A/01-motorcycle-basics/lesson-01-introduction/quiz.html": {
       "hash": "f0654a794d0cb031dfcc4e1c5bb3dc46",
       "mtime": 1772036186179,
       "size": 26384,
-      "lastUpload": 1772036772690
+      "lastUpload": 1772121592963
+    },
+    "content/A1/01-motorcycle-basics/lesson-01-introduction/index.html": {
+      "hash": "bc952aee935aadc482f67b4d9cc68885",
+      "mtime": 1772012288038,
+      "size": 11119,
+      "lastUpload": 1772121606944
+    },
+    "content/A1/01-motorcycle-basics/lesson-01-introduction/quiz.html": {
+      "hash": "2e15b2a8c2be702d6f6d62fdfaf46eca",
+      "mtime": 1772015081931,
+      "size": 24339,
+      "lastUpload": 1772121638022
+    },
+    "content/A1/02-road-safety/lesson-01-defensive-riding/index.html": {
+      "hash": "e3779402efea62928c80e2e22fd6ee63",
+      "mtime": 1772012341109,
+      "size": 4479,
+      "lastUpload": 1772121651396
+    },
+    "content/B1/01-vehicle-basics/files.zip": {
+      "hash": "7659f1b037192462cf6be36760b5b9cb",
+      "mtime": 1772018340782,
+      "size": 14291,
+      "lastUpload": 1772121665170
+    },
+    "content/B1/01-vehicle-basics/lesson-01-town-simulation/files.zip": {
+      "hash": "3f4314486df28787415f632e6d143be2",
+      "mtime": 1772017019469,
+      "size": 15405,
+      "lastUpload": 1772121679105
+    },
+    "content/B1/01-vehicle-basics/lesson-01-town-simulation/game.js": {
+      "hash": "aa53d741293ad90cc7eb450b4813f238",
+      "mtime": 1772006126000,
+      "size": 35438,
+      "lastUpload": 1772121692686
+    },
+    "content/B1/01-vehicle-basics/lesson-01-town-simulation/index.html": {
+      "hash": "d674c932978f611a141a1322c951cc8f",
+      "mtime": 1772006126000,
+      "size": 6985,
+      "lastUpload": 1772121710062
+    },
+    "content/B1/01-vehicle-basics/lesson-01-town-simulation/mobile.js": {
+      "hash": "eb2d89dc7f0567796f2741095bd8a5e9",
+      "mtime": 1772006126000,
+      "size": 3993,
+      "lastUpload": 1772121723944
+    },
+    "content/B1/01-vehicle-basics/lesson-01-town-simulation/style.css": {
+      "hash": "8f3723cc0bcd7450fe10bb9d9066394e",
+      "mtime": 1772006126000,
+      "size": 13460,
+      "lastUpload": 1772121797175
+    },
+    "content/B1/01-vehicle-basics/lesson-02-vehicle-controls/index.html": {
+      "hash": "4ab1e6bfc5f736d7456cc145044bd6af",
+      "mtime": 1772018668877,
+      "size": 26746,
+      "lastUpload": 1772121825368
+    },
+    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/index.html": {
+      "hash": "13cd0a9907c33bedc614ceace9711e0e",
+      "mtime": 1772019219734,
+      "size": 27547,
+      "lastUpload": 1772121845728
+    },
+    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-angle.html": {
+      "hash": "d52edbd62007b37ee6889e9b7a568731",
+      "mtime": 1772020001198,
+      "size": 16833,
+      "lastUpload": 1772121891551
+    },
+    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-bay.html": {
+      "hash": "926a70a10fcab3864828f95562e6b1e4",
+      "mtime": 1772019935967,
+      "size": 17527,
+      "lastUpload": 1772121906418
+    },
+    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-final.html": {
+      "hash": "9da735696a84c5d9b3fefc252cb40b77",
+      "mtime": 1772020221988,
+      "size": 24102,
+      "lastUpload": 1772121939615
+    },
+    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-hill.html": {
+      "hash": "1094d570a61851f92091a0d6140a657c",
+      "mtime": 1772020104673,
+      "size": 17040,
+      "lastUpload": 1772121969385
+    },
+    "content/B1/01-vehicle-basics/lesson-03-parking-maneuvers/quiz-parallel.html": {
+      "hash": "0097bbc344af361b154001837857ac4d",
+      "mtime": 1772019381151,
+      "size": 17184,
+      "lastUpload": 1772121989713
+    },
+    "content/B1/01-vehicle-basics/nairobi_city_model.py": {
+      "hash": "6e493280e0125ecf6c754b835453ce7c",
+      "mtime": 1772007448000,
+      "size": 44031,
+      "lastUpload": 1772122012277
+    },
+    "content/B1/quizzes/quiz-01-road-signs/quiz.json": {
+      "hash": "498b3db346f0d8d38c43bb37bbf5f555",
+      "mtime": 1772120292645,
+      "size": 6729,
+      "lastUpload": 1772122029880
     },
     "content/Categorized_License_PDFs/Category_A3_Motorcycle_Taxi.pdf": {
       "hash": "a5e83921a4ff3b8c8f9873aa5b60c61c",
       "mtime": 1772034331784,
       "size": 601699,
-      "lastUpload": 1772035543023
+      "lastUpload": 1772122046469
     },
     "content/Categorized_License_PDFs/Category_A_Motorcycles.pdf": {
       "hash": "88702a3aaf17945ea958aceb4bf56e0c",
       "mtime": 1772034331760,
       "size": 602633,
-      "lastUpload": 1772035582353
+      "lastUpload": 1772122064247
     },
     "content/Categorized_License_PDFs/Category_B_Light_Vehicles.pdf": {
       "hash": "cfbbb05cc6eb8c18de69bec6b1f6a3ec",
       "mtime": 1772034331766,
       "size": 598151,
-      "lastUpload": 1772035626601
+      "lastUpload": 1772122089858
     },
     "content/Categorized_License_PDFs/Category_B_Professional_PLV.pdf": {
       "hash": "27b5b0d0fb64f6769cfb630aaabeb796",
       "mtime": 1772034331773,
       "size": 641163,
-      "lastUpload": 1772035712665
+      "lastUpload": 1772122105707
     },
     "content/Categorized_License_PDFs/Category_C_Truck_Drivers.pdf": {
       "hash": "9936fee595872601640fa671c5ad1dab",
       "mtime": 1772034331792,
       "size": 671558,
-      "lastUpload": 1772035733724
+      "lastUpload": 1772122123173
     },
     "content/Categorized_License_PDFs/Category_D_Public_Service_PSV.pdf": {
       "hash": "b8ca2697299b332b2c8c4ff1d9b49839",
       "mtime": 1772034331779,
       "size": 619429,
-      "lastUpload": 1772035752890
+      "lastUpload": 1772122142028
     },
     "content/Categorized_License_PDFs/Category_E_Special_Professional.pdf": {
       "hash": "972915062836776c843d014d70ced888",
       "mtime": 1772034331799,
       "size": 641094,
-      "lastUpload": 1772035771059
+      "lastUpload": 1772122161334
     },
     "content/Categorized_License_PDFs/Category_G_Industrial_Agri_ICA.pdf": {
       "hash": "8d8b8007579e6d33f9cd11c46ab4b633",
       "mtime": 1772034331805,
       "size": 597012,
-      "lastUpload": 1772035823621
+      "lastUpload": 1772122191083
+    },
+    "content/New Driving Curriculum Ntsa.pdf": {
+      "hash": "73887caf4ceed87cb86ec884aeb8e709",
+      "mtime": 1772031761523,
+      "size": 2225291,
+      "lastUpload": 1772122239583
+    },
+    "content/STRUCTURE.md": {
+      "hash": "79f51e24ffd91a719e07beecc0342e70",
+      "mtime": 1772035400508,
+      "size": 55397,
+      "lastUpload": 1772122253839
     },
     "content/split_to_pdf.py": {
       "hash": "c2d70d34ee3de26f2b36c02fd31c1f6d",
       "mtime": 1772034313109,
       "size": 2575,
-      "lastUpload": 1772035875849
+      "lastUpload": 1772122273012
     }
   },
-  "lastSync": 1772036772690
+  "lastSync": 1772122817275
 }
