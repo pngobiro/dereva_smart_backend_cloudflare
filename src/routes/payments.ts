@@ -6,8 +6,6 @@ const payments = new Hono<{ Bindings: Env }>();
 // GET /api/payments/config
 payments.get('/config', async (c) => {
   try {
-    // In the future, this could be read from a KV store or database table
-    // For now, we return a fixed configuration for the single monthly plan
     return c.json({
       success: true,
       monthlyPrice: 1.0,
@@ -37,13 +35,9 @@ payments.post('/initiate', async (c) => {
       return c.json({ error: 'Missing required fields' }, 400);
     }
 
-    // Format phone number
     const formattedPhone = phone.startsWith('254') ? phone : `254${phone.replace(/^0/, '')}`;
-
-    // Create payment record. Use provided ID if available.
     const paymentId = id || crypto.randomUUID();
     const now = Date.now();
-
     const db = (c.env as any).DB;
 
     await db.prepare(`
@@ -77,11 +71,8 @@ payments.post('/link-checkout', async (c) => {
     }
 
     const db = (c.env as any).DB;
-
     await db.prepare(`
-      UPDATE payments 
-      SET transaction_id = ?
-      WHERE id = ?
+      UPDATE payments SET transaction_id = ? WHERE id = ?
     `).bind(checkout_request_id, id).run();
 
     return c.json({ success: true });
@@ -98,38 +89,23 @@ payments.post('/callback', async (c) => {
     console.log('M-Pesa callback:', JSON.stringify(body));
 
     const stkCallback = body?.Body?.stkCallback;
-    if (!stkCallback) {
-      return c.json({ error: 'Invalid callback data' }, 400);
-    }
-
-    // Usually Safaricom's CheckoutRequestID is tied to our system, but 
-    // we need to find the payment by phone number and amount if we didn't save the checkout request id, 
-    // however, the easiest way to correlate in this specific callback is by checking the most recent pending payment 
-    // for that phone number. 
-    // A better approach is having the Android app pass AccountReference when making the push 
-    // but Safaricom STK Push callback doesn't always echo it back. 
-    // We will extract phone number from callback to map it.
+    if (!stkCallback) return c.json({ error: 'Invalid callback data' }, 400);
 
     const resultCode = stkCallback.ResultCode;
     const checkoutRequestId = stkCallback.CheckoutRequestID;
     const isSuccess = resultCode === 0;
 
     let mpesaReceiptNumber = null;
-    let amount = null;
     let phoneNumber = null;
 
     if (isSuccess && stkCallback.CallbackMetadata && stkCallback.CallbackMetadata.Item) {
       const items = stkCallback.CallbackMetadata.Item;
       const receiptItem = items.find((item: any) => item.Name === 'MpesaReceiptNumber');
-      const amountItem = items.find((item: any) => item.Name === 'Amount');
       const phoneItem = items.find((item: any) => item.Name === 'PhoneNumber');
-
       if (receiptItem) mpesaReceiptNumber = receiptItem.Value;
-      if (amountItem) amount = amountItem.Value;
       if (phoneItem) phoneNumber = phoneItem.Value?.toString();
     }
 
-    // Attempt to format phone number to match database (e.g., 2547XXXXXXXX)
     let formattedPhone = phoneNumber;
     if (formattedPhone && formattedPhone.startsWith('0')) {
       formattedPhone = `254${formattedPhone.substring(1)}`;
@@ -137,67 +113,45 @@ payments.post('/callback', async (c) => {
 
     const status = isSuccess ? 'completed' : 'failed';
     const now = Date.now();
-
     const db = (c.env as any).DB;
 
-    let updatedPayment: any = null;
+    // Step 1: Update payment status
+    await db.prepare(`
+        UPDATE payments 
+        SET status = ?, mpesa_receipt_number = ?, completed_at = ?
+        WHERE (transaction_id = ? OR id = ? OR (phone_number = ? AND transaction_id IS NULL)) 
+        AND status = 'pending'
+      `).bind(status, mpesaReceiptNumber, now, checkoutRequestId || '', checkoutRequestId || '', formattedPhone || '').run();
 
-    // Use checkout_request_id to update exactly the right transaction
-    if (checkoutRequestId) {
-      updatedPayment = await db.prepare(`
-          UPDATE payments 
-          SET status = ?, mpesa_receipt_number = ?, completed_at = ?
-          WHERE transaction_id = ? AND status = 'pending'
-          RETURNING id, user_id, subscription_type, subscription_months
-        `).bind(status, mpesaReceiptNumber, now, checkoutRequestId).first();
+    // Step 2: Select the updated record
+    const updatedPayment: any = await db.prepare(`
+        SELECT id, user_id, subscription_type, subscription_months 
+        FROM payments 
+        WHERE (transaction_id = ? OR id = ? OR (phone_number = ? AND mpesa_receipt_number = ?))
+        LIMIT 1
+      `).bind(checkoutRequestId || '', checkoutRequestId || '', formattedPhone || '', mpesaReceiptNumber || '').first();
 
-      // Fallback for older transactions that didn't save transaction_id
-      if (!updatedPayment && formattedPhone) {
-        updatedPayment = await db.prepare(`
-              UPDATE payments 
-              SET status = ?, mpesa_receipt_number = ?, completed_at = ?
-              WHERE phone_number = ? AND status = 'pending' AND transaction_id IS NULL
-              RETURNING id, user_id, subscription_type, subscription_months
-            `).bind(status, mpesaReceiptNumber, now, formattedPhone).first();
-      }
-    } else if (formattedPhone) {
-      // Fallback
-      updatedPayment = await db.prepare(`
-          UPDATE payments 
-          SET status = ?, mpesa_receipt_number = ?, completed_at = ?
-          WHERE phone_number = ? AND status = 'pending'
-          RETURNING id, user_id, subscription_type, subscription_months
-        `).bind(status, mpesaReceiptNumber, now, formattedPhone).first();
-    } else {
-      console.error('Could not extract checkout id or phone number from Mpesa callback to update record.');
-    }
-
-    // If payment was successful and we found the record, create a subscription
     if (isSuccess && updatedPayment) {
+      const actualUserId = updatedPayment.user_id;
       const subId = crypto.randomUUID();
-      const startDate = now;
       const months = updatedPayment.subscription_months || 1;
-
-      const date = new Date(startDate);
-      date.setMonth(date.getMonth() + months);
-      const endDate = date.getTime();
+      const endDate = now + (months * 30 * 24 * 60 * 60 * 1000);
 
       await db.prepare(`
         INSERT INTO subscriptions (
           id, user_id, payment_id, subscription_type,
           start_date, end_date, is_active, created_at
         ) VALUES (?, ?, ?, ?, ?, ?, 1, ?)
-      `).bind(
-        subId,
-        updatedPayment.user_id,
-        updatedPayment.id,
-        updatedPayment.subscription_type || 'monthly',
-        startDate,
-        endDate,
-        now
-      ).run();
+      `).bind(subId, actualUserId, updatedPayment.id, 'monthly', now, endDate, now).run();
 
-      console.log(`Created subscription ${subId} for user ${updatedPayment.user_id}`);
+      // Always set to PREMIUM_MONTHLY after any payment
+      const subStatus = 'PREMIUM_MONTHLY';
+        
+      await db.prepare(`
+        UPDATE users SET subscription_status = ?, subscription_expiry_date = ? WHERE id = ?
+      `).bind(subStatus, endDate, actualUserId).run();
+
+      console.log(`Updated user ${actualUserId} to ${subStatus}`);
     }
 
     return c.json({ success: true });
@@ -211,11 +165,9 @@ payments.post('/callback', async (c) => {
 payments.get('/:userId', async (c) => {
   try {
     const userId = c.req.param('userId');
-
     const { results } = await c.env.DB.prepare(
       'SELECT * FROM payments WHERE user_id = ? ORDER BY created_at DESC'
     ).bind(userId).all();
-
     return c.json(results || []);
   } catch (error) {
     console.error('Get payments error:', error);
@@ -229,21 +181,12 @@ payments.get('/status/:paymentId', async (c) => {
     const paymentId = c.req.param('paymentId');
     const db = (c.env as any).DB;
 
-    let payment = await db.prepare(
-      'SELECT * FROM payments WHERE id = ?'
-    ).bind(paymentId).first();
-
+    let payment = await db.prepare('SELECT * FROM payments WHERE id = ?').bind(paymentId).first();
     if (!payment) {
-      // Allow fallback: check by transaction_id (CheckoutRequestID)
-      payment = await db.prepare(
-        'SELECT * FROM payments WHERE transaction_id = ?'
-      ).bind(paymentId).first();
-
-      if (!payment) {
-        return c.json({ error: 'Payment not found', status: 'pending' }, 404);
-      }
+      payment = await db.prepare('SELECT * FROM payments WHERE transaction_id = ?').bind(paymentId).first();
     }
 
+    if (!payment) return c.json({ error: 'Payment not found', status: 'pending' }, 404);
     return c.json(payment);
   } catch (error) {
     console.error('Get payment status error:', error);
