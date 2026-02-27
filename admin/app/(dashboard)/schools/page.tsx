@@ -30,7 +30,25 @@ export default function SchoolsPage() {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schools`);
       const data = await res.json();
-      setSchools(data.schools || []);
+      // Backend returns array directly, not wrapped in object
+      const schoolsData = Array.isArray(data) ? data : (data.schools || []);
+      
+      // Map to expected format
+      const mappedSchools = schoolsData.map((school: any) => ({
+        id: school.id,
+        name: school.name,
+        registrationNumber: school.code || school.registrationNumber || school.id,
+        phone: school.phone || school.phoneNumber || '',
+        email: school.email || '',
+        address: school.address || '',
+        county: school.location?.split(',')[1]?.trim() || school.county || '',
+        town: school.location?.split(',')[0]?.trim() || school.town || '',
+        isVerified: school.verified || school.isVerified || false,
+        totalBranches: school.totalBranches || 0,
+        createdAt: school.createdAt || Date.now(),
+      }));
+      
+      setSchools(mappedSchools);
     } catch (err) {
       console.error('Failed to load schools:', err);
     } finally {
@@ -63,6 +81,7 @@ export default function SchoolsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Branches</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -102,6 +121,14 @@ export default function SchoolsPage() {
                     >
                       {school.isVerified ? '✓ Verified' : 'Pending'}
                     </span>
+                  </td>
+                  <td className="px-6 py-4">
+                    <Link
+                      href={`/schools/${school.id}/progress`}
+                      className="text-blue-600 hover:text-blue-900 text-sm"
+                    >
+                      View Progress →
+                    </Link>
                   </td>
                 </tr>
               ))}

@@ -272,6 +272,7 @@ quizzes.post('/:id/attempts', async (c) => {
     let attemptId = null;
     if (userId) {
       attemptId = `attempt-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      const completedAt = Date.now();
       
       await c.env.DB.prepare(`
         INSERT INTO quiz_attempts (
@@ -282,8 +283,8 @@ quizzes.post('/:id/attempts', async (c) => {
         attemptId,
         userId,
         id,
-        Date.now() - (timeTaken * 1000),
-        Date.now(),
+        completedAt - (timeTaken * 1000),
+        completedAt,
         timeTaken,
         questions.length,
         correctAnswers,
@@ -291,6 +292,38 @@ quizzes.post('/:id/attempts', async (c) => {
         passed ? 1 : 0,
         JSON.stringify(answers)
       ).run();
+      
+      // Share progress with school if user is linked to one
+      const user = await c.env.DB.prepare(
+        'SELECT driving_school_id FROM users WHERE id = ?'
+      ).bind(userId).first();
+      
+      if (user && user.driving_school_id) {
+        const progressId = `progress-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+        
+        await c.env.DB.prepare(`
+          INSERT INTO school_student_progress (
+            id, school_id, user_id, quiz_attempt_id, quiz_bank_id,
+            quiz_name, category, score, passed, total_questions,
+            correct_answers, time_taken, completed_at, created_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          progressId,
+          user.driving_school_id,
+          userId,
+          attemptId,
+          id,
+          quiz.name,
+          quiz.category,
+          score,
+          passed ? 1 : 0,
+          questions.length,
+          correctAnswers,
+          timeTaken,
+          completedAt,
+          completedAt
+        ).run();
+      }
     }
     
     return c.json({

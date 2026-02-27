@@ -7,9 +7,15 @@ const schools = new Hono<{ Bindings: Env }>();
 schools.get('/', async (c) => {
   try {
     const county = c.req.query('county');
+    const verified = c.req.query('verified'); // Add verified filter for app
     
     let query = 'SELECT * FROM schools WHERE 1=1';
     const params: any[] = [];
+    
+    // Filter by verified status (for app to show only verified schools)
+    if (verified === 'true') {
+      query += ' AND is_verified = 1';
+    }
     
     if (county) {
       query += ' AND county = ?';
@@ -23,18 +29,16 @@ schools.get('/', async (c) => {
     const schools = (results || []).map((school: any) => ({
       id: school.id,
       name: school.name,
-      registrationNumber: school.registration_number,
-      phone: school.phone_number,
-      email: school.email,
-      address: school.address,
-      county: school.county,
-      town: school.town,
-      isVerified: school.is_verified === 1,
-      totalBranches: school.total_branches || 0,
-      createdAt: school.created_at,
+      location: `${school.town}, ${school.county}`,
+      phone: school.phone_number || '',
+      email: school.email || '',
+      rating: 4.5, // TODO: Calculate from reviews
+      license_types: ['B1', 'B2', 'C1'], // TODO: Get from school_license_types table
+      price_range: 'KES 15,000 - 25,000', // TODO: Get from school pricing
+      verified: school.is_verified === 1,
     }));
     
-    return c.json({ schools });
+    return c.json(schools);
   } catch (error) {
     console.error('Get schools error:', error);
     return c.json({ error: 'Failed to fetch schools' }, 500);

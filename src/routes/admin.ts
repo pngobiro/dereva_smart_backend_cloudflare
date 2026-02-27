@@ -585,4 +585,211 @@ admin.post('/upload', async (c) => {
   }
 });
 
+// Get school student progress
+admin.get('/schools/:schoolId/progress', async (c) => {
+  try {
+    const schoolId = c.req.param('schoolId');
+    const userId = c.req.query('userId'); // Optional filter by user
+    const category = c.req.query('category'); // Optional filter by category
+    const limit = parseInt(c.req.query('limit') || '50');
+    
+    let query = `
+      SELECT 
+        p.*,
+        u.name as user_name,
+        u.phone_number as user_phone
+      FROM school_student_progress p
+      JOIN users u ON p.user_id = u.id
+      WHERE p.school_id = ?
+    `;
+    const params: any[] = [schoolId];
+    
+    if (userId) {
+      query += ' AND p.user_id = ?';
+      params.push(userId);
+    }
+    
+    if (category) {
+      query += ' AND p.category = ?';
+      params.push(category);
+    }
+    
+    query += ' ORDER BY p.completed_at DESC LIMIT ?';
+    params.push(limit);
+    
+    const { results } = await c.env.DB.prepare(query).bind(...params).all();
+    
+    const progress = (results || []).map((p: any) => ({
+      id: p.id,
+      userId: p.user_id,
+      userName: p.user_name,
+      userPhone: p.user_phone,
+      quizAttemptId: p.quiz_attempt_id,
+      quizBankId: p.quiz_bank_id,
+      quizName: p.quiz_name,
+      category: p.category,
+      score: p.score,
+      passed: p.passed === 1,
+      totalQuestions: p.total_questions,
+      correctAnswers: p.correct_answers,
+      timeTaken: p.time_taken,
+      completedAt: p.completed_at,
+    }));
+    
+    return c.json({ progress });
+  } catch (error) {
+    console.error('Get school progress error:', error);
+    return c.json({ error: 'Failed to fetch school progress' }, 500);
+  }
+});
+
+// Get school student statistics
+admin.get('/schools/:schoolId/stats', async (c) => {
+  try {
+    const schoolId = c.req.param('schoolId');
+    
+    // Get total students
+    const totalStudents = await c.env.DB.prepare(
+      'SELECT COUNT(*) as count FROM users WHERE driving_school_id = ?'
+    ).bind(schoolId).first();
+    
+    // Get total quiz attempts
+    const totalAttempts = await c.env.DB.prepare(
+      'SELECT COUNT(*) as count FROM school_student_progress WHERE school_id = ?'
+    ).bind(schoolId).first();
+    
+    // Get average score
+    const avgScore = await c.env.DB.prepare(
+      'SELECT AVG(score) as avg FROM school_student_progress WHERE school_id = ?'
+    ).bind(schoolId).first();
+    
+    // Get pass rate
+    const passRate = await c.env.DB.prepare(`
+      SELECT 
+        COUNT(*) as total,
+        SUM(CASE WHEN passed = 1 THEN 1 ELSE 0 END) as passed
+      FROM school_student_progress 
+      WHERE school_id = ?
+    `).bind(schoolId).first();
+    
+    // Get top performers (last 30 days)
+    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+    const { results: topPerformers } = await c.env.DB.prepare(`
+      SELECT 
+        u.id,
+        u.name,
+        u.phone_number,
+        AVG(p.score) as avg_score,
+        COUNT(p.id) as attempts,
+        SUM(CASE WHEN p.passed = 1 THEN 1 ELSE 0 END) as passed_count
+      FROM users u
+      JOIN school_student_progress p ON u.id = p.user_id
+      WHERE p.school_id = ? AND p.completed_at > ?
+      GROUP BY u.id, u.name, u.phone_number
+      ORDER BY avg_score DESC
+      LIMIT 10
+    `).bind(schoolId, thirtyDaysAgo).all();
+    
+    // Get category breakdown
+    const { results: categoryStats } = await c.env.DB.prepare(`
+      SELECT 
+        category,
+        COUNT(*) as attempts,
+        AVG(score) as avg_score,
+        SUM(CASE WHEN passed = 1 THEN 1 ELSE 0 END) as passed
+      FROM school_student_progress
+      WHERE school_id = ?
+      GROUP BY category
+    `).bind(schoolId).all();
+    
+    return c.json({
+      totalStudents: totalStudents?.count || 0,
+      totalAttempts: totalAttempts?.count || 0,
+      averageScore: Math.round(avgScore?.avg || 0),
+      passRate: passRate?.total ? Math.round((passRate.passed / passRate.total) * 100) : 0,
+      topPerformers: (topPerformers || []).map((p: any) => ({
+        id: p.id,
+        name: p.name,
+        phoneNumber: p.phone_number,
+        avgScore: Math.round(p.avg_score),
+        attempts: p.attempts,
+        passedCount: p.passed_count,
+      })),
+      categoryStats: (categoryStats || []).map((c: any) => ({
+        category: c.category,
+        attempts: c.attempts,
+        avgScore: Math.round(c.avg_score),
+        passed: c.passed,
+        passRate: Math.round((c.passed / c.attempts) * 100),
+      })),
+    });
+  } catch (error) {
+    console.error('Get school stats error:', error);
+    return c.json({ error: 'Failed to fetch school stats' }, 500);
+  }
+});
+
+// Get individual student progress for a school
+admin.get('/schools/:schoolId/students/:userId/progress', async (c) => {
+  try {
+    const schoolId = c.req.param('schoolId');
+    const userId = c.req.param('userId');
+    
+    // Verify student belongs to school
+    const user = await c.env.DB.prepare(
+      'SELECT * FROM users WHERE id = ? AND driving_school_id = ?'
+    ).bind(userId, schoolId).first();
+    
+    if (!user) {
+      return c.json({ error: 'Student not found or not linked to this school' }, 404);
+    }
+    
+    // Get all progress records
+    const { results } = await c.env.DB.prepare(`
+      SELECT * FROM school_student_progress
+      WHERE school_id = ? AND user_id = ?
+      ORDER BY completed_at DESC
+    `).bind(schoolId, userId).all();
+    
+    const progress = (results || []).map((p: any) => ({
+      id: p.id,
+      quizName: p.quiz_name,
+      category: p.category,
+      score: p.score,
+      passed: p.passed === 1,
+      totalQuestions: p.total_questions,
+      correctAnswers: p.correct_answers,
+      timeTaken: p.time_taken,
+      completedAt: p.completed_at,
+    }));
+    
+    // Calculate summary stats
+    const totalAttempts = progress.length;
+    const avgScore = totalAttempts > 0 
+      ? Math.round(progress.reduce((sum, p) => sum + p.score, 0) / totalAttempts)
+      : 0;
+    const passedCount = progress.filter(p => p.passed).length;
+    const passRate = totalAttempts > 0 ? Math.round((passedCount / totalAttempts) * 100) : 0;
+    
+    return c.json({
+      student: {
+        id: user.id,
+        name: user.name,
+        phoneNumber: user.phone_number,
+        targetCategory: user.target_category,
+      },
+      summary: {
+        totalAttempts,
+        avgScore,
+        passedCount,
+        passRate,
+      },
+      progress,
+    });
+  } catch (error) {
+    console.error('Get student progress error:', error);
+    return c.json({ error: 'Failed to fetch student progress' }, 500);
+  }
+});
+
 export default admin;

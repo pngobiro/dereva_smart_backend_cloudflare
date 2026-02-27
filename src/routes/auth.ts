@@ -11,6 +11,7 @@ const registerSchema = z.object({
   password: z.string().min(6),
   name: z.string().min(2),
   licenseCategory: z.enum(['A1', 'A2', 'A3', 'B1', 'B2', 'B3', 'C', 'D', 'E', 'F', 'G']),
+  drivingSchoolId: z.string().optional(),
 });
 
 const loginSchema = z.object({
@@ -62,12 +63,12 @@ auth.post('/register', async (c) => {
 
     await c.env.DB.prepare(`
       INSERT INTO users (
-        id, phone_number, password_hash, name, target_category,
+        id, phone_number, password_hash, name, target_category, driving_school_id,
         subscription_status, is_phone_verified, is_guest_mode,
         created_at, last_active_at
-      ) VALUES (?, ?, ?, ?, ?, 'FREE', 0, 0, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, 'FREE', 0, 0, ?, ?)
     `).bind(
-      userId, phoneNumber, passwordHash, data.name, data.licenseCategory,
+      userId, phoneNumber, passwordHash, data.name, data.licenseCategory, data.drivingSchoolId || null,
       now, now
     ).run();
 
