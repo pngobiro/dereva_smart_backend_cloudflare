@@ -6,25 +6,35 @@ const schools = new Hono<{ Bindings: Env }>();
 // GET /api/schools
 schools.get('/', async (c) => {
   try {
-    const location = c.req.query('location');
-    const category = c.req.query('category');
+    const county = c.req.query('county');
     
-    let query = 'SELECT * FROM schools WHERE is_verified = 1';
+    let query = 'SELECT * FROM schools WHERE 1=1';
     const params: any[] = [];
     
-    if (location) {
-      query += ' AND (county LIKE ? OR town LIKE ?)';
-      params.push(`%${location}%`, `%${location}%`);
+    if (county) {
+      query += ' AND county = ?';
+      params.push(county);
     }
     
     query += ' ORDER BY name ASC';
     
-    const stmt = c.env.DB.prepare(query);
-    const { results } = params.length > 0
-      ? await stmt.bind(...params).all()
-      : await stmt.all();
+    const { results } = await c.env.DB.prepare(query).bind(...params).all();
     
-    return c.json(results || []);
+    const schools = (results || []).map((school: any) => ({
+      id: school.id,
+      name: school.name,
+      registrationNumber: school.registration_number,
+      phone: school.phone_number,
+      email: school.email,
+      address: school.address,
+      county: school.county,
+      town: school.town,
+      isVerified: school.is_verified === 1,
+      totalBranches: school.total_branches || 0,
+      createdAt: school.created_at,
+    }));
+    
+    return c.json({ schools });
   } catch (error) {
     console.error('Get schools error:', error);
     return c.json({ error: 'Failed to fetch schools' }, 500);
@@ -44,7 +54,21 @@ schools.get('/:id', async (c) => {
       return c.json({ error: 'School not found' }, 404);
     }
     
-    return c.json(school);
+    const schoolData = {
+      id: school.id,
+      name: school.name,
+      registrationNumber: school.registration_number,
+      phone: school.phone_number,
+      email: school.email,
+      address: school.address,
+      county: school.county,
+      town: school.town,
+      isVerified: school.is_verified === 1,
+      totalBranches: school.total_branches || 0,
+      createdAt: school.created_at,
+    };
+    
+    return c.json(schoolData);
   } catch (error) {
     console.error('Get school error:', error);
     return c.json({ error: 'Failed to fetch school' }, 500);

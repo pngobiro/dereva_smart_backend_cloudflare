@@ -7,12 +7,14 @@ import { prettyJSON } from 'hono/pretty-json';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
 import contentRoutes from './routes/content';
+import modulesRoutes from './routes/modules';
 import questionRoutes from './routes/questions';
 import quizRoutes from './routes/quizzes';
 import progressRoutes from './routes/progress';
 import paymentRoutes from './routes/payments';
 import schoolRoutes from './routes/schools';
 import tutorRoutes from './routes/tutor';
+import adminRoutes from './routes/admin';
 
 // Types
 export type Env = {
@@ -39,7 +41,7 @@ const app = new Hono<{ Bindings: Env }>();
 app.use('*', logger());
 app.use('*', prettyJSON());
 app.use('*', cors({
-  origin: ['http://localhost:3000', 'https://derevasmart.com', 'https://admin.derevasmart.com'],
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'https://derevasmart.com', 'https://admin.derevasmart.com'],
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
   exposeHeaders: ['Content-Length'],
@@ -69,12 +71,14 @@ app.get('/health', (c) => {
 app.route('/api/auth', authRoutes);
 app.route('/api/users', userRoutes);
 app.route('/api/content', contentRoutes);
+app.route('/api/modules', modulesRoutes);
 app.route('/api/questions', questionRoutes);
 app.route('/api/quizzes', quizRoutes);
 app.route('/api/progress', progressRoutes);
 app.route('/api/payments', paymentRoutes);
 app.route('/api/schools', schoolRoutes);
 app.route('/api/tutor', tutorRoutes);
+app.route('/api/admin', adminRoutes);
 
 // 404 handler
 app.notFound((c) => {

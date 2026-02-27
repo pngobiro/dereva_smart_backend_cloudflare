@@ -1,0 +1,157 @@
+{
+  "id": "quiz-b1-traffic-rules-002",
+  "title": "Quiz 2: Traffic Rules and Right of Way",
+  "description": "Test your knowledge of Kenyan traffic rules, right of way, and road safety regulations",
+  "licenseCategory": "B1",
+  "topicArea": "TRAFFIC_RULES",
+  "difficulty": "MEDIUM",
+  "timeLimit": 25,
+  "passingScore": 75,
+  "isPaid": false,
+  "version": 1,
+  "order": 2,
+  "questions": [
+    {
+      "id": "q1",
+      "type": "multiple-choice",
+      "question": "At a roundabout, who has the right of way?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Vehicles entering the roundabout", "isCorrect": false },
+        { "id": "b", "text": "Vehicles already in the roundabout", "isCorrect": true },
+        { "id": "c", "text": "The largest vehicle", "isCorrect": false },
+        { "id": "d", "text": "Whoever arrives first", "isCorrect": false }
+      ],
+      "explanation": "Vehicles already circulating in the roundabout have the right of way. You must yield to traffic from your right before entering.",
+      "hint": "Think about who is already using the road space",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#e3f2fd;border-left:4px solid #1976d2;border-radius:6px;'><h4 style='color:#0d47a1;'>🔄 Roundabout Rules</h4><p style='line-height:1.6;font-size:0.9em;'>Roundabouts are designed to keep traffic flowing smoothly. Understanding right of way prevents accidents and congestion.</p><ul style='font-size:0.85em;margin:0;'><li>Always approach with caution</li><li>Signal your exit intention</li><li>Give way to traffic already in the roundabout</li></ul></div>"
+      }
+    },
+    {
+      "id": "q2",
+      "type": "true-false",
+      "question": "You must always stop at a zebra crossing when pedestrians are waiting to cross.",
+      "points": 10,
+      "correctAnswer": true,
+      "explanation": "Yes, you must stop and give way to pedestrians at zebra crossings. Pedestrians have absolute right of way at marked crossings.",
+      "hint": "Consider pedestrian safety",
+      "context": {
+        "format": "html",
+        "value": "<div style='padding:12px;background:#fff9c4;border-left:4px solid #f57f17;border-radius:6px;'><h4 style='color:#f57f17;'>🚶 Pedestrian Crossings</h4><p style='line-height:1.6;font-size:0.9em;'>Zebra crossings are marked pedestrian crossing points where pedestrians have priority over vehicles.</p></div>"
+      }
+    },
+    {
+      "id": "q3",
+      "type": "multiple-choice",
+      "question": "What is the maximum blood alcohol content (BAC) allowed for drivers in Kenya?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "0.00% (zero tolerance)", "isCorrect": false },
+        { "id": "b", "text": "0.05%", "isCorrect": false },
+        { "id": "c", "text": "0.08%", "isCorrect": true },
+        { "id": "d", "text": "0.10%", "isCorrect": false }
+      ],
+      "explanation": "In Kenya, the legal BAC limit is 0.08%. However, it's safest not to drink any alcohol before driving.",
+      "hint": "This is a legal limit, but zero is always safest"
+    },
+    {
+      "id": "q4",
+      "type": "multiple-choice",
+      "question": "When must you use your headlights?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Only at night", "isCorrect": false },
+        { "id": "b", "text": "Between sunset and sunrise, and in poor visibility", "isCorrect": true },
+        { "id": "c", "text": "Only when it's raining", "isCorrect": false },
+        { "id": "d", "text": "Whenever you want", "isCorrect": false }
+      ],
+      "explanation": "Headlights must be used between sunset and sunrise, and during any conditions of poor visibility such as fog, heavy rain, or dust.",
+      "hint": "Think about when you need to see and be seen"
+    },
+    {
+      "id": "q5",
+      "type": "multiple-select",
+      "question": "Which of the following are legal reasons to use your horn? (Select all that apply)",
+      "points": 15,
+      "partialCredit": true,
+      "options": [
+        { "id": "a", "text": "To warn other road users of your presence", "isCorrect": true },
+        { "id": "b", "text": "To express anger at another driver", "isCorrect": false },
+        { "id": "c", "text": "To alert others of danger", "isCorrect": true },
+        { "id": "d", "text": "To greet friends on the street", "isCorrect": false },
+        { "id": "e", "text": "When overtaking on a narrow road", "isCorrect": true }
+      ],
+      "explanation": "Horns should only be used to warn others of your presence, alert them to danger, or when overtaking. Using horns unnecessarily is illegal and creates noise pollution.",
+      "hint": "Think about safety purposes only"
+    },
+    {
+      "id": "q6",
+      "type": "multiple-choice",
+      "question": "What should you do when an emergency vehicle with sirens and flashing lights approaches from behind?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Speed up to get out of the way", "isCorrect": false },
+        { "id": "b", "text": "Stop immediately wherever you are", "isCorrect": false },
+        { "id": "c", "text": "Pull over to the left and stop when safe", "isCorrect": true },
+        { "id": "d", "text": "Continue driving normally", "isCorrect": false }
+      ],
+      "explanation": "You must pull over to the left side of the road and stop when it is safe to do so, allowing the emergency vehicle to pass.",
+      "hint": "Emergency vehicles need clear passage"
+    },
+    {
+      "id": "q7",
+      "type": "true-false",
+      "question": "It is legal to use a mobile phone while driving if you use a hands-free device.",
+      "points": 10,
+      "correctAnswer": true,
+      "explanation": "Yes, hands-free devices are legal. However, holding a phone while driving is illegal and dangerous as it distracts you from the road.",
+      "hint": "Consider what 'hands-free' means"
+    },
+    {
+      "id": "q8",
+      "type": "multiple-choice",
+      "question": "What is the minimum following distance you should maintain behind another vehicle in normal conditions?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "1 second", "isCorrect": false },
+        { "id": "b", "text": "2 seconds", "isCorrect": true },
+        { "id": "c", "text": "5 seconds", "isCorrect": false },
+        { "id": "d", "text": "10 seconds", "isCorrect": false }
+      ],
+      "explanation": "The minimum safe following distance is 2 seconds in normal conditions. This should be increased in poor weather or road conditions.",
+      "hint": "Use the 'two-second rule'"
+    },
+    {
+      "id": "q9",
+      "type": "multiple-choice",
+      "question": "When are you allowed to overtake on the left side of another vehicle?",
+      "points": 10,
+      "options": [
+        { "id": "a", "text": "Never", "isCorrect": false },
+        { "id": "b", "text": "When the vehicle ahead is turning right", "isCorrect": true },
+        { "id": "c", "text": "Whenever there is space", "isCorrect": false },
+        { "id": "d", "text": "Only on highways", "isCorrect": false }
+      ],
+      "explanation": "You may overtake on the left only when the vehicle ahead is signaling and positioned to turn right, or in designated lanes.",
+      "hint": "Think about when it's safe and logical"
+    },
+    {
+      "id": "q10",
+      "type": "multiple-select",
+      "question": "Which of the following must you carry with you when driving? (Select all that apply)",
+      "points": 15,
+      "partialCredit": true,
+      "options": [
+        { "id": "a", "text": "Valid driving license", "isCorrect": true },
+        { "id": "b", "text": "Vehicle registration certificate (logbook)", "isCorrect": true },
+        { "id": "c", "text": "Valid insurance certificate", "isCorrect": true },
+        { "id": "d", "text": "Passport", "isCorrect": false },
+        { "id": "e", "text": "Vehicle inspection certificate", "isCorrect": true }
+      ],
+      "explanation": "You must always carry your driving license, vehicle logbook, insurance certificate, and valid inspection certificate when driving. Failure to produce these documents when requested by police is an offense.",
+      "hint": "Think about legal requirements for vehicle operation"
+    }
+  ]
+}

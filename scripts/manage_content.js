@@ -135,7 +135,7 @@ async function deleteFileFromR2(key, retries = 3) {
 async function deleteViaWrangler(key, retries = 3) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     const escapedPath = `"${BUCKET_NAME}/${key}"`;
-    const cmd = `wrangler r2 object delete ${escapedPath}`;
+    const cmd = `wrangler r2 object delete ${escapedPath} --remote`;
     
     console.log(`🗑️  (wrangler) Deleting (${attempt}/${retries}): ${key}`);
     
@@ -303,7 +303,7 @@ async function uploadViaWrangler(filePath, key, retries = 5) {
   for (let attempt = 1; attempt <= retries; attempt++) {
     const escapedPath = `"${BUCKET_NAME}/${key}"`;
     const escapedFile = `"${filePath}"`;
-    const cmd = `wrangler r2 object put ${escapedPath} --file=${escapedFile}`;
+    const cmd = `wrangler r2 object put ${escapedPath} --file=${escapedFile} --remote`;
 
     console.log(`⤴️  (wrangler) Uploading (${attempt}/${retries}): ${key}`);
 
