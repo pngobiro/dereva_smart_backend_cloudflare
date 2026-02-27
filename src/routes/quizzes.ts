@@ -145,10 +145,35 @@ quizzes.get('/:id/content', async (c) => {
       return c.json({ error: 'Quiz content not found in storage' }, 404);
     }
     
-    const quizContent = await object.json();
+        const quizContent: any = await object.json();
     
-    return c.json(quizContent);
-  } catch (error) {
+        // Fix relative media URLs to be absolute R2 public URLs
+        const publicR2Url = 'https://pub-16856a23f68347f2ae1c5b71791e9070.r2.dev';
+        const baseUrlPath = quiz.json_url.substring(0, quiz.json_url.lastIndexOf('/') + 1);
+        const absoluteBaseUrl = `${publicR2Url}/${baseUrlPath}`;
+    
+        if (quizContent.questions && Array.isArray(quizContent.questions)) {
+          quizContent.questions.forEach((q: any) => {
+            // Fix top-level media (legacy)
+            if (q.media && q.media.url) {
+              if (q.media.url.startsWith('./')) {
+                q.media.url = absoluteBaseUrl + q.media.url.substring(2);
+              } else if (q.media.url.startsWith('/')) {
+                q.media.url = publicR2Url + q.media.url;
+              }
+            }
+            // Fix ContentObject media in question
+            if (q.question && q.question.media && q.question.media.url) {
+              if (q.question.media.url.startsWith('./')) {
+                q.question.media.url = absoluteBaseUrl + q.question.media.url.substring(2);
+              } else if (q.question.media.url.startsWith('/')) {
+                q.question.media.url = publicR2Url + q.question.media.url;
+              }
+            }
+          });
+        }
+    
+        return c.json(quizContent);  } catch (error) {
     console.error('Get quiz content error:', error);
     return c.json({ error: 'Failed to fetch quiz content' }, 500);
   }

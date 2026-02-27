@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import type { Env } from '../types';
+import { verify } from 'hono/jwt';
 
 const users = new Hono<{ Bindings: Env }>();
 
@@ -36,7 +37,7 @@ users.put('/:id/category', async (c) => {
     }
     
     const token = authHeader.replace('Bearer ', '');
-    const payload = await verifyToken(token, c.env.JWT_SECRET);
+    const payload: any = await verify(token, c.env.JWT_SECRET);
     
     if (!payload || payload.userId !== userId) {
       return c.json({ error: 'Unauthorized' }, 403);
@@ -70,7 +71,7 @@ users.put('/:id/category', async (c) => {
     
     // Update category
     await c.env.DB.prepare(
-      'UPDATE users SET target_category = ?, updated_at = ? WHERE id = ?'
+      'UPDATE users SET target_category = ?, last_active_at = ? WHERE id = ?'
     ).bind(targetCategory, now, userId).run();
     
     return c.json({ 
@@ -81,6 +82,53 @@ users.put('/:id/category', async (c) => {
   } catch (error) {
     console.error('Update category error:', error);
     return c.json({ error: 'Failed to update category' }, 500);
+  }
+});
+
+// Update user's driving school
+users.put('/:id/school', async (c) => {
+  try {
+    const userId = c.req.param('id');
+    const authHeader = c.req.header('Authorization');
+    
+    if (!authHeader) {
+      return c.json({ error: 'No authorization header' }, 401);
+    }
+    
+    const token = authHeader.replace('Bearer ', '');
+    const payload: any = await verify(token, c.env.JWT_SECRET);
+    
+    if (!payload || payload.userId !== userId) {
+      return c.json({ error: 'Unauthorized' }, 403);
+    }
+    
+    const { drivingSchoolId } = await c.req.json();
+    
+    // Validate school exists if provided
+    if (drivingSchoolId) {
+      const school = await c.env.DB.prepare(
+        'SELECT id FROM schools WHERE id = ?'
+      ).bind(drivingSchoolId).first();
+      
+      if (!school) {
+        return c.json({ error: 'School not found' }, 404);
+      }
+    }
+    
+    // Update school (null to unlink)
+    const now = Date.now();
+    await c.env.DB.prepare(
+      'UPDATE users SET driving_school_id = ?, last_active_at = ? WHERE id = ?'
+    ).bind(drivingSchoolId || null, now, userId).run();
+    
+    return c.json({ 
+      success: true, 
+      message: drivingSchoolId ? 'School linked successfully' : 'School unlinked successfully'
+    });
+    
+  } catch (error) {
+    console.error('Update school error:', error);
+    return c.json({ error: 'Failed to update school' }, 500);
   }
 });
 

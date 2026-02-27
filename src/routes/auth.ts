@@ -126,7 +126,7 @@ auth.post('/login', async (c) => {
 
     // Get user
     const user = await c.env.DB.prepare(`
-      SELECT id, phone_number, password_hash, name, target_category,
+      SELECT id, phone_number, password_hash, name, target_category, driving_school_id,
              subscription_status, subscription_expiry_date, is_phone_verified
       FROM users WHERE phone_number = ?
     `).bind(phoneNumber).first();
@@ -161,9 +161,10 @@ auth.post('/login', async (c) => {
       success: true,
       user: {
         id: user.id,
-        phoneNumber: user.phone_number,
+        phone_number: user.phone_number,
         name: user.name,
-        targetCategory: user.target_category,
+        target_category: user.target_category,
+        driving_school_id: user.driving_school_id,
         subscription_status: user.subscription_status,
         subscription_expiry_date: user.subscription_expiry_date,
         isPhoneVerified: user.is_phone_verified === 1,
