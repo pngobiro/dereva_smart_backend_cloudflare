@@ -237,6 +237,97 @@ admin.get('/payments/:id', async (c) => {
   }
 });
 
+// Get all commissions
+admin.get('/commissions', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(`
+      SELECT 
+        sc.id, sc.school_id, sc.payment_id, sc.user_id, sc.payment_amount,
+        sc.commission_rate, sc.commission_amount, sc.status, sc.paid_at, sc.created_at,
+        s.name as school_name, u.name as user_name
+      FROM school_commissions sc
+      JOIN schools s ON sc.school_id = s.id
+      JOIN users u ON sc.user_id = u.id
+      ORDER BY sc.created_at DESC
+    `).all();
+
+    const commissions = (results || []).map((comm: any) => ({
+      id: comm.id,
+      schoolId: comm.school_id,
+      schoolName: comm.school_name,
+      paymentId: comm.payment_id,
+      userId: comm.user_id,
+      userName: comm.user_name,
+      paymentAmount: comm.payment_amount,
+      commissionRate: comm.commission_rate,
+      commissionAmount: comm.commission_amount,
+      status: comm.status,
+      paidAt: comm.paid_at,
+      createdAt: comm.created_at,
+    }));
+
+    return c.json({ commissions });
+  } catch (error) {
+    console.error('Get commissions error:', error);
+    return c.json({ error: 'Failed to fetch commissions' }, 500);
+  }
+});
+
+// Get commission summary by school
+admin.get('/commissions/summary', async (c) => {
+  try {
+    const { results } = await c.env.DB.prepare(`
+      SELECT 
+        s.id as school_id,
+        s.name as school_name,
+        s.commission_rate,
+        COUNT(DISTINCT u.id) as student_count,
+        COALESCE(SUM(sc.commission_amount), 0) as total_commission,
+        COALESCE(SUM(CASE WHEN sc.status = 'PENDING' THEN sc.commission_amount ELSE 0 END), 0) as pending_commission,
+        COALESCE(SUM(CASE WHEN sc.status = 'PAID' THEN sc.commission_amount ELSE 0 END), 0) as paid_commission
+      FROM schools s
+      LEFT JOIN users u ON u.driving_school_id = s.id
+      LEFT JOIN school_commissions sc ON sc.school_id = s.id
+      GROUP BY s.id, s.name, s.commission_rate
+      HAVING student_count > 0 OR total_commission > 0
+      ORDER BY total_commission DESC
+    `).all();
+
+    const summary = (results || []).map((school: any) => ({
+      schoolId: school.school_id,
+      schoolName: school.school_name,
+      commissionRate: school.commission_rate,
+      studentCount: school.student_count || 0,
+      totalCommission: school.total_commission || 0,
+      pendingCommission: school.pending_commission || 0,
+      paidCommission: school.paid_commission || 0,
+    }));
+
+    return c.json({ summary });
+  } catch (error) {
+    console.error('Get commission summary error:', error);
+    return c.json({ error: 'Failed to fetch commission summary' }, 500);
+  }
+});
+
+// Mark commission as paid
+admin.post('/commissions/:id/pay', async (c) => {
+  try {
+    const id = c.req.param('id');
+    
+    await c.env.DB.prepare(`
+      UPDATE school_commissions 
+      SET status = 'PAID', paid_at = ?
+      WHERE id = ?
+    `).bind(Date.now(), id).run();
+
+    return c.json({ success: true });
+  } catch (error) {
+    console.error('Mark commission paid error:', error);
+    return c.json({ error: 'Failed to mark commission as paid' }, 500);
+  }
+});
+
 // Get analytics
 admin.get('/analytics', async (c) => {
   try {
@@ -246,6 +337,35 @@ admin.get('/analytics', async (c) => {
     const totalModules = await c.env.DB.prepare('SELECT COUNT(*) as count FROM modules').first();
     const totalSchools = await c.env.DB.prepare('SELECT COUNT(*) as count FROM schools').first();
     const quizAttempts = await c.env.DB.prepare('SELECT COUNT(*) as count FROM quiz_attempts').first();
+    
+    // Get total revenue
+    const revenueResult = await c.env.DB.prepare(
+      "SELECT SUM(amount) as total FROM payments WHERE status = 'completed'"
+    ).first();
+    const totalRevenue = (revenueResult as any)?.total || 0;
+
+    // Get school statistics
+    const { results: schoolResults } = await c.env.DB.prepare(`
+      SELECT 
+        s.id as school_id,
+        s.name as school_name,
+        COUNT(DISTINCT u.id) as student_count,
+        COALESCE(SUM(p.amount), 0) as revenue,
+        s.total_branches as branches
+      FROM schools s
+      LEFT JOIN users u ON u.driving_school_id = s.id
+      LEFT JOIN payments p ON p.user_id = u.id AND p.status = 'completed'
+      GROUP BY s.id, s.name, s.total_branches
+      ORDER BY revenue DESC
+    `).all();
+
+    const schoolStats = (schoolResults || []).map((school: any) => ({
+      schoolId: school.school_id,
+      schoolName: school.school_name,
+      studentCount: school.student_count || 0,
+      revenue: school.revenue || 0,
+      branches: school.branches || 0,
+    }));
 
     return c.json({
       totalUsers: (totalUsers as any)?.count || 0,
@@ -254,6 +374,8 @@ admin.get('/analytics', async (c) => {
       totalModules: (totalModules as any)?.count || 0,
       totalSchools: (totalSchools as any)?.count || 0,
       quizAttempts: (quizAttempts as any)?.count || 0,
+      totalRevenue,
+      schoolStats,
     });
   } catch (error) {
     console.error('Get analytics error:', error);
