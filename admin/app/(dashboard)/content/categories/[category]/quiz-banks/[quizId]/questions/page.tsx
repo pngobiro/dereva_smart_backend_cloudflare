@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 import { LICENSE_CATEGORIES } from '@/lib/constants';
 import JsonEditor from '@/components/JsonEditor';
 import ContentRenderer from '@/components/ContentRenderer';
@@ -45,7 +46,12 @@ export default function QuizQuestionsPage() {
   const loadQuestions = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/quizzes/${quizId}/content`);
+      // We can use a generic api call here or add one to api.ts
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dereva-smart-backend.pngobiro.workers.dev';
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`${apiUrl}/api/quizzes/${quizId}/content`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
       setFullQuizData(data);
       setQuestions(data.questions || []);
@@ -77,7 +83,11 @@ export default function QuizQuestionsPage() {
       console.log('Updated quiz data:', updatedQuizData);
 
       // Get the json_url from the database by fetching quiz metadata
-      const metaRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/quizzes/${quizId}`);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dereva-smart-backend.pngobiro.workers.dev';
+      const token = localStorage.getItem('admin_token');
+      const metaRes = await fetch(`${apiUrl}/api/quizzes/${quizId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       if (!metaRes.ok) {
         throw new Error('Failed to fetch quiz metadata');
       }
@@ -86,14 +96,7 @@ export default function QuizQuestionsPage() {
 
       console.log('Uploading to:', jsonUrl);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/upload`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          path: jsonUrl,
-          content: JSON.stringify(updatedQuizData, null, 2),
-        }),
-      });
+      const response = await api.uploadToR2(jsonUrl, JSON.stringify(updatedQuizData, null, 2));
 
       if (!response.ok) {
         const error = await response.json();

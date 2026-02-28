@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 
 interface ProgressRecord {
   id: string;
@@ -60,17 +61,14 @@ export default function SchoolProgressPage() {
       setLoading(true);
       
       // Load progress
-      let progressUrl = `/api/admin/schools/${schoolId}/progress?limit=100`;
-      if (categoryFilter) progressUrl += `&category=${categoryFilter}`;
-      if (userFilter) progressUrl += `&userId=${userFilter}`;
-      
-      const progressRes = await fetch(progressUrl);
-      const progressData = await progressRes.json();
+      const progressData = await api.getSchoolProgress(schoolId, {
+        category: categoryFilter,
+        userId: userFilter
+      });
       setProgress(progressData.progress || []);
       
       // Load stats
-      const statsRes = await fetch(`/api/admin/schools/${schoolId}/stats`);
-      const statsData = await statsRes.json();
+      const statsData = await api.getSchoolStats(schoolId);
       setStats(statsData);
     } catch (error) {
       console.error('Failed to load data:', error);

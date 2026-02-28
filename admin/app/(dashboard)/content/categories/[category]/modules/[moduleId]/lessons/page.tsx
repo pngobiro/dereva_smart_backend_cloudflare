@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 import { LICENSE_CATEGORIES } from '@/lib/constants';
 
 interface Lesson {
@@ -32,13 +33,17 @@ export default function ModuleLessonsPage() {
     setLoading(true);
     try {
       // Fetch lessons from API
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/content/lessons/${moduleId}`);
+      // Add getLessons to api library if missing, but for now use direct fetch with headers
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dereva-smart-backend.pngobiro.workers.dev';
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`${apiUrl}/api/content/lessons/${moduleId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
       setLessons(data || []);
       
       // Get module name
-      const moduleRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/modules`);
-      const moduleData = await moduleRes.json();
+      const moduleData = await api.getModules();
       const module = moduleData.modules.find((m: any) => m.id === moduleId);
       setModuleName(module?.title || moduleId);
     } catch (err) {

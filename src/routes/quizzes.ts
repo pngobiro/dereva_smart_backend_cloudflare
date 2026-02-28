@@ -1,7 +1,23 @@
 import { Hono } from 'hono';
+import { verify } from 'hono/jwt';
 import type { Env } from '../types';
 
 const quizzes = new Hono<{ Bindings: Env }>();
+
+// Helper to extract user ID from token
+async function getUserIdFromToken(c: any): Promise<string | null> {
+  const authHeader = c.req.header('Authorization');
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+  try {
+    const token = authHeader.replace('Bearer ', '');
+    const payload = await verify(token, c.env.JWT_SECRET) as any;
+    return payload?.userId || null;
+  } catch (error) {
+    return null;
+  }
+}
 
 // GET /api/quizzes - Get all quiz banks
 quizzes.get('/', async (c) => {
@@ -95,8 +111,8 @@ quizzes.get('/:id', async (c) => {
 quizzes.get('/:id/content', async (c) => {
   try {
     const id = c.req.param('id');
-    const userId = c.get('userId'); // Optional - may be undefined for guests
-    
+    const userId = await getUserIdFromToken(c); // Optional - may be undefined for guests
+
     // Get quiz metadata
     const quiz = await c.env.DB.prepare(
       'SELECT * FROM quiz_banks WHERE id = ?'
@@ -183,7 +199,7 @@ quizzes.get('/:id/content', async (c) => {
 quizzes.post('/:id/attempts', async (c) => {
   try {
     const id = c.req.param('id');
-    const userId = c.get('userId'); // Optional for guests
+    const userId = await getUserIdFromToken(c); // Optional for guests
     const body = await c.req.json();
     
     const { answers, timeTaken } = body;
@@ -371,10 +387,13 @@ quizzes.post('/:id/attempts', async (c) => {
 quizzes.get('/:id/attempts', async (c) => {
   try {
     const id = c.req.param('id');
-    const userId = c.get('userId');
-    
-    const { results } = await c.env.DB.prepare(`
-      SELECT * FROM quiz_attempts 
+    const userId = await getUserIdFromToken(c);
+
+    if (!userId) {
+      return c.json({ error: 'Unauthorized' }, 401);
+    }
+
+    const { results } = await c.env.DB.prepare(`      SELECT * FROM quiz_attempts 
       WHERE quiz_bank_id = ? AND user_id = ?
       ORDER BY completed_at DESC
       LIMIT 10
