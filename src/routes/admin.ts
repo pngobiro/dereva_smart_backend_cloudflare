@@ -1,7 +1,73 @@
 import { Hono } from 'hono';
 import type { Env } from '../types';
+import { verifyPassword, generateJWT } from '../utils/auth';
+import { z } from 'zod';
+import { requireAdmin, requireSchoolAccess } from '../middleware/adminAuth';
 
 const admin = new Hono<{ Bindings: Env }>();
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
+// POST /api/admin/login
+admin.post('/login', async (c) => {
+  try {
+    const body = await c.req.json();
+    const { email, password } = loginSchema.parse(body);
+
+    const adminUser = await c.env.DB.prepare(
+      'SELECT * FROM admin_users WHERE email = ? AND is_active = 1'
+    ).bind(email).first();
+
+    if (!adminUser) {
+      return c.json({ error: 'Invalid credentials' }, 401);
+    }
+
+    const valid = await verifyPassword(password, adminUser.password_hash as string);
+    if (!valid) {
+      return c.json({ error: 'Invalid credentials' }, 401);
+    }
+
+    // Update last login
+    await c.env.DB.prepare(
+      'UPDATE admin_users SET last_login_at = ? WHERE id = ?'
+    ).bind(Date.now(), adminUser.id).run();
+
+    // Generate JWT
+    const token = await generateJWT(
+      { 
+        adminId: adminUser.id as string, 
+        email: adminUser.email as string,
+        role: adminUser.role as string,
+        schoolId: adminUser.school_id as string | null
+      },
+      c.env.JWT_SECRET
+    );
+
+    return c.json({
+      success: true,
+      user: {
+        id: adminUser.id,
+        email: adminUser.email,
+        name: adminUser.name,
+        role: adminUser.role,
+        schoolId: adminUser.school_id,
+      },
+      token,
+    });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return c.json({ error: 'Validation error', details: error.errors }, 400);
+    }
+    console.error('Admin login error:', error);
+    return c.json({ error: 'Login failed' }, 500);
+  }
+});
+
+// All routes below this line require admin authentication
+admin.use('*', requireAdmin);
 
 // Get all users
 admin.get('/users', async (c) => {
@@ -332,7 +398,7 @@ admin.post('/commissions/:id/pay', async (c) => {
 admin.get('/analytics', async (c) => {
   try {
     const totalUsers = await c.env.DB.prepare('SELECT COUNT(*) as count FROM users').first();
-    const premiumUsers = await c.env.DB.prepare("SELECT COUNT(*) as count FROM users WHERE subscription_status = 'PREMIUM'").first();
+    const premiumUsers = await c.env.DB.prepare("SELECT COUNT(*) as count FROM users WHERE subscription_status LIKE 'PREMIUM%'").first();
     const totalQuizzes = await c.env.DB.prepare('SELECT COUNT(*) as count FROM quiz_banks').first();
     const totalModules = await c.env.DB.prepare('SELECT COUNT(*) as count FROM modules').first();
     const totalSchools = await c.env.DB.prepare('SELECT COUNT(*) as count FROM schools').first();
@@ -586,7 +652,7 @@ admin.post('/upload', async (c) => {
 });
 
 // Get school student progress
-admin.get('/schools/:schoolId/progress', async (c) => {
+admin.get('/schools/:schoolId/progress', requireSchoolAccess, async (c) => {
   try {
     const schoolId = c.req.param('schoolId');
     const userId = c.req.query('userId'); // Optional filter by user
@@ -643,8 +709,42 @@ admin.get('/schools/:schoolId/progress', async (c) => {
   }
 });
 
+// Get all users associated with a school
+admin.get('/schools/:schoolId/users', requireSchoolAccess, async (c) => {
+  try {
+    const schoolId = c.req.param('schoolId');
+    const { results } = await c.env.DB.prepare(`
+      SELECT id, phone_number, name, email, target_category, 
+             subscription_status, subscription_expiry_date, is_phone_verified,
+             user_role, created_at, last_active_at
+      FROM users
+      WHERE driving_school_id = ?
+      ORDER BY created_at DESC
+    `).bind(schoolId).all();
+
+    const users = (results || []).map((user: any) => ({
+      id: user.id,
+      name: user.name,
+      phoneNumber: user.phone_number,
+      email: user.email,
+      targetCategory: user.target_category,
+      subscriptionStatus: user.subscription_status,
+      subscriptionExpiryDate: user.subscription_expiry_date,
+      isPhoneVerified: user.is_phone_verified === 1,
+      userRole: user.user_role,
+      createdAt: user.created_at,
+      lastActiveAt: user.last_active_at,
+    }));
+
+    return c.json({ users });
+  } catch (error) {
+    console.error('Get school users error:', error);
+    return c.json({ error: 'Failed to fetch school users' }, 500);
+  }
+});
+
 // Get school student statistics
-admin.get('/schools/:schoolId/stats', async (c) => {
+admin.get('/schools/:schoolId/stats', requireSchoolAccess, async (c) => {
   try {
     const schoolId = c.req.param('schoolId');
     
@@ -730,7 +830,7 @@ admin.get('/schools/:schoolId/stats', async (c) => {
 });
 
 // Get individual student progress for a school
-admin.get('/schools/:schoolId/students/:userId/progress', async (c) => {
+admin.get('/schools/:schoolId/students/:userId/progress', requireSchoolAccess, async (c) => {
   try {
     const schoolId = c.req.param('schoolId');
     const userId = c.req.param('userId');

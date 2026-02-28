@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { api } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 interface School {
   id: string;
@@ -20,16 +22,24 @@ interface School {
 export default function SchoolsPage() {
   const [schools, setSchools] = useState<School[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    const userStr = localStorage.getItem('admin_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      if (user.role === 'SCHOOL_ADMIN') {
+        router.push(`/schools/${user.schoolId}`);
+        return;
+      }
+    }
     loadSchools();
-  }, []);
+  }, [router]);
 
   const loadSchools = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schools`);
-      const data = await res.json();
+      const data = await api.getSchools();
       // Backend returns array directly, not wrapped in object
       const schoolsData = Array.isArray(data) ? data : (data.schools || []);
       
