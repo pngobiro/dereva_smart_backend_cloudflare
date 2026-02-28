@@ -367,8 +367,11 @@ admin.get('/payments/:id', async (c) => {
 
 // Get all commissions
 admin.get('/commissions', async (c) => {
+  const adminRole = c.get('role');
+  const adminSchoolId = c.get('schoolId');
+
   try {
-    const { results } = await c.env.DB.prepare(`
+    let query = `
       SELECT 
         sc.id, sc.school_id, sc.payment_id, sc.user_id, sc.payment_amount,
         sc.commission_rate, sc.commission_amount, sc.status, sc.paid_at, sc.created_at,
@@ -376,8 +379,18 @@ admin.get('/commissions', async (c) => {
       FROM school_commissions sc
       JOIN schools s ON sc.school_id = s.id
       JOIN users u ON sc.user_id = u.id
-      ORDER BY sc.created_at DESC
-    `).all();
+    `;
+    
+    let params: any[] = [];
+    
+    if (adminRole === 'SCHOOL_ADMIN') {
+      query += ' WHERE sc.school_id = ?';
+      params.push(adminSchoolId);
+    }
+    
+    query += ' ORDER BY sc.created_at DESC';
+
+    const { results } = await c.env.DB.prepare(query).bind(...params).all();
 
     const commissions = (results || []).map((comm: any) => ({
       id: comm.id,
@@ -403,8 +416,11 @@ admin.get('/commissions', async (c) => {
 
 // Get commission summary by school
 admin.get('/commissions/summary', async (c) => {
+  const adminRole = c.get('role');
+  const adminSchoolId = c.get('schoolId');
+
   try {
-    const { results } = await c.env.DB.prepare(`
+    let query = `
       SELECT 
         s.id as school_id,
         s.name as school_name,
@@ -416,10 +432,22 @@ admin.get('/commissions/summary', async (c) => {
       FROM schools s
       LEFT JOIN users u ON u.driving_school_id = s.id
       LEFT JOIN school_commissions sc ON sc.school_id = s.id
+    `;
+    
+    let params: any[] = [];
+    
+    if (adminRole === 'SCHOOL_ADMIN') {
+      query += ' WHERE s.id = ?';
+      params.push(adminSchoolId);
+    }
+    
+    query += `
       GROUP BY s.id, s.name, s.commission_rate
       HAVING student_count > 0 OR total_commission > 0
       ORDER BY total_commission DESC
-    `).all();
+    `;
+
+    const { results } = await c.env.DB.prepare(query).bind(...params).all();
 
     const summary = (results || []).map((school: any) => ({
       schoolId: school.school_id,
@@ -440,6 +468,11 @@ admin.get('/commissions/summary', async (c) => {
 
 // Mark commission as paid
 admin.post('/commissions/:id/pay', async (c) => {
+  const adminRole = c.get('role');
+  if (adminRole !== 'SUPER_ADMIN') {
+    return c.json({ error: 'Unauthorized. Only Super Admins can pay commissions.' }, 403);
+  }
+
   try {
     const id = c.req.param('id');
     

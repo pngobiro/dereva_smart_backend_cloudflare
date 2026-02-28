@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 
 interface Commission {
   id: string;
@@ -33,17 +34,25 @@ export default function CommissionsPage() {
   const [summary, setSummary] = useState<SchoolCommissionSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'pending' | 'paid'>('pending');
+  const [adminUser, setAdminUser] = useState<any>(null);
 
   useEffect(() => {
+    const userStr = localStorage.getItem('admin_user');
+    if (userStr) setAdminUser(JSON.parse(userStr));
     loadCommissions();
   }, []);
 
   const loadCommissions = async () => {
     setLoading(true);
     try {
+      // Use direct fetch with auth for now or update api.ts
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dereva-smart-backend.pngobiro.workers.dev';
+      const token = localStorage.getItem('admin_token');
+      const headers = { 'Authorization': `Bearer ${token}` };
+
       const [commissionsRes, summaryRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/commissions`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/commissions/summary`),
+        fetch(`${apiUrl}/api/admin/commissions`, { headers }),
+        fetch(`${apiUrl}/api/admin/commissions/summary`, { headers }),
       ]);
 
       const commissionsData = await commissionsRes.json();
@@ -62,9 +71,14 @@ export default function CommissionsPage() {
     if (!confirm('Mark this commission as paid?')) return;
 
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dereva-smart-backend.pngobiro.workers.dev';
+      const token = localStorage.getItem('admin_token');
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/commissions/${commissionId}/pay`,
-        { method: 'POST' }
+        `${apiUrl}/api/admin/commissions/${commissionId}/pay`,
+        { 
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        }
       );
 
       if (res.ok) {
@@ -129,76 +143,78 @@ export default function CommissionsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
-        <div className="px-6 py-4 border-b">
-          <h3 className="text-lg font-bold text-gray-900">Commission Summary by School</h3>
-        </div>
-        {summary.length === 0 ? (
-          <div className="p-12 text-center text-gray-500">No commission data available</div>
-        ) : (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  School
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Rate
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Students
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Total
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Pending
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Paid
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {summary.map((school) => (
-                <tr key={school.schoolId} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <Link
-                      href={`/schools/${school.schoolId}/branches`}
-                      className="font-medium text-blue-600 hover:text-blue-900"
-                    >
-                      {school.schoolName}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">
-                      {(school.commissionRate * 100).toFixed(0)}%
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{school.studentCount}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-gray-900">
-                      KES {school.totalCommission.toLocaleString()}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-yellow-600">
-                      KES {school.pendingCommission.toLocaleString()}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm font-medium text-green-600">
-                      KES {school.paidCommission.toLocaleString()}
-                    </div>
-                  </td>
+      {adminUser?.role === 'SUPER_ADMIN' && (
+        <div className="bg-white rounded-lg shadow overflow-hidden mb-8">
+          <div className="px-6 py-4 border-b">
+            <h3 className="text-lg font-bold text-gray-900">Commission Summary by School</h3>
+          </div>
+          {summary.length === 0 ? (
+            <div className="p-12 text-center text-gray-500">No commission data available</div>
+          ) : (
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    School
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Rate
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Students
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Total
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Pending
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Paid
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {summary.map((school) => (
+                  <tr key={school.schoolId} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <Link
+                        href={`/schools/${school.schoolId}/branches`}
+                        className="font-medium text-blue-600 hover:text-blue-900"
+                      >
+                        {school.schoolName}
+                      </Link>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-900">
+                        {(school.commissionRate * 100).toFixed(0)}%
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm text-gray-900">{school.studentCount}</div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-gray-900">
+                        KES {school.totalCommission.toLocaleString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-yellow-600">
+                        KES {school.pendingCommission.toLocaleString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="text-sm font-medium text-green-600">
+                        KES {school.paidCommission.toLocaleString()}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
 
       <div className="mb-6 flex items-center gap-2">
         <button
@@ -258,9 +274,11 @@ export default function CommissionsPage() {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                  Actions
-                </th>
+                {adminUser?.role === 'SUPER_ADMIN' && (
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                    Actions
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -315,16 +333,18 @@ export default function CommissionsPage() {
                       </div>
                     )}
                   </td>
-                  <td className="px-6 py-4">
-                    {commission.status === 'PENDING' && (
-                      <button
-                        onClick={() => handleMarkAsPaid(commission.id)}
-                        className="text-sm text-green-600 hover:text-green-900 font-medium"
-                      >
-                        Mark Paid
-                      </button>
-                    )}
-                  </td>
+                  {adminUser?.role === 'SUPER_ADMIN' && (
+                    <td className="px-6 py-4">
+                      {commission.status === 'PENDING' && (
+                        <button
+                          onClick={() => handleMarkAsPaid(commission.id)}
+                          className="text-sm text-green-600 hover:text-green-900 font-medium"
+                        >
+                          Mark Paid
+                        </button>
+                      )}
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

@@ -36,6 +36,7 @@ export default function Sidebar() {
     : [
         { href: `/schools/${user?.schoolId}/progress`, label: 'Student Progress', icon: '📈' },
         { href: `/schools/${user?.schoolId}`, label: 'School Details', icon: '🏫' },
+        { href: '/commissions', label: 'Commissions', icon: '💰' },
         { href: '/profile', label: 'My Profile', icon: '👤' },
       ];
 
