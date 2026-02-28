@@ -105,6 +105,34 @@ export const api = {
     return handleResponse(res);
   },
 
+  getUser: async (id: string) => {
+    const res = await fetch(`${API_URL}/api/admin/users/${id}`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  getUserAttempts: async (id: string) => {
+    const res = await fetch(`${API_URL}/api/admin/users/${id}/attempts`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  getUserSubscriptions: async (id: string) => {
+    const res = await fetch(`${API_URL}/api/admin/users/${id}/subscriptions`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  getUserProgress: async (id: string) => {
+    const res = await fetch(`${API_URL}/api/admin/users/${id}/progress`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
   // Analytics
   getAnalytics: async () => {
     const res = await fetch(`${API_URL}/api/admin/analytics`, {
@@ -134,6 +162,37 @@ export const api = {
 
   getSchoolUsers: async (schoolId: string) => {
     const res = await fetch(`${API_URL}/api/admin/schools/${schoolId}/users`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  getSchoolBranches: async (schoolId: string) => {
+    const res = await fetch(`${API_URL}/api/admin/schools/${schoolId}/branches`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  createBranch: async (schoolId: string, data: any) => {
+    const res = await fetch(`${API_URL}/api/admin/schools/${schoolId}/branches`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
+
+  deleteBranch: async (schoolId: string, branchId: string) => {
+    const res = await fetch(`${API_URL}/api/admin/schools/${schoolId}/branches/${branchId}`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  getStudentProgress: async (schoolId: string, userId: string) => {
+    const res = await fetch(`${API_URL}/api/admin/schools/${schoolId}/students/${userId}/progress`, {
       headers: getAuthHeaders(),
     });
     return handleResponse(res);

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 
 interface Branch {
   id: string;
@@ -27,26 +28,37 @@ interface School {
 export default function SchoolBranchesPage() {
   const params = useParams();
   const schoolId = params.schoolId as string;
+  const router = useRouter();
   const [branches, setBranches] = useState<Branch[]>([]);
   const [school, setSchool] = useState<School | null>(null);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [adminUser, setAdminUser] = useState<any>(null);
 
   useEffect(() => {
+    const userStr = localStorage.getItem('admin_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      setAdminUser(user);
+      if (user.role === 'SCHOOL_ADMIN' && user.schoolId !== schoolId) {
+        router.push(`/schools/${user.schoolId}/branches`);
+        return;
+      }
+    }
     loadData();
-  }, [schoolId]);
+  }, [schoolId, router]);
 
   const loadData = async () => {
     setLoading(true);
     try {
-      const [schoolRes, branchesRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/schools/${schoolId}`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/schools/${schoolId}/branches`),
+      // Use direct fetch for school metadata (it's public anyway)
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dereva-smart-backend.pngobiro.workers.dev';
+      const [schoolRes, branchesData] = await Promise.all([
+        fetch(`${apiUrl}/api/schools/${schoolId}`),
+        api.getSchoolBranches(schoolId),
       ]);
 
       const schoolData = await schoolRes.json();
-      const branchesData = await branchesRes.json();
-
       setSchool(schoolData);
       setBranches(branchesData.branches || []);
     } catch (err) {
@@ -73,19 +85,13 @@ export default function SchoolBranchesPage() {
     };
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/schools/${schoolId}/branches`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-      if (res.ok) {
-        form.reset();
-        setShowForm(false);
-        loadData();
-      }
+      await api.createBranch(schoolId, data);
+      form.reset();
+      setShowForm(false);
+      loadData();
     } catch (err) {
       console.error('Failed to create branch:', err);
+      alert('Failed to create branch');
     }
   };
 
@@ -93,16 +99,11 @@ export default function SchoolBranchesPage() {
     if (!confirm('Delete this branch?')) return;
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/schools/${schoolId}/branches/${branchId}`,
-        { method: 'DELETE' }
-      );
-
-      if (res.ok) {
-        loadData();
-      }
+      await api.deleteBranch(schoolId, branchId);
+      loadData();
     } catch (err) {
       console.error('Failed to delete branch:', err);
+      alert('Failed to delete branch');
     }
   };
 
@@ -113,9 +114,15 @@ export default function SchoolBranchesPage() {
   return (
     <div>
       <div className="mb-8">
-        <Link href="/schools" className="text-blue-600 hover:underline text-sm mb-2 inline-block">
-          ← Back to Schools
-        </Link>
+        {adminUser?.role === 'SUPER_ADMIN' ? (
+          <Link href="/schools" className="text-blue-600 hover:underline text-sm mb-2 inline-block">
+            ← Back to Schools
+          </Link>
+        ) : (
+          <Link href={`/schools/${schoolId}`} className="text-blue-600 hover:underline text-sm mb-2 inline-block">
+            ← Back to School
+          </Link>
+        )}
         <h1 className="text-3xl font-bold text-gray-900">🏢 Branches - {school?.name}</h1>
         <p className="text-gray-600 mt-2">{branches.length} branches</p>
       </div>

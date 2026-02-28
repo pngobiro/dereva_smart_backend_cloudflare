@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 
 interface User {
   id: string;
@@ -23,16 +24,24 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<'all' | 'premium' | 'free'>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
+    const userStr = localStorage.getItem('admin_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      if (user.role !== 'SUPER_ADMIN') {
+        router.push('/');
+        return;
+      }
+    }
     loadUsers();
-  }, []);
+  }, [router]);
 
   const loadUsers = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/users`);
-      const data = await res.json();
+      const data = await api.getUsers();
       setUsers(data.users || []);
     } catch (err) {
       console.error('Failed to load users:', err);
@@ -44,7 +53,7 @@ export default function UsersPage() {
   const filteredUsers = users.filter((user) => {
     const matchesFilter =
       filter === 'all' ||
-      (filter === 'premium' && user.subscriptionStatus === 'PREMIUM') ||
+      (filter === 'premium' && (user.subscriptionStatus === 'PREMIUM' || user.subscriptionStatus === 'PREMIUM_MONTHLY')) ||
       (filter === 'free' && user.subscriptionStatus === 'FREE');
 
     const matchesSearch =
@@ -65,7 +74,7 @@ export default function UsersPage() {
   };
 
   const getSubscriptionBadge = (status: string) => {
-    if (status === 'PREMIUM') {
+    if (status === 'PREMIUM' || status === 'PREMIUM_MONTHLY') {
       return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">Premium</span>;
     }
     return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Free</span>;
@@ -105,7 +114,7 @@ export default function UsersPage() {
               filter === 'premium' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700'
             }`}
           >
-            Premium ({users.filter((u) => u.subscriptionStatus === 'PREMIUM').length})
+            Premium ({users.filter((u) => u.subscriptionStatus === 'PREMIUM' || u.subscriptionStatus === 'PREMIUM_MONTHLY').length})
           </button>
           <button
             onClick={() => setFilter('free')}
@@ -161,7 +170,7 @@ export default function UsersPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div>{getSubscriptionBadge(user.subscriptionStatus)}</div>
-                    {user.subscriptionStatus === 'PREMIUM' && user.subscriptionExpiryDate && (
+                    {(user.subscriptionStatus === 'PREMIUM' || user.subscriptionStatus === 'PREMIUM_MONTHLY') && user.subscriptionExpiryDate && (
                       <div className="text-xs text-gray-500 mt-1">
                         Expires: {formatDate(user.subscriptionExpiryDate)}
                       </div>

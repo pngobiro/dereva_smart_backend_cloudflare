@@ -14,10 +14,19 @@ interface CategoryStats {
 export default function CategoriesPage() {
   const [stats, setStats] = useState<CategoryStats[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    const userStr = localStorage.getItem('admin_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      if (user.role !== 'SUPER_ADMIN') {
+        router.push('/');
+        return;
+      }
+    }
     loadStats();
-  }, []);
+  }, [router]);
 
   const loadStats = async () => {
     setLoading(true);

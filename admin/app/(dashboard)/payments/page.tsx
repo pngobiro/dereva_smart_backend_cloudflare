@@ -39,10 +39,19 @@ export default function PaymentsPage() {
   const [filter, setFilter] = useState<'all' | 'completed' | 'pending' | 'failed'>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [timeRange, setTimeRange] = useState<'week' | 'month' | 'all'>('month');
+  const router = useRouter();
 
   useEffect(() => {
+    const userStr = localStorage.getItem('admin_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      if (user.role !== 'SUPER_ADMIN') {
+        router.push('/');
+        return;
+      }
+    }
     loadPayments();
-  }, []);
+  }, [router]);
 
   const loadPayments = async () => {
     setLoading(true);

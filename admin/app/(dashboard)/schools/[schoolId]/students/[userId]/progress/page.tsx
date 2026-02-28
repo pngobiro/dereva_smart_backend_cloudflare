@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 
 interface ProgressRecord {
   id: string;
@@ -16,7 +17,7 @@ interface ProgressRecord {
   completedAt: number;
 }
 
-interface StudentData {
+interface StudentProgressResponse {
   student: {
     id: string;
     name: string;
@@ -37,7 +38,7 @@ export default function StudentProgressPage() {
   const schoolId = params.schoolId as string;
   const userId = params.userId as string;
   
-  const [data, setData] = useState<StudentData | null>(null);
+  const [data, setData] = useState<StudentProgressResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -47,11 +48,10 @@ export default function StudentProgressPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`/api/admin/schools/${schoolId}/students/${userId}/progress`);
-      const result = await res.json();
+      const result = await api.getStudentProgress(schoolId, userId);
       setData(result);
     } catch (error) {
-      console.error('Failed to load data:', error);
+      console.error('Failed to load student progress:', error);
     } finally {
       setLoading(false);
     }
@@ -68,52 +68,33 @@ export default function StudentProgressPage() {
   };
 
   if (loading) {
-    return (
-      <div className="p-8">
-        <div className="text-center">Loading...</div>
-      </div>
-    );
+    return <div className="p-8 text-center">Loading...</div>;
   }
 
   if (!data) {
-    return (
-      <div className="p-8">
-        <div className="text-center text-red-600">Failed to load student data</div>
-      </div>
-    );
+    return <div className="p-8 text-center">Student not found</div>;
   }
 
   return (
     <div className="p-8">
       <div className="mb-6">
         <Link href={`/schools/${schoolId}/progress`} className="text-blue-600 hover:underline">
-          ← Back to School Progress
+          ← Back to All Students
         </Link>
-      </div>
-
-      {/* Student Info */}
-      <div className="bg-white p-6 rounded-lg shadow mb-8">
-        <h1 className="text-3xl font-bold mb-4">{data.student.name}</h1>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <div className="text-gray-500 text-sm">Phone Number</div>
-            <div className="font-medium">{data.student.phoneNumber}</div>
-          </div>
-          <div>
-            <div className="text-gray-500 text-sm">Target Category</div>
-            <div className="font-medium">{data.student.targetCategory}</div>
-          </div>
+        <h1 className="text-3xl font-bold mt-2">{data.student.name}'s Progress</h1>
+        <div className="text-gray-500 mt-1">
+          {data.student.phoneNumber} • Category: {data.student.targetCategory}
         </div>
       </div>
 
-      {/* Summary Stats */}
+      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         <div className="bg-white p-6 rounded-lg shadow">
-          <div className="text-gray-500 text-sm">Total Attempts</div>
+          <div className="text-gray-500 text-sm">Attempts</div>
           <div className="text-3xl font-bold">{data.summary.totalAttempts}</div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
-          <div className="text-gray-500 text-sm">Average Score</div>
+          <div className="text-gray-500 text-sm">Avg Score</div>
           <div className="text-3xl font-bold">{data.summary.avgScore}%</div>
         </div>
         <div className="bg-white p-6 rounded-lg shadow">
@@ -126,65 +107,48 @@ export default function StudentProgressPage() {
         </div>
       </div>
 
-      {/* Progress History */}
-      <div className="bg-white rounded-lg shadow">
-        <div className="p-6 border-b">
-          <h2 className="text-xl font-bold">Quiz History</h2>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full">
-            <thead>
-              <tr className="border-b bg-gray-50">
-                <th className="text-left py-3 px-4">Quiz</th>
-                <th className="text-left py-3 px-4">Category</th>
-                <th className="text-right py-3 px-4">Score</th>
-                <th className="text-right py-3 px-4">Questions</th>
-                <th className="text-right py-3 px-4">Time</th>
-                <th className="text-center py-3 px-4">Status</th>
-                <th className="text-left py-3 px-4">Date</th>
+      {/* Progress Records */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <table className="min-w-full">
+          <thead>
+            <tr className="border-b bg-gray-50">
+              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase">Quiz</th>
+              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase">Category</th>
+              <th className="text-right py-3 px-4 text-xs font-medium text-gray-500 uppercase">Score</th>
+              <th className="text-right py-3 px-4 text-xs font-medium text-gray-500 uppercase">Questions</th>
+              <th className="text-right py-3 px-4 text-xs font-medium text-gray-500 uppercase">Time</th>
+              <th className="text-center py-3 px-4 text-xs font-medium text-gray-500 uppercase">Status</th>
+              <th className="text-left py-3 px-4 text-xs font-medium text-gray-500 uppercase">Date</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {data.progress.map((record) => (
+              <tr key={record.id} className="hover:bg-gray-50">
+                <td className="py-3 px-4 font-medium">{record.quizName}</td>
+                <td className="py-3 px-4">{record.category}</td>
+                <td className="text-right py-3 px-4 font-semibold">{record.score}%</td>
+                <td className="text-right py-3 px-4">
+                  {record.correctAnswers}/{record.totalQuestions}
+                </td>
+                <td className="text-right py-3 px-4">{formatTime(record.timeTaken)}</td>
+                <td className="text-center py-3 px-4">
+                  <span
+                    className={`px-2 py-1 rounded text-sm ${
+                      record.passed
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}
+                  >
+                    {record.passed ? 'Passed' : 'Failed'}
+                  </span>
+                </td>
+                <td className="py-3 px-4 text-sm text-gray-500">
+                  {formatDate(record.completedAt)}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {data.progress.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="text-center py-8 text-gray-500">
-                    No quiz attempts yet
-                  </td>
-                </tr>
-              ) : (
-                data.progress.map((record) => (
-                  <tr key={record.id} className="border-b hover:bg-gray-50">
-                    <td className="py-3 px-4">{record.quizName}</td>
-                    <td className="py-3 px-4">{record.category}</td>
-                    <td className="text-right py-3 px-4 font-semibold">
-                      {record.score}%
-                    </td>
-                    <td className="text-right py-3 px-4">
-                      {record.correctAnswers}/{record.totalQuestions}
-                    </td>
-                    <td className="text-right py-3 px-4">
-                      {formatTime(record.timeTaken)}
-                    </td>
-                    <td className="text-center py-3 px-4">
-                      <span
-                        className={`px-2 py-1 rounded text-sm ${
-                          record.passed
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {record.passed ? 'Passed' : 'Failed'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-sm">
-                      {formatDate(record.completedAt)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

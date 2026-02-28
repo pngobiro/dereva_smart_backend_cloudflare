@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 
 interface User {
   id: string;
@@ -62,32 +63,17 @@ export default function UserDetailPage() {
   const loadUserData = async () => {
     setLoading(true);
     try {
-      const [userRes, attemptsRes, subscriptionsRes, progressRes] = await Promise.all([
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/users/${userId}`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/users/${userId}/attempts`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/users/${userId}/subscriptions`),
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/users/${userId}/progress`),
+      const [userData, attemptsData, subscriptionsData, progressData] = await Promise.all([
+        api.getUser(userId),
+        api.getUserAttempts(userId),
+        api.getUserSubscriptions(userId),
+        api.getUserProgress(userId),
       ]);
 
-      if (userRes.ok) {
-        const userData = await userRes.json();
-        setUser(userData);
-      }
-
-      if (attemptsRes.ok) {
-        const attemptsData = await attemptsRes.json();
-        setAttempts(attemptsData.attempts || []);
-      }
-
-      if (subscriptionsRes.ok) {
-        const subscriptionsData = await subscriptionsRes.json();
-        setSubscriptions(subscriptionsData.subscriptions || []);
-      }
-
-      if (progressRes.ok) {
-        const progressData = await progressRes.json();
-        setProgress(progressData);
-      }
+      setUser(userData);
+      setAttempts(attemptsData.attempts || []);
+      setSubscriptions(subscriptionsData.subscriptions || []);
+      setProgress(progressData);
     } catch (err) {
       console.error('Failed to load user data:', err);
     } finally {

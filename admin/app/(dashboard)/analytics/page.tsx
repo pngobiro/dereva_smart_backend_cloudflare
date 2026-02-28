@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 
 interface SchoolStats {
   schoolId: string;
@@ -25,16 +26,24 @@ interface Analytics {
 export default function AnalyticsPage() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
+    const userStr = localStorage.getItem('admin_user');
+    if (userStr) {
+      const user = JSON.parse(userStr);
+      if (user.role !== 'SUPER_ADMIN') {
+        router.push('/');
+        return;
+      }
+    }
     loadAnalytics();
-  }, []);
+  }, [router]);
 
   const loadAnalytics = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/analytics`);
-      const data = await res.json();
+      const data = await api.getAnalytics();
       setAnalytics(data);
     } catch (err) {
       console.error('Failed to load analytics:', err);
@@ -47,8 +56,8 @@ export default function AnalyticsPage() {
     return <div className="text-center py-8 text-gray-500">Loading analytics...</div>;
   }
 
-  if (!analytics) {
-    return <div className="text-center py-8 text-gray-500">Failed to load analytics</div>;
+  if (!analytics || !Array.isArray(analytics.schoolStats)) {
+    return <div className="text-center py-8 text-gray-500">Failed to load analytics or invalid data received</div>;
   }
 
   const topSchoolsByRevenue = [...analytics.schoolStats]
