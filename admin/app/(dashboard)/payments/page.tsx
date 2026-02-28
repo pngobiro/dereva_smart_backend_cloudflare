@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { api } from '@/lib/api';
 
 interface Payment {
   id: string;
@@ -46,7 +47,12 @@ export default function PaymentsPage() {
   const loadPayments = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/payments`);
+      // Use direct fetch with auth
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://dereva-smart-backend.pngobiro.workers.dev';
+      const token = localStorage.getItem('admin_token');
+      const res = await fetch(`${apiUrl}/api/admin/payments`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
       setPayments(data.payments || []);
     } catch (err) {
@@ -392,7 +398,7 @@ export default function PaymentsPage() {
       )}
 
       <div className="mt-4 text-sm text-gray-500">
-        Showing {filteredPayments.length} of {payments.length} payments
+        Showing {filteredPayments.length} of {payments.length} users
       </div>
     </div>
   );
