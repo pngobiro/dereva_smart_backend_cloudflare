@@ -69,6 +69,68 @@ admin.post('/login', async (c) => {
 // All routes below this line require admin authentication
 admin.use('*', requireAdmin);
 
+// Get current admin profile
+admin.get('/profile', async (c) => {
+  const adminId = c.get('adminId');
+  
+  try {
+    const adminUser = await c.env.DB.prepare(
+      'SELECT id, email, name, role, school_id FROM admin_users WHERE id = ?'
+    ).bind(adminId).first();
+
+    if (!adminUser) {
+      return c.json({ error: 'Admin not found' }, 404);
+    }
+
+    return c.json(adminUser);
+  } catch (error) {
+    console.error('Get profile error:', error);
+    return c.json({ error: 'Failed to fetch profile' }, 500);
+  }
+});
+
+const changePasswordSchema = z.object({
+  currentPassword: z.string(),
+  newPassword: z.string().min(6),
+});
+
+// Change admin password
+admin.post('/change-password', async (c) => {
+  const adminId = c.get('adminId');
+  
+  try {
+    const body = await c.req.json();
+    const { currentPassword, newPassword } = changePasswordSchema.parse(body);
+
+    const adminUser = await c.env.DB.prepare(
+      'SELECT password_hash FROM admin_users WHERE id = ?'
+    ).bind(adminId).first();
+
+    if (!adminUser) {
+      return c.json({ error: 'Admin not found' }, 401);
+    }
+
+    const valid = await verifyPassword(currentPassword, adminUser.password_hash as string);
+    if (!valid) {
+      return c.json({ error: 'Invalid current password' }, 400);
+    }
+
+    const newHash = await hashPassword(newPassword);
+    
+    await c.env.DB.prepare(
+      'UPDATE admin_users SET password_hash = ? WHERE id = ?'
+    ).bind(newHash, adminId).run();
+
+    return c.json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return c.json({ error: 'Validation error', details: error.errors }, 400);
+    }
+    console.error('Change password error:', error);
+    return c.json({ error: 'Failed to update password' }, 500);
+  }
+});
+
 // Get all users
 admin.get('/users', async (c) => {
   try {

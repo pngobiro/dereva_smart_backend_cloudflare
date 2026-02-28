@@ -139,6 +139,22 @@ export const api = {
     return handleResponse(res);
   },
 
+  getProfile: async () => {
+    const res = await fetch(`${API_URL}/api/admin/profile`, {
+      headers: getAuthHeaders(),
+    });
+    return handleResponse(res);
+  },
+
+  changePassword: async (data: any) => {
+    const res = await fetch(`${API_URL}/api/admin/change-password`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data),
+    });
+    return handleResponse(res);
+  },
+
   // Upload
   uploadToR2: async (path: string, content: string) => {
     const res = await fetch(`${API_URL}/api/admin/upload`, {
