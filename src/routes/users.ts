@@ -132,4 +132,50 @@ users.put('/:id/school', async (c) => {
   }
 });
 
+// Get user quiz attempts
+users.get('/:id/attempts', async (c) => {
+  try {
+    const userId = c.req.param('id');
+    const authHeader = c.req.header('Authorization');
+    
+    if (!authHeader) {
+      return c.json({ error: 'No authorization header' }, 401);
+    }
+    
+    const token = authHeader.replace('Bearer ', '');
+    const payload: any = await verify(token, c.env.JWT_SECRET);
+    
+    if (!payload || payload.userId !== userId) {
+      return c.json({ error: 'Unauthorized' }, 403);
+    }
+
+    const { results } = await c.env.DB.prepare(`
+      SELECT qa.*, qb.title as quiz_title, qb.license_category
+      FROM quiz_attempts qa
+      LEFT JOIN quiz_banks qb ON qa.quiz_bank_id = qb.id
+      WHERE qa.user_id = ?
+      ORDER BY qa.completed_at DESC
+    `).bind(userId).all();
+
+    const attempts = (results || []).map((attempt: any) => ({
+      id: attempt.id,
+      quizBankId: attempt.quiz_bank_id,
+      quizTitle: attempt.quiz_title,
+      category: attempt.license_category,
+      startedAt: attempt.started_at,
+      completedAt: attempt.completed_at,
+      timeTaken: attempt.time_taken,
+      totalQuestions: attempt.total_questions,
+      correctAnswers: attempt.correct_answers,
+      score: attempt.score,
+      passed: attempt.passed === 1
+    }));
+
+    return c.json({ attempts });
+  } catch (error) {
+    console.error('Get user attempts error:', error);
+    return c.json({ error: 'Failed to fetch attempts' }, 500);
+  }
+});
+
 export default users;

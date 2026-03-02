@@ -8,15 +8,15 @@ progress.get('/:userId/summary', async (c) => {
   try {
     const userId = c.req.param('userId');
 
-    // Total study time
+    // Total study time from quiz attempts (time_taken is in seconds)
     const totalTimeResult = await c.env.DB.prepare(
-      'SELECT SUM(duration_minutes) as total FROM study_sessions WHERE user_id = ?'
+      'SELECT SUM(time_taken) as total_seconds FROM quiz_attempts WHERE user_id = ?'
     ).bind(userId).first();
-    const totalStudyTimeMinutes = (totalTimeResult as any)?.total || 0;
+    const totalStudyTimeMinutes = Math.round(((totalTimeResult as any)?.total_seconds || 0) / 60);
 
     // Streaks
     const { results: sessions } = await c.env.DB.prepare(
-      'SELECT completed_at FROM study_sessions WHERE user_id = ? ORDER BY completed_at DESC'
+      'SELECT completed_at FROM quiz_attempts WHERE user_id = ? ORDER BY completed_at DESC'
     ).bind(userId).all();
     
     const uniqueDays = new Set(sessions.map((s: any) => new Date(s.completed_at).toDateString()));
@@ -24,7 +24,7 @@ progress.get('/:userId/summary', async (c) => {
 
     let currentStreak = 0;
     let longestStreak = 0;
-    let lastStudyDate = sortedDays.length > 0 ? new Date(sortedDays[0]) : null;
+    let lastStudyDate = sortedDays.length > 0 ? new Date(sortedDays[0]).getTime() : null;
 
     if (sortedDays.length > 0) {
         const today = new Date();
@@ -50,12 +50,7 @@ progress.get('/:userId/summary', async (c) => {
         }
     }
 
-    // Achievements
-    const { results: achievements } = await c.env.DB.prepare(
-      'SELECT * FROM achievements WHERE user_id = ?'
-    ).bind(userId).all();
-
-    // Completion percentage (mocked)
+    // Completion percentage (mocked for now since learning modules aren't tracked yet)
     const completionPercentage = (uniqueDays.size * 5.5) % 100;
 
     return c.json({
@@ -65,7 +60,7 @@ progress.get('/:userId/summary', async (c) => {
       currentStreak,
       longestStreak,
       lastStudyDate,
-      badges: achievements || []
+      badges: [] // Achievements table doesn't exist yet
     });
   } catch (error) {
     console.error('Get progress summary error:', error);
