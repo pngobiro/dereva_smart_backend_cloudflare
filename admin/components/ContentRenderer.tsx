@@ -34,7 +34,7 @@ export default function ContentRenderer({ content, className = '' }: ContentRend
           <img
             src={media.url}
             alt={media.alt || 'Content image'}
-            className="max-w-full h-auto rounded-lg shadow-sm"
+            className="max-w-full max-h-96 object-contain rounded-lg shadow-sm"
           />
         </div>
       );
